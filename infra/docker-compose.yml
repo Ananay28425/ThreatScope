@@ -1,0 +1,182 @@
+# ThreatScope — Full Local Stack
+# Valkey replaces Redis throughout (FOSS BSD-3-Clause, protocol-identical).
+# All services that previously connected to Redis now connect to Valkey on port 6379.
+# No application code changes are needed — redis-py 5.x works with Valkey out of the box.
+#
+# Start:  docker compose up --build
+# Stop:   docker compose down -v
+
+version: "3.9"
+
+services:
+
+  # ── PostgreSQL 16 ─────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: threatscope-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: threatscope
+      POSTGRES_PASSWORD: threatscope
+      POSTGRES_DB: threatscope
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U threatscope"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Valkey (FOSS Redis replacement) ───────────────────────────────────────
+  # Valkey is a community fork of Redis 7.2.4 released under BSD-3-Clause.
+  # It is 100% RESP-protocol-compatible: every Redis client library works
+  # without modification. No license fees, no SSPL restrictions.
+  valkey:
+    image: valkey/valkey:7.2-alpine
+    container_name: threatscope-valkey
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: valkey-server --save 60 1 --loglevel warning
+    volumes:
+      - valkey_data:/data
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI Backend ───────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: threatscope-backend
+    restart: unless-stopped
+    env_file:
+      - ../backend/.env.example
+    environment:
+      DATABASE_URL: postgresql+asyncpg://threatscope:threatscope@postgres:5432/threatscope
+      SYNC_DATABASE_URL: postgresql://threatscope:threatscope@postgres:5432/threatscope
+      VALKEY_URL: redis://valkey:6379/0
+      CELERY_BROKER_URL: redis://valkey:6379/1
+      CELERY_RESULT_BACKEND: redis://valkey:6379/2
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── Celery Worker ─────────────────────────────────────────────────────────
+  celery-worker:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: threatscope-celery
+    restart: unless-stopped
+    command: celery -A workers.tasks worker --loglevel=info --concurrency=2
+    env_file:
+      - ../backend/.env.example
+    environment:
+      VALKEY_URL: redis://valkey:6379/0
+      CELERY_BROKER_URL: redis://valkey:6379/1
+      CELERY_RESULT_BACKEND: redis://valkey:6379/2
+    depends_on:
+      - valkey
+      - postgres
+
+  # ── Celery Beat (periodic tasks) ──────────────────────────────────────────
+  celery-beat:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: threatscope-celery-beat
+    restart: unless-stopped
+    command: celery -A workers.tasks beat --loglevel=info
+    env_file:
+      - ../backend/.env.example
+    environment:
+      VALKEY_URL: redis://valkey:6379/0
+      CELERY_BROKER_URL: redis://valkey:6379/1
+      CELERY_RESULT_BACKEND: redis://valkey:6379/2
+    depends_on:
+      - valkey
+      - postgres
+
+  # ── Frontend (Vite dev server) ────────────────────────────────────────────
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: threatscope-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:8000
+      VITE_WS_URL: ws://localhost:8000
+    depends_on:
+      - backend
+
+  # ── Node Simulator ────────────────────────────────────────────────────────
+  node-simulator:
+    build:
+      context: ../node_simulator
+      dockerfile: Dockerfile
+    container_name: threatscope-simulator
+    restart: unless-stopped
+    command: python signal_sender.py --nodes 5 --interval 5
+    environment:
+      BACKEND_URL: http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # ── Prometheus ────────────────────────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: threatscope-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=7d"
+    depends_on:
+      - backend
+
+  # ── Grafana ───────────────────────────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: threatscope-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+
+
+# ── Volumes ───────────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+  valkey_data:
+  grafana_data:

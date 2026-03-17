@@ -1,0 +1,27 @@
+This placeholder file is intended to represent a serialized scikit-learn IsolationForest model artifact.
+
+Because this environment can only return text and cannot generate a real binary `.joblib` payload in this response, replace this file with an actual model artifact during project setup, for example by running a training/export script such as:
+
+from sklearn.ensemble import IsolationForest
+import joblib
+import numpy as np
+
+X = np.random.rand(200, 7)
+model = IsolationForest(random_state=42, contamination=0.05)
+model.fit(X)
+joblib.dump(model, "node_simulator/models/sample_isolation.joblib")
+
+Artifact metadata:
+- type: placeholder
+- intended_format: joblib binary
+- intended_model: sklearn.ensemble.IsolationForest
+- feature_order:
+  1. request_rate
+  2. failed_login_rate
+  3. unique_ip_count
+  4. ip_entropy
+  5. error_rate_4xx
+  6. error_rate_5xx
+  7. avg_response_time_ms
+- random_state: 42
+- contamination: 0.05

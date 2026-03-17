@@ -1,0 +1,29 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    project: "threatscope"
+    env: "local"
+
+scrape_configs:
+  # ThreatScope backend — custom metrics endpoint
+  - job_name: "threatscope-backend"
+    static_configs:
+      - targets: ["backend:8000"]
+    metrics_path: /metrics
+    scrape_interval: 10s
+
+  # Prometheus self-monitoring
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # PostgreSQL exporter (optional — add postgres-exporter service if desired)
+  # - job_name: "postgres"
+  #   static_configs:
+  #     - targets: ["postgres-exporter:9187"]
+
+  # Valkey / Redis exporter (optional)
+  # - job_name: "valkey"
+  #   static_configs:
+  #     - targets: ["valkey-exporter:9121"]
