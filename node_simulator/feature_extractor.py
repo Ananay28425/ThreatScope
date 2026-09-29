@@ -1,12 +1,12 @@
 """
-Feature Extractor — converts a batch of raw events into a privacy-safe feature vector.
+Feature Extractor — converts a batch of raw events into a local aggregate feature vector.
 
-This is the privacy boundary.
+This module computes local features, not the network release boundary.
 Everything computed here is an aggregate statistic over a time window.
 No individual event, IP address, username, or payload is preserved.
 
-The output of this module is safe to share externally.
-The input (raw events) is not.
+Both raw events and these detailed features remain local. Only separately
+approved finite catalogue representations enter the network protocol.
 
 Feature vector (f):
   [
@@ -25,14 +25,14 @@ import math
 from collections import Counter
 from dataclasses import dataclass
 
-from log_generator import RawEvent
+from node_simulator.log_generator import RawEvent
 
 
 @dataclass
 class FeatureVector:
     """
-    Aggregated, privacy-safe representation of a time window of activity.
-    Safe to send to the central orchestrator.
+    Local aggregate representation of a time window of activity.
+    It is not an authorized network message.
     """
     request_rate: float          # events / second
     failed_login_rate: float     # 0.0 – 1.0
@@ -102,6 +102,8 @@ def extract_features(events: list[RawEvent], window_seconds: int = 60) -> Featur
     Returns:
         FeatureVector — all derived, non-identifying statistics
     """
+    if window_seconds <= 0:
+        raise ValueError("window_seconds_must_be_positive")
     n = len(events)
     if n == 0:
         return FeatureVector(

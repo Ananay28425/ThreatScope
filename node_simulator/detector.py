@@ -2,8 +2,8 @@
 Local Anomaly Detector — runs entirely within the node boundary.
 
 Uses a two-layer approach:
-  1. Rule-based fast path (catches obvious attacks immediately)
-  2. Isolation Forest (unsupervised ML for subtle anomalies)
+  1. Rule-based fast path (flags configured patterns immediately)
+  2. Isolation Forest (unsupervised ML for deviations from its local baseline)
 
 The Isolation Forest is trained on local "normal" baseline data collected
 during the first N windows after startup. This is the only ML training in
@@ -13,7 +13,7 @@ Nothing from the training data is ever shared externally.
 Output:
   anomaly_score ∈ [0.0, 1.0]   (0 = normal, 1 = highly anomalous)
   fingerprint: str | None       (attack pattern label if detected by rules)
-  confidence: float             (0.0–1.0, higher when more data is available)
+  model_readiness: float             (0.0–1.0, higher when more data is available)
 """
 
 from dataclasses import dataclass
@@ -21,8 +21,7 @@ from dataclasses import dataclass
 import numpy as np
 from sklearn.ensemble import IsolationForest
 
-from feature_extractor import FeatureVector
-
+from node_simulator.feature_extractor import FeatureVector
 
 # ── Attack fingerprint constants ──────────────────────────────────────────────
 
@@ -36,7 +35,7 @@ FP_HIGH_ERROR_RATE = "HIGH_ERROR_RATE"
 class DetectionResult:
     anomaly_score: float     # 0.0 – 1.0
     fingerprint: str | None  # attack pattern or None
-    confidence: float        # 0.0 – 1.0 based on model warmup state
+    model_readiness: float        # 0.0 – 1.0 based on model warmup state
     is_anomalous: bool       # convenience flag (score ≥ threshold)
     rule_triggered: bool     # True if rule-based detection fired
 
@@ -61,14 +60,14 @@ class LocalDetector:
             n_estimators=100,
             contamination=self.CONTAMINATION,
             random_state=42,
-            n_jobs=-1,
+            n_jobs=1,
         )
         self._baseline: list[list[float]] = []
         self._fitted = False
 
     @property
-    def confidence(self) -> float:
-        """Confidence grows linearly during warmup, is 1.0 once fitted."""
+    def model_readiness(self) -> float:
+        """Readiness tracks training progress; it is not calibrated detection confidence."""
         if self._fitted:
             return 1.0
         return min(len(self._baseline) / self.BASELINE_SIZE, 0.99)
@@ -76,7 +75,7 @@ class LocalDetector:
     def _rule_based_score(self, fv: FeatureVector) -> tuple[float, str | None]:
         """
         Fast rule-based detection. Returns (score, fingerprint | None).
-        Rules are tuned to catch unambiguous attack signatures without ML.
+        Rules flag candidate patterns; benign outages can satisfy the same conditions.
         """
         # Distributed brute force / credential stuffing
         if fv.failed_login_rate > 0.5 and fv.request_rate > 100:
@@ -117,8 +116,8 @@ class LocalDetector:
         rule_score, fingerprint = self._rule_based_score(fv)
         rule_triggered = rule_score > 0.0
 
-        # Update baseline (even during attack — Isolation Forest handles contamination)
-        if not self._fitted:
+        # Warm up only on windows not flagged by the local rule layer.
+        if not self._fitted and not rule_triggered:
             self._baseline.append(fv.to_array())
             if len(self._baseline) >= self.BASELINE_SIZE:
                 X = np.array(self._baseline)
@@ -128,8 +127,8 @@ class LocalDetector:
         ml_score = self._ml_score(fv)
 
         if rule_triggered:
-            # Rule takes priority; blend with ML score for refinement
-            blended = 0.7 * rule_score + 0.3 * ml_score
+            # An unfitted model must not suppress an already triggered rule.
+            blended = max(rule_score, ml_score)
         else:
             blended = ml_score
 
@@ -138,7 +137,7 @@ class LocalDetector:
         return DetectionResult(
             anomaly_score=round(final_score, 4),
             fingerprint=fingerprint,
-            confidence=self.confidence,
+            model_readiness=self.model_readiness,
             is_anomalous=final_score >= self.SCORE_THRESHOLD,
             rule_triggered=rule_triggered,
         )

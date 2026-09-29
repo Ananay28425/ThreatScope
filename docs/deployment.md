@@ -1,493 +1,60 @@
-# ThreatScope Deployment and Demo Guide
+# Deployment and recovery
 
-This document explains how to run ThreatScope locally for development, testing, and demo purposes using the repository layout in this project.
+## Reproducible setup
 
-## Overview
+Use root `docker-compose.yml`, `uv.lock`, and `frontend/package-lock.json`. The Compose database is internal, and API/frontend ports bind to loopback. `python scripts/bootstrap.py` creates private settings and refuses replacement. Build, start services, enroll once, then start the optional `demo` profile as shown in the README. Do not use `down -v` to restart: it deletes database and agent volumes.
 
-ThreatScope is composed of:
+The base deployment uses deterministic explanations until an inference endpoint is configured. The dashboard reports whether inference is configured; configuration alone does not establish service health. A failed generation returns a labeled fallback. Optional external monitoring can poll the authenticated `/api/v1/status` endpoint for queue depth and oldest pending age, and `/health/live` and `/health/ready` for process/database checks. Old dashboards with unsupported metrics were removed.
 
-- `backend/` — FastAPI orchestration service
-- `frontend/` — React + Vite SOC dashboard
-- `node_simulator/` — synthetic node agents that generate privacy-safe signals
-- `infra/` — Prometheus, Grafana, and local stack container configuration
-- `tests/` — unit and load tests
-- `docs/` — architecture and operations notes
+## Native PostgreSQL alternative
 
-The standard local deployment includes:
+Install PostgreSQL 16 and create a dedicated database and restricted service role. Set `DATABASE_URL` to its SQLAlchemy `postgresql+asyncpg` URL, install `uv sync --frozen`, then run:
 
-- Backend API
-- Frontend dashboard
-- PostgreSQL
-- Redis-compatible cache/message broker
-- Prometheus
-- Grafana
-- Node simulator
-
-## Prerequisites
-
-Install the following before running the stack:
-
-- Docker Desktop or Docker Engine with Compose support
-- Python 3.11+
-- Node.js 20+
-- `make` or an equivalent shell environment if you want shortcut commands
-
-Optional but useful:
-
-- `curl`
-- `pytest`
-- `locust`
-
-## Environment Setup
-
-Create environment files before first run.
-
-### Root example
-
-Copy the repository example file:
-
-```/dev/null/.env.example#L1-20
-# Copy this file to .env for local development
-APP_ENV=development
-API_HOST=0.0.0.0
-API_PORT=8000
-
-DATABASE_URL=postgresql+asyncpg://threatscope:threatscope@postgres:5432/threatscope
-SYNC_DATABASE_URL=postgresql://threatscope:threatscope@postgres:5432/threatscope
-
-REDIS_URL=redis://redis:6379/0
-KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-
-JWT_SECRET_KEY=change-me
-NODE_API_KEY=dev-node-key
-GRAFANA_ADMIN_PASSWORD=admin
+```sh
+uv run alembic upgrade head
+uv run python -m backend.app.admin seed-demo --output .runtime/private/demo-credentials.json
+uv run uvicorn backend.main:app --host 127.0.0.1 --port 8000 --no-access-log
 ```
 
-If the root `.env.example` does not yet exist in your checkout, create `.env` manually with values appropriate for local development.
+In separate terminals using the same database configuration:
 
-### Backend environment
-
-If your backend uses its own environment file, ensure it contains at least:
-
-- application environment
-- database URL
-- broker/cache URL
-- auth secret
-- node API key
-
-Recommended local values:
-
-- app env: `development`
-- backend port: `8000`
-- frontend port: `5173`
-- Grafana admin password: `admin`
-
-## Local Deployment Options
-
-You can run ThreatScope in two ways:
-
-1. Fully containerized with Docker Compose
-2. Hybrid local development with services in containers and app code run directly
-
----
-
-## Option 1: Run the Full Stack with Docker Compose
-
-From the repository root:
-
-```/dev/null/commands.sh#L1-4
-docker compose up --build
-# or, if using infra compose explicitly
-docker compose -f infra/docker-compose.yml up --build
+```sh
+uv run python -m backend.app.worker
+uv run python -m backend.app.explain_worker
+uv run python -m node_simulator.agent --credentials .runtime/private/orion-node.json --state .runtime/orion.db --seed 41
+uv run python -m node_simulator.agent --credentials .runtime/private/lyra-node.json --state .runtime/lyra.db --seed 42
+uv run python -m node_simulator.agent --credentials .runtime/private/vega-node.json --state .runtime/vega.db --seed 43
 ```
 
-Run in detached mode if preferred:
+Run `npm ci` and `npm run dev` in `frontend`. Its same-origin development proxy defaults to port 8000; set `BACKEND_URL` before starting Vite when using another port. Native browser origins must match `ALLOWED_ORIGINS`. The task's verification instance uses ports 18000 (API), 18080 (inference), 55432 (isolated PostgreSQL), and 5173 (dashboard).
 
-```/dev/null/commands.sh#L1-2
-docker compose up --build -d
+For Windows without an available Docker engine, `scripts/local_runtime.py` initializes a task-owned PostgreSQL binary distribution under `.runtime/postgres/pgsql`, on loopback port 55432. It never installs a Windows service or modifies an existing cluster. Obtain the official EDB PostgreSQL 16 binary archive first. The script stores private native settings in `.runtime/local-config.json`; load those values locally without printing them. Do not use this convenience cluster as a production installation.
+
+## Local model and second laptop
+
+`python scripts/setup_models.py` obtains the versions and checksums in `research/models.lock.json`. On Windows, start the pinned `llama-server.exe` with one slot, 8,192 context tokens, four CPU threads, `--reasoning off`, an explicit model alias, loopback binding, and `--api-key-file` pointing at a generated private file. Use Q4_K_M for the selected model. Set `LLM_ENABLED=true`, `LLM_URL`, `LLM_MODEL`, `LLM_API_KEY`, and the timeout on the explanation worker. The API also reads these settings when reporting configuration. Keep the key outside repository history.
+
+For inference on a second laptop, expose only an authenticated HTTPS endpoint. Configure a certificate valid for its hostname and trust its CA through `LLM_CA_FILE` if necessary. Set the matching HTTPS URL and API key; never disable certificate verification. Firewall access to the coordinator host. The native loopback model server can sit behind a local TLS reverse proxy. The same HTTPS boundary applies when containers access host inference. The `llm` hostname is reserved for a private container network; do not use it as an untrusted remote DNS shortcut.
+
+The process generates explanations only. It never receives raw logs, executes recommendations, changes detector decisions, or falls back to an external model. CPU latency and memory must be measured on the actual laptop. A 1.7B model does not imply interactive response times under contention.
+
+## Migration, backup, and rollback
+
+Before migration, stop producers and take a database backup plus consistent copies of each agent SQLite database using the SQLite backup API. Copying only a live `.db` file without its WAL can lose committed work. Preserve private enrollment files separately with restricted access.
+
+The initial Alembic migration creates `ts_` tables. It preserves original prototype tables and archives legacy signal/alert records with `research_eligible=false`. Existing source identities are not automatically trusted. No old arbitrary API key is accepted by the new API. Enrollment is explicit. Validate record counts before and after migration.
+
+For Compose, create a custom-format PostgreSQL backup without binary shell redirection:
+
+```sh
+docker compose exec -T postgres pg_dump -U threatscope -d threatscope -Fc -f /tmp/threatscope.dump
+docker compose cp postgres:/tmp/threatscope.dump .runtime/threatscope.dump
 ```
 
-To stop:
+Restore into a newly created database or isolated cluster first. Use `pg_restore --exit-on-error` and verify counts, credential hashes, evidence histories, and migrations before switching traffic. Never restore over a working database as a routine test. Keep the original database untouched until verification succeeds. Schema downgrade intentionally refuses destructive reversal; rollback means restoring the verified backup with its matching application revision.
 
-```/dev/null/commands.sh#L1-2
-docker compose down
-```
+## Failure handling
 
-To stop and remove volumes:
+An unavailable database returns unsuccessful readiness and ingestion; agents retain pending signals. A worker crash rolls back unfinished work, then resumes from the durable inbox. Do not run multiple correlation owners: the second process fails its advisory-lock check. Slow browser clients disconnect and recover through their cursor. Inference failure invokes bounded repair/fallback. A revoked browser account loses active stream access. Missing source evidence leaves an unresolved outcome.
 
-```/dev/null/commands.sh#L1-2
-docker compose down -v
-```
-
-### Expected service endpoints
-
-After startup, the typical endpoints are:
-
-- Frontend: `http://localhost:5173`
-- Backend API: `http://localhost:8000`
-- Swagger docs: `http://localhost:8000/docs`
-- Prometheus: `http://localhost:9090`
-- Grafana: `http://localhost:3000`
-
-If your compose file maps different ports, use those mapped host ports instead.
-
----
-
-## Option 2: Run Services in Containers, Apps Locally
-
-This mode is useful when developing backend or frontend interactively.
-
-### Start infrastructure only
-
-If your compose file supports selective service startup:
-
-```/dev/null/commands.sh#L1-2
-docker compose up -d postgres redis prometheus grafana
-```
-
-If the repository uses a different cache or broker service name, use that name from the compose file.
-
-### Run backend locally
-
-From `backend/`:
-
-```/dev/null/commands.sh#L1-4
-python -m venv .venv
-. .venv/Scripts/activate
-pip install -r requirements.txt
-python main.py
-```
-
-Or with Uvicorn directly:
-
-```/dev/null/commands.sh#L1-2
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-### Run frontend locally
-
-From `frontend/`:
-
-```/dev/null/commands.sh#L1-4
-npm install
-npm run dev
-```
-
-### Run node simulator locally
-
-From `node_simulator/`:
-
-```/dev/null/commands.sh#L1-4
-python -m venv .venv
-. .venv/Scripts/activate
-pip install -r requirements.txt
-python signal_sender.py --nodes 5 --interval 5
-```
-
----
-
-## Suggested Demo Flow
-
-This section is optimized for classroom, review, or stakeholder demonstration.
-
-### Demo goal
-
-Show that:
-
-1. nodes generate local events
-2. only privacy-safe signals are sent centrally
-3. backend correlates signals across nodes
-4. frontend receives live updates
-5. observability stack shows system health
-
-### Step 1: Start the full stack
-
-```/dev/null/demo.sh#L1-2
-docker compose up --build
-```
-
-Wait until the backend and frontend are reachable.
-
-### Step 2: Open the main interfaces
-
-Open these in the browser:
-
-- `http://localhost:5173`
-- `http://localhost:8000/docs`
-- `http://localhost:3000`
-- `http://localhost:9090`
-
-### Step 3: Start node activity
-
-If node simulator is not already part of Compose, start it manually:
-
-```/dev/null/demo.sh#L1-2
-python node_simulator/signal_sender.py --nodes 5 --interval 2
-```
-
-This should begin generating live signals.
-
-### Step 4: Verify ingestion
-
-Use the API docs or a quick health request:
-
-```/dev/null/demo.sh#L1-2
-curl http://localhost:8000/health
-```
-
-You should receive an `ok` style response.
-
-### Step 5: Watch the frontend
-
-In the dashboard, show:
-
-- live alerts panel
-- node activity updates
-- threat visualization
-- WebSocket-driven UI changes
-
-### Step 6: Show Prometheus and Grafana
-
-In Prometheus:
-
-- inspect backend metrics
-- verify alert/signal counters
-
-In Grafana:
-
-- open the prebuilt dashboard
-- show alert throughput, node counts, and service health
-
----
-
-## Backend Startup Notes
-
-The backend is expected to provide:
-
-- REST API routes under `/api`
-- WebSocket endpoint for live threat stream
-- `/health`
-- `/metrics`
-
-Typical checks:
-
-```/dev/null/commands.sh#L1-3
-curl http://localhost:8000/health
-curl http://localhost:8000/metrics
-curl http://localhost:8000/docs
-```
-
-If authentication is enabled for some routes, use the configured development credentials or API key.
-
-## Frontend Startup Notes
-
-The frontend expects:
-
-- backend API base URL
-- backend WebSocket URL
-
-Typical Vite environment values:
-
-```/dev/null/frontend.env#L1-4
-VITE_API_URL=http://localhost:8000
-VITE_WS_URL=ws://localhost:8000
-VITE_APP_NAME=ThreatScope
-```
-
-If using Docker, ensure the frontend receives the correct hostnames for container-to-container communication and browser-accessible URLs.
-
-## Node Simulator Notes
-
-The simulator should never send raw logs to the backend. It should only send aggregated or sanitized signals such as:
-
-- anomaly score
-- confidence
-- fingerprint
-- window metrics
-
-Example run commands:
-
-```/dev/null/node-demo.sh#L1-3
-python signal_sender.py --node-id org_1 --interval 5
-python signal_sender.py --nodes 3 --interval 2
-python signal_sender.py --nodes 10 --interval 1
-```
-
-For a deterministic demo, keep:
-
-- fixed node count
-- small interval
-- stable backend URL
-- known API key
-
-## Makefile Suggestions
-
-If a `Makefile` exists or is added later, these are the recommended targets:
-
-```/dev/null/Makefile#L1-18
-up:
-	docker compose up --build
-
-down:
-	docker compose down
-
-demo:
-	python node_simulator/signal_sender.py --nodes 5 --interval 2
-
-backend:
-	cd backend && uvicorn main:app --reload --host 0.0.0.0 --port 8000
-
-frontend:
-	cd frontend && npm run dev
-
-test:
-	pytest tests/unit -v
-
-load:
-	locust -f tests/load/locustfile.py --host=http://localhost:8000
-```
-
-## Running Unit Tests
-
-From the repository root:
-
-```/dev/null/test.sh#L1-2
-pytest tests/unit -v
-```
-
-If backend imports require the backend directory on the Python path:
-
-```/dev/null/test.sh#L1-2
-PYTHONPATH=backend pytest tests/unit -v
-```
-
-On Windows PowerShell:
-
-```/dev/null/test.ps1#L1-2
-$env:PYTHONPATH="backend"
-pytest tests/unit -v
-```
-
-## Running Load Tests
-
-From the repository root:
-
-```/dev/null/load.sh#L1-2
-locust -f tests/load/locustfile.py --host=http://localhost:8000
-```
-
-Then open the Locust UI in the browser, usually at:
-
-- `http://localhost:8089`
-
-Recommended demo settings:
-
-- users: `20`
-- spawn rate: `5`
-- duration: `2m`
-
-Use a higher load only if your machine has enough memory and CPU.
-
-## Troubleshooting
-
-### Backend does not start
-
-Check for:
-
-- missing environment variables
-- database not reachable
-- broker/cache not reachable
-- port `8000` already in use
-
-Useful checks:
-
-```/dev/null/troubleshoot.sh#L1-4
-docker compose ps
-docker compose logs backend
-docker compose logs postgres
-docker compose logs redis
-```
-
-If your project uses a different service name than `redis`, inspect the compose services and substitute the correct one.
-
-### Frontend cannot connect to backend
-
-Symptoms:
-
-- blank dashboard
-- failed API requests
-- WebSocket disconnect loops
-
-Verify:
-
-- `VITE_API_URL`
-- `VITE_WS_URL`
-- backend CORS configuration
-- backend port mapping
-
-### Grafana shows no data
-
-Check:
-
-- Prometheus is running
-- backend exposes `/metrics`
-- Prometheus scrape config points to the correct backend target
-- Grafana datasource points to Prometheus
-
-### Database errors
-
-If schema initialization is missing, ensure migrations or table creation steps have run before using alert endpoints.
-
-### Node simulator cannot ingest
-
-Check:
-
-- backend URL
-- API key header or configured auth
-- route path for signal ingestion
-- network path between simulator and backend
-
----
-
-## Production-Oriented Notes
-
-This repository is intended primarily for local demo and academic deployment, but if you extend it toward production, consider:
-
-- replacing development secrets
-- using managed PostgreSQL
-- using TLS for all HTTP and WebSocket traffic
-- placing backend behind a reverse proxy
-- externalizing Grafana and Prometheus storage
-- adding structured log shipping
-- introducing Kafka or a durable queue if required by the architecture version you adopt
-- adding CI/CD and image version pinning
-- implementing DB migrations and backup policies
-
-## Minimal Demo Checklist
-
-Use this checklist before presenting:
-
-- [ ] `.env` configured
-- [ ] containers build successfully
-- [ ] backend reachable at `/health`
-- [ ] frontend loads in browser
-- [ ] WebSocket connection established
-- [ ] simulator sending signals
-- [ ] alerts visible in dashboard
-- [ ] Prometheus scraping metrics
-- [ ] Grafana dashboard loads
-- [ ] unit tests pass
-
-## Quick Start Summary
-
-For the fastest local demo:
-
-```/dev/null/quickstart.sh#L1-5
-docker compose up --build -d
-python node_simulator/signal_sender.py --nodes 5 --interval 2
-curl http://localhost:8000/health
-pytest tests/unit -v
-locust -f tests/load/locustfile.py --host=http://localhost:8000
-```
-
-Once the stack is up, open the frontend and observability tools and walk through the live signal-to-alert pipeline.
+Agent queues are bounded but historical state has no automatic deletion policy. Review disk usage and retention before sustained deployment. Every organization must retain its own ledger across restarts; replacing it resets its local history and is an operator recovery decision, not an allowed budget-reset method.

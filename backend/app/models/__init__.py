@@ -1,3 +1,0 @@
-"""
-ThreatScope backend models package.
-"""

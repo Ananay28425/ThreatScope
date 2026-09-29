@@ -8,12 +8,12 @@ Generates events across three modes:
 
 This is intentionally fake data. The architecture's privacy guarantee
 is that even if this were real, raw logs stay here — only derived signals
-ever leave this process. That constraint is enforced by signal_sender.py.
+ever leave this process. That constraint is enforced by agent.py and the finite wire contracts.
 """
 
 import random
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
 from typing import Iterator

@@ -1,35 +1,16 @@
-# ── Build stage ───────────────────────────────────────────────────────────────
-FROM python:3.11-slim AS builder
-
+# Purpose: shared locked runtime for API, workers, and organization agents.
+FROM ghcr.io/astral-sh/uv:0.10.12 AS uv
+FROM python:3.12-slim
+COPY --from=uv /uv /usr/local/bin/uv
 WORKDIR /app
-
-# System deps for psycopg2 / cryptography builds
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install --prefix=/install --no-cache-dir -r requirements.txt
-
-
-# ── Runtime stage ─────────────────────────────────────────────────────────────
-FROM python:3.11-slim AS runtime
-
-WORKDIR /app
-
-# Only the built packages, no build tools in the final image
-RUN apt-get update && apt-get install -y --no-install-recommends libpq5 && \
-    rm -rf /var/lib/apt/lists/*
-
-COPY --from=builder /install /usr/local
-COPY . .
-
-# Non-root user for security (don't run as root in containers)
-RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
-USER appuser
-
-EXPOSE 8000
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev --no-install-project
+ENV PATH="/app/.venv/bin:$PATH" PYTHONUNBUFFERED=1
+COPY backend ./backend
+COPY common ./common
+COPY node_simulator ./node_simulator
+COPY migrations ./migrations
+COPY alembic.ini ./
+RUN useradd --uid 10001 --create-home app && mkdir /state && chown -R app:app /app /state
+USER app
+CMD ["python", "-m", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]

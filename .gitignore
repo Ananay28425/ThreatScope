@@ -171,6 +171,13 @@ test_output/
 models/*.joblib
 !node_simulator/models/.gitkeep
 !models/.gitkeep
+.runtime/
+.cache/
+!.dockerignore
+!frontend/package-lock.json
+!uv.lock
+!migrations/**/*.sql
+!infra/postgres/*.sql
 checkpoints/
 mlruns/
 wandb/

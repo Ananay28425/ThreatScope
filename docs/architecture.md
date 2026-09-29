@@ -1,197 +1,39 @@
-# ThreatScope — Architecture Documentation
+# Architecture and limits
 
-## System Overview
+## Trust and deployment
 
-ThreatScope is a distributed, privacy-preserving cyber threat intelligence platform. The core design principle is **signal sharing without data sharing**: each participating organization runs local anomaly detection on its private logs and shares only derived, irreversible signals with the central orchestrator.
+Three separately enrolled organizations run local detection and independent SQLite release ledgers. Enrollment maps a hashed random credential to an organization; the credential record is the node enrollment identity. Provenance groups are assigned by the operator and copied into accepted signals. They are not cryptographic proof of independence. Multiple credentials or reports from one group do not create independent corroboration. Compromised organizations can lie about their own observations; this prototype is not Byzantine consensus.
 
----
+FastAPI authenticates and commits a durable signal inbox. PostgreSQL is authoritative for incidents, participation, requests, evidence revisions, browser sessions, explanation jobs, audit events, and notification history. One correlation worker owns an advisory lock. One explanation worker owns another lock and performs model calls outside database transactions. The React dashboard receives scoped snapshots through authenticated HTTP and a recoverable WebSocket stream.
 
-## Privacy Model
+The design chooses durable acceptance and consistent incident updates over accepting data during a database outage. Agents retain pending signals for later retry. A lost acknowledgement may cause a resend, but organization-scoped signal and snapshot identities prevent duplicate acceptance. Conflicting identity reuse returns HTTP 409. A database restart is recoverable; it is not high availability. A single database and correlation worker remain failure domains.
 
-### What is NEVER shared
+## Disclosure mechanism
 
-- Raw log entries (IP addresses, usernames, request payloads, timestamps of individual events)
-- Network topology or infrastructure details
-- User identities or session data
+The catalogue is finite and versioned with the wire schema. Authentication scenarios use authentication-failure level, source spread, and failure kind. Traffic scenarios use request-rate category, source spread, and service-error level. Raw log export, arbitrary queries, and unrestricted metric maps are absent.
 
-### What IS shared (signals)
+An initial signal costs one policy unit. Authentication refinements cost 1, 2, and 2 units; traffic refinements cost 1, 2, and 1 units. An organization defaults to a six-unit snapshot ceiling and 2,400 units across all snapshots released to the coordinator in the preceding hour. These are administrative limits, not epsilon or formal leakage bounds. New requests and policy version numbers do not reset accumulated costs.
 
-| Signal Type | Example | Why it's safe |
-|---|---|---|
-| Statistical aggregate | `{ "failed_login_rate": 0.42, "ip_entropy": 3.7 }` | No individual identifiable |
-| Anomaly score | `{ "anomaly_score": 0.87 }` | Single float — irreversible |
-| Behavioral fingerprint | `{ "fingerprint": "AUTH_FAIL_BURST" }` | Pattern label, no raw data |
-| Confidence metadata | `{ "confidence": 0.91, "window_seconds": 60 }` | Model quality indicator |
+For an unresolved rule, the coordinator requests the cheapest missing predicate, using its catalogue name to break ties. It never requests another predicate after that source's rule is decided. The source can approve, coarsen to unknown, or deny. SQLite commits an immutable release and its debit before transmission. Retries reuse the representation and evidence identity without charging twice. Policy tightening can deny reuse; it cannot erase evidence already received elsewhere.
 
-**Privacy guarantee**: even if all signals from a node were intercepted, it is mathematically impossible to reconstruct the raw logs they were derived from.
+One denial terminates further requests to that source in that investigation. All useful requests exhausted, insufficient sources, conflicting corroboration, budget exhaustion, and deadlines leave an explicit unresolved outcome. Missing evidence does not become benign evidence. An incident's supported/contradicted/unresolved outcome is separate from the analyst's open/investigating/resolved workflow.
 
----
+## Correlation semantics
 
-## Component Architecture
+The current catalogue addresses two declared scenarios, not every coordinated threat. A 120-second tumbling window selects the first eligible snapshot from each organization for a family. At least three enrolled provenance groups must agree. Reports from one group must agree internally to contribute a group vote. Unknown fingerprints do not join unrelated anomalies. Signals can arrive up to 24 hours late and 60 seconds ahead; late data still uses its observation bucket, while requests have a receipt-time deadline. Boundary-split campaigns and changing conditions within a window remain limitations.
 
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                        PRIVACY BOUNDARY                              │
-│                                                                      │
-│  ┌─────────────┐   ┌─────────────────────┐   ┌────────────────────┐ │
-│  │   Node A    │   │       Node B        │   │       Node C       │ │
-│  │             │   │                     │   │                    │ │
-│  │ Private     │   │ Private Logs        │   │ Private Logs       │ │
-│  │ Logs        │   │ (never leave)       │   │ (never leave)      │ │
-│  │      │      │   │        │            │   │        │           │ │
-│  │ Feature     │   │ Feature Extraction  │   │ Feature Extraction │ │
-│  │ Extraction  │   │ (windowed stats)    │   │ (windowed stats)   │ │
-│  │      │      │   │        │            │   │        │           │ │
-│  │ Isolation   │   │ Isolation Forest    │   │ Isolation Forest   │ │
-│  │ Forest +    │   │ + Rules             │   │ + Rules            │ │
-│  │ Rules       │   │        │            │   │        │           │ │
-│  └──────┬──────┘   └────────┬────────────┘   └────────┬───────────┘ │
-│         │                   │                         │             │
-└─────────┼───────────────────┼─────────────────────────┼─────────────┘
-          │  SIGNALS ONLY     │                         │
-          └───────────────────┴─────────────────────────┘
-                              │
-                    ┌─────────▼──────────┐
-                    │   Valkey Stream    │
-                    │  (signal topic)    │
-                    └─────────┬──────────┘
-                              │
-                    ┌─────────▼──────────┐
-                    │  FastAPI           │
-                    │  Orchestrator      │
-                    │                   │
-                    │  ┌─────────────┐  │
-                    │  │ Correlation │  │
-                    │  │   Engine    │  │
-                    │  └──────┬──────┘  │
-                    └─────────┼──────────┘
-                              │
-              ┌───────────────┼───────────────┐
-              │               │               │
-    ┌─────────▼──────┐  ┌────▼────┐  ┌───────▼────────┐
-    │   PostgreSQL   │  │Prometheus│  │   WebSocket    │
-    │   (alerts,     │  │(metrics) │  │   (push to     │
-    │    metadata)   │  └────┬────┘  │    dashboard)  │
-    └────────────────┘       │       └───────┬────────┘
-                        ┌────▼────┐          │
-                        │ Grafana │  ┌───────▼────────┐
-                        │dashboards│  │ React + Three.js│
-                        └─────────┘  │ 3D SOC Globe   │
-                                     └────────────────┘
-```
+Authentication support requires high failure rate, wide source spread, and rejected credentials. Service-unavailable failures supply a benign alternative. Traffic support requires a spike, wide sources, and high service errors; normal rate or low errors contradict that rule. These predicates are interpretable assumptions, not universal attack definitions. Local detector warmup cannot suppress a rule score. Model readiness describes training progress and is not detection confidence.
 
----
+## Local explanation boundary
 
-## Correlation Engine
+Only recipient-authorized snapshots enter generation. The model selects claims in a finite language separating observation, inference, unknown, and advice. Admission checks each predicate/value pair, exact evidence identity and version, active status, and the authorized snapshot. Fixed prose renders admitted slots. This deliberately restricts expressive power; it does not solve unrestricted natural-language factuality.
 
-The central intelligence of ThreatScope. Replaces full federated ML training with a simpler, more reliable sliding-window rule-based system.
+Evidence corrections, withdrawal, expiry, or changed authorization invalidate dependent views. Evidence expires after 24 hours; retrieval masks expired evidence immediately, and the worker persists expiry revisions. The model has no tools, raw-log access, or cloud fallback. One repair is allowed before deterministic fallback. The call budget is 512 output tokens, at most four requested claims, one concurrent generation, and a bounded timeout. Oversized prompts fall back before inference. Detection continues while inference is slow or unavailable.
 
-### Algorithm
+## Security and operational costs
 
-```
-FOR each incoming signal:
-  1. Add to buffer[fingerprint]
-  2. Prune records older than WINDOW (default: 120s)
-  3. Filter buffer to records with anomaly_score ≥ THRESHOLD (default: 0.80)
-  4. Count distinct contributing node IDs
-  5. IF distinct_nodes ≥ MIN_NODES (default: 3):
-       - Compute confidence-weighted mean score
-       - Classify severity (MEDIUM / HIGH / CRITICAL)
-       - Create alert record
-       - Broadcast via WebSocket to all connected SOC clients
-```
+Random node credentials are stored as SHA-256 hashes; browser passwords use Argon2. Browser sessions use HttpOnly, SameSite cookies, origin checks, and CSRF tokens. Administrator/coordinator access covers shared evidence; organization analysts see only their own refinements within participating incidents. Every stream subscription rechecks the session. Slow viewers receive bounded buffering and disconnect without blocking ingestion.
 
-### Severity Classification
+Loopback HTTP is for the single-PC demo. Production browser access requires TLS and secure cookies. A second-laptop inference endpoint requires authenticated HTTPS and certificate verification. Source-local snapshots and database evidence remain sensitive at rest; disk encryption and operating-system access control belong to deployment. No credential is a metric label. Logs use resource identities, not secret keys.
 
-| Condition | Severity |
-|---|---|
-| score ≥ 0.95 OR nodes ≥ 8 | CRITICAL |
-| score ≥ 0.90 OR nodes ≥ 6 | HIGH |
-| score ≥ 0.80 OR nodes ≥ 3 | MEDIUM |
-
-### Why this beats full federated training
-
-For a 3-month project timeline:
-- Full federated training requires: gradient aggregation, model versioning, poisoning defenses, per-node training pipelines
-- Rule-based correlation delivers: sub-millisecond decisions, zero training overhead, fully debuggable, no model drift
-
-In real industry SOC tools (e.g., Splunk ES, Elastic SIEM), rule-based correlation is the primary detection mechanism. ML is additive, not foundational.
-
----
-
-## Data Flow: Signal Lifecycle
-
-```
-1. Node generates 1000 raw events over 60 seconds
-2. Feature extractor computes 7 aggregate statistics
-3. Local detector (Isolation Forest + rules) produces anomaly_score ∈ [0,1]
-4. signal_sender.py POSTs JSON signal to /api/signals/ingest
-5. FastAPI validates with Pydantic strict mode (rejects raw log fields)
-6. Signal fed to CorrelationEngine.ingest()
-7. Engine evaluates: enough nodes? score threshold met?
-8. If YES → Alert created → WebSocket broadcast → 3D globe flashes
-9. Alert stored in PostgreSQL for audit trail
-```
-
----
-
-## WebSocket Event Contract
-
-All events pushed from backend to frontend follow this schema:
-
-```json
-{
-  "event_type": "new_alert | signal_pulse | node_status | metrics | connected",
-  "payload": { ... },
-  "timestamp": "2026-03-21T10:00:00Z"
-}
-```
-
-### new_alert payload
-```json
-{
-  "fingerprint": "AUTH_FAIL_BURST",
-  "severity": "HIGH",
-  "contributing_nodes": ["org_1", "org_3", "org_7"],
-  "anomaly_score": 0.913,
-  "node_count": 3
-}
-```
-
-### signal_pulse payload
-```json
-{
-  "node_id": "org_3",
-  "timestamp": "2026-03-21T10:00:05Z",
-  "anomaly_score": 0.84,
-  "fingerprint": "AUTH_FAIL_BURST"
-}
-```
-
----
-
-## Prometheus Metrics
-
-| Metric | Type | Description |
-|---|---|---|
-| `threatscope_signals_ingested_total` | Counter | Total signals received, labelled by node + fingerprint |
-| `threatscope_alerts_raised_total` | Counter | Alerts fired, labelled by severity + fingerprint |
-| `threatscope_correlation_latency_seconds` | Histogram | Engine evaluation time (target: p99 < 10ms) |
-| `threatscope_active_nodes` | Gauge | Currently live nodes |
-| `threatscope_websocket_connections_active` | Gauge | Connected SOC analysts |
-
----
-
-## Technology Decisions
-
-### Valkey instead of Redis
-Redis changed its license to SSPL (non-FOSS) in March 2024. Valkey is a BSD-3-Clause fork of Redis 7.2.4, maintained by the Linux Foundation. It is 100% RESP-protocol-compatible — `redis-py` connects without modification. Using Valkey means zero licensing cost and no vendor lock-in.
-
-### FastAPI over Django
-Django is a batteries-included framework optimized for database-heavy web apps. ThreatScope's backend is an async, streaming, event-driven service — FastAPI's async-native design and native WebSocket support are a better fit. Django REST Framework adds overhead without benefit here.
-
-### Isolation Forest for local detection
-Unsupervised, requires no labelled training data (critical for a simulation), handles high-dimensional feature vectors, and is computationally cheap enough to run per-node at 60-second intervals. One-Class SVM is an alternative but scales poorly with dataset size.
-
-### Rule-based correlation over federated ML
-See "Why this beats full federated training" above. The rule-based engine is faster, more debuggable, and delivers the same observable outcome for the demo.
+PostgreSQL indexes cover pending ingestion, observation windows, scoped evidence, request ownership, sessions, and notification cursors. The coordinator stores historical versions and notifications indefinitely in this prototype. Plan retention and disk alerts before long-running deployment. Agent pending queues are bounded to 1,000 signals; rejected production attempts increment a visible gap counter. A full or unavailable database fails visibly. No partitioning, multi-region replication, distributed query engine, or automatic failover is claimed.

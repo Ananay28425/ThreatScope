@@ -1,0 +1,14 @@
+.git
+.venv
+.runtime
+.cache
+**/__pycache__
+**/node_modules
+**/dist
+.env
+**/*.db
+**/*.joblib
+research
+papers
+tests
+*.log

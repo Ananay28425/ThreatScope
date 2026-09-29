@@ -1,105 +1,59 @@
-name: ThreatScope CI
-
-on:
-  push:
-    branches: [main, dev]
-  pull_request:
-    branches: [main, dev]
-
+name: ThreatScope verification
+on: [push, pull_request]
+permissions:
+  contents: read
 jobs:
-  # ─── Backend: Lint + Test ───────────────────────────────────────────────────
   backend:
-    name: Backend (Python)
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: backend
-
+    services:
+      postgres:
+        image: postgres:16.15-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: isolated-ci-only
+          POSTGRES_DB: threatscope_test
+        ports: [5432:5432]
+        options: --health-cmd "pg_isready -U test -d threatscope_test" --health-interval 3s --health-timeout 3s --health-retries 20
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.11"
-          cache: "pip"
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install ruff pytest pytest-asyncio httpx
-
-      - name: Lint with Ruff
-        run: ruff check app/ workers/ main.py
-
-      - name: Run unit tests
-        run: pytest ../tests/unit/ -v --tb=short
-
-  # ─── Frontend: Lint + Build ─────────────────────────────────────────────────
+          version: "0.10.12"
+          python-version: "3.12"
+      - run: uv sync --frozen
+      - run: uv run ruff check backend common node_simulator migrations scripts tests research
+      - run: uv run pytest -q
+      - run: uv run pytest -q
+        env:
+          TEST_DATABASE_URL: postgresql+asyncpg://test:isolated-ci-only@127.0.0.1:5432/threatscope_test
   frontend:
-    name: Frontend (Node)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: frontend
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: "22"
+          cache: npm
           cache-dependency-path: frontend/package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
-
-  # ─── Node Simulator: Lint ───────────────────────────────────────────────────
-  node-simulator:
-    name: Node Simulator (Python)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: node_simulator
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
-        run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install ruff
-
-      - name: Lint
-        run: ruff check .
-
-  # ─── Docker Build Check ─────────────────────────────────────────────────────
-  docker:
-    name: Docker Compose Build
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+  compose:
     runs-on: ubuntu-latest
     needs: [backend, frontend]
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build all containers
-        run: docker compose -f infra/docker-compose.yml build --no-cache
+      - uses: actions/checkout@v4
+      - run: python scripts/bootstrap.py
+      - run: docker compose config --quiet
+      - run: docker compose build
+      - run: docker compose up -d --wait backend correlation explanations frontend
+      - run: docker compose --profile setup run --rm enroll
+      - run: docker compose --profile demo up -d orion lyra vega
+      - run: python scripts/compose_smoke.py
+      - if: always()
+        run: docker compose logs --no-color --tail 80
+      - if: always()
+        run: docker compose down
