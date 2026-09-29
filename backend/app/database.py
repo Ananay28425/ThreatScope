@@ -11,4 +11,3 @@ class Database:
 
     async def close(self) -> None:
         await self.engine.dispose()
-

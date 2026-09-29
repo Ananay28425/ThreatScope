@@ -192,4 +192,3 @@ class LegacyArchive(Base):
     row_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     body: Mapped[dict] = mapped_column(JSON)
     research_eligible: Mapped[bool] = mapped_column(Boolean, default=False)
-

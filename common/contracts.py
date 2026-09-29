@@ -126,4 +126,3 @@ class Claim(Contract):
 
 class ClaimSet(Contract):
     claims: list[Claim] = Field(max_length=12)
-

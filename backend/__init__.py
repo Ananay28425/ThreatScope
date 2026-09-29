@@ -1,2 +1,1 @@
 """ThreatScope coordinator package."""
-

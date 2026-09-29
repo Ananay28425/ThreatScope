@@ -107,4 +107,3 @@ def new_session(user_id: str, hours: int) -> tuple[str, Session]:
         token_hash=hash_token(token), user_id=user_id, csrf=secrets.token_urlsafe(32),
         expires_at=utcnow() + timedelta(hours=hours),
     )
-

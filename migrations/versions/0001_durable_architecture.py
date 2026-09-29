@@ -32,4 +32,3 @@ def upgrade():
 
 def downgrade():
     raise RuntimeError("Use the documented backup restore procedure; automatic data deletion is disabled.")
-
