@@ -1,0 +1,11 @@
+{
+  "os": "Windows",
+  "ram_bytes": 20853362688,
+  "python": "3.12.3",
+  "device": "CPU",
+  "context": 8192,
+  "cpu": "AMD Ryzen 5 4500U with Radeon Graphics         ",
+  "logical_processors": 6,
+  "concurrency": 1,
+  "threads": 4
+}

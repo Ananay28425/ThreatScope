@@ -1,0 +1,1351 @@
+{
+  "entries": {
+    "R01": {
+      "kind": "doi",
+      "identifier": "10.1109/WCNC61545.2025.10978723",
+      "source": "https://api.crossref.org/works/10.1109/WCNC61545.2025.10978723",
+      "status": 200,
+      "title": [
+        "Integrating Centrality Measures in Federated Learning-Based Intrusion Detection Systems"
+      ],
+      "author": [
+        {
+          "given": "Mortada",
+          "family": "Termos",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "CESI LINEACT UR 7527,Strasbourg,France"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Zakariya",
+          "family": "Ghalmane",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "CESI LINEACT UR 7527,Strasbourg,France"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Mohamed-el-Amine",
+          "family": "Brahmia",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "CESI LINEACT UR 7527,Strasbourg,France"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Ahmad",
+          "family": "Fadlallah",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Lebanese University,Faculty of Sciences,Computer Science department,Beirut,Lebanon"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Ali",
+          "family": "Jaber",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Lebanese University,Faculty of Sciences,Computer Science department,Beirut,Lebanon"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Mourad",
+          "family": "Zghal",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "CESI LINEACT UR 7527,Strasbourg,France"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            3,
+            24
+          ]
+        ]
+      },
+      "container-title": [
+        "2025 IEEE Wireless Communications and Networking Conference (WCNC)"
+      ],
+      "volume": null,
+      "page": "1-6",
+      "type": "proceedings-article",
+      "URL": "https://doi.org/10.1109/wcnc61545.2025.10978723"
+    },
+    "R02": {
+      "kind": "doi",
+      "identifier": "10.1109/ICASSP49660.2025.10890330",
+      "source": "https://api.crossref.org/works/10.1109/ICASSP49660.2025.10890330",
+      "status": 200,
+      "title": [
+        "A Federated Learning-Based Intrusion Detection System for Satellite-Terrestrial Integrated Networks"
+      ],
+      "author": [
+        {
+          "given": "Mengke",
+          "family": "Wan",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Chinese Academy of Sciences,Institute of Information Engineering,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jiang",
+          "family": "Fang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Chinese Academy of Sciences,Institute of Information Engineering,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Chen",
+          "family": "Guo",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "China Mobile Group Device Co., Ltd,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Liru",
+          "family": "Geng",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Chinese Academy of Sciences,Institute of Information Engineering,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yinlong",
+          "family": "Liu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Chinese Academy of Sciences,Institute of Information Engineering,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Wei",
+          "family": "Ma",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Chinese Academy of Sciences,Institute of Information Engineering,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Chao",
+          "family": "Xu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "China Mobile Communications Group Co.,Ltd,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Mohan",
+          "family": "Su",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "China Mobile Group Device Co., Ltd,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            4,
+            6
+          ]
+        ]
+      },
+      "container-title": [
+        "ICASSP 2025 - 2025 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)"
+      ],
+      "volume": null,
+      "page": "1-5",
+      "type": "proceedings-article",
+      "URL": "https://doi.org/10.1109/icassp49660.2025.10890330"
+    },
+    "R03": {
+      "kind": "doi",
+      "identifier": "10.1109/ICCCAS62034.2024.10652649",
+      "source": "https://api.crossref.org/works/10.1109/ICCCAS62034.2024.10652649",
+      "status": 200,
+      "title": [
+        "Network Intrusion Detection Scheme Based on Federated Learning in Heterogeneous Network Environments"
+      ],
+      "author": [
+        {
+          "given": "Yuedi",
+          "family": "Zhu",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "College of Computer Science and Technology, Shanghai University of Electric Power,Shanghai,China"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Chao",
+          "family": "Li",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "State Grid Digital Technology Holdings Co., LTD,Beijing,China"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Yong",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "College of Computer Science and Technology, Shanghai University of Electric Power,Shanghai,China"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2024,
+            5,
+            10
+          ]
+        ]
+      },
+      "container-title": [
+        "2024 13th International Conference on Communications, Circuits and Systems (ICCCAS)"
+      ],
+      "volume": null,
+      "page": "491-496",
+      "type": "proceedings-article",
+      "URL": "https://doi.org/10.1109/icccas62034.2024.10652649"
+    },
+    "R04": {
+      "kind": "arxiv",
+      "identifier": "2604.06900",
+      "source": "https://arxiv.org/abs/2604.06900",
+      "status": 200,
+      "citation_title": [
+        "SentinelSphere: Integrating AI-Powered Real-Time Threat Detection with Cybersecurity Awareness Training"
+      ],
+      "citation_author": [
+        "Tantaroudas, Nikolaos D.",
+        "Karachalios, Ilias",
+        "McCracken, Andrew J."
+      ],
+      "citation_date": [
+        "2026/04/08"
+      ],
+      "citation_online_date": [
+        "2026/04/08"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2604.06900"
+      ],
+      "citation_arxiv_id": [
+        "2604.06900"
+      ],
+      "citation_abstract": [
+        "The field of cybersecurity is confronted with two interrelated challenges: a worldwide deficit of qualified practitioners and ongoing human-factor weaknesses that account for the bulk of security incidents. To tackle these issues, we present SentinelSphere, a platform driven by artificial intelligence that unifies machine learning-based threat identification with security training powered by a Large Language Model (LLM). The detection module uses an Enhanced Deep Neural Network (DNN) trained on the CIC-IDS2017 and CIC-DDoS2019 benchmark datasets, enriched with novel HTTP-layer feature engineering that captures application level attack signatures. For the educational component, we deploy a quantised variant of Phi-4 model (Q4_K_M), fine-tuned for the cybersecurity domain, enabling deployment on commodity hardware requiring only 16 GB of RAM without dedicated GPU resources. Experimental results show that the Enhanced DNN attains high detection accuracy while substantially lowering false positives relative to baseline models, and maintains strong recall across critical attack categories such as DDoS, brute force, and web-based exploits. Validation workshops involving industry professionals and university students confirmed that the Traffic Light visualisation system and conversational AI assistant are both intuitive and effective for users without technical backgrounds. SentinelSphere illustrates that coupling intelligent threat detection with adaptive, LLM-driven security education can meaningfully address both technical and human-factor cybersecurity vulnerabilities within a single, cohesive framework."
+      ]
+    },
+    "R05": {
+      "kind": "arxiv",
+      "identifier": "2602.19087",
+      "source": "https://arxiv.org/abs/2602.19087",
+      "status": 200,
+      "citation_title": [
+        "Detecting Cybersecurity Threats by Integrating Explainable AI with SHAP Interpretability and Strategic Data Sampling"
+      ],
+      "citation_author": [
+        "Srisumrith, Norrakith",
+        "Sodsee, Sunantha"
+      ],
+      "citation_date": [
+        "2026/02/22"
+      ],
+      "citation_online_date": [
+        "2026/02/22"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2602.19087"
+      ],
+      "citation_arxiv_id": [
+        "2602.19087"
+      ],
+      "citation_abstract": [
+        "The critical need for transparent and trustworthy machine learning in cybersecurity operations drives the development of this integrated Explainable AI (XAI) framework. Our methodology addresses three fundamental challenges in deploying AI for threat detection: handling massive datasets through Strategic Sampling Methodology that preserves class distributions while enabling efficient model development; ensuring experimental rigor via Automated Data Leakage Prevention that systematically identifies and removes contaminated features; and providing operational transparency through Integrated XAI Implementation using SHAP analysis for model-agnostic interpretability across algorithms. Applied to the CIC-IDS2017 dataset, our approach maintains detection efficacy while reducing computational overhead and delivering actionable explanations for security analysts. The framework demonstrates that explainability, computational efficiency, and experimental integrity can be simultaneously achieved, providing a robust foundation for deploying trustworthy AI systems in security operations centers where decision transparency is paramount."
+      ]
+    },
+    "R06": {
+      "kind": "arxiv",
+      "identifier": "2409.11276",
+      "source": "https://arxiv.org/abs/2409.11276",
+      "status": 200,
+      "citation_title": [
+        "Hackphyr: A Local Fine-Tuned LLM Agent for Network Security Environments"
+      ],
+      "citation_author": [
+        "Rigaki, Maria",
+        "Catania, Carlos",
+        "Garcia, Sebastian"
+      ],
+      "citation_date": [
+        "2024/09/17"
+      ],
+      "citation_online_date": [
+        "2024/09/17"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2409.11276"
+      ],
+      "citation_arxiv_id": [
+        "2409.11276"
+      ],
+      "citation_abstract": [
+        "Large Language Models (LLMs) have shown remarkable potential across various domains, including cybersecurity. Using commercial cloud-based LLMs may be undesirable due to privacy concerns, costs, and network connectivity constraints. In this paper, we present Hackphyr, a locally fine-tuned LLM to be used as a red-team agent within network security environments. Our fine-tuned 7 billion parameter model can run on a single GPU card and achieves performance comparable with much larger and more powerful commercial models such as GPT-4. Hackphyr clearly outperforms other models, including GPT-3.5-turbo, and baselines, such as Q-learning agents in complex, previously unseen scenarios. To achieve this performance, we generated a new task-specific cybersecurity dataset to enhance the base model's capabilities. Finally, we conducted a comprehensive analysis of the agents' behaviors that provides insights into the planning abilities and potential shortcomings of such agents, contributing to the broader understanding of LLM-based agents in cybersecurity contexts"
+      ]
+    },
+    "R07": {
+      "kind": "doi",
+      "identifier": "10.1145/3704413.3764429",
+      "source": "https://api.crossref.org/works/10.1145/3704413.3764429",
+      "status": 200,
+      "title": [
+        "Local-Cloud Inference Offloading for LLMs in Multi-Modal, Multi-Task, Multi-Dialogue Settings"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0002-9994-6773",
+          "authenticated-orcid": false,
+          "given": "Liangqi",
+          "family": "Yuan",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Purdue University, West Lafayette, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-2970-7336",
+          "authenticated-orcid": false,
+          "given": "Dong-Jun",
+          "family": "Han",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Yonsei University, Seoul, Republic of Korea"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-2090-5512",
+          "authenticated-orcid": false,
+          "given": "Shiqiang",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "IBM Research, Yorktown Heights, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-2771-3521",
+          "authenticated-orcid": false,
+          "given": "Christopher",
+          "family": "Brinton",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Purdue University, West Lafayette, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            10,
+            23
+          ]
+        ]
+      },
+      "container-title": [
+        "Proceedings of the Twenty-sixth International Symposium on Theory, Algorithmic Foundations, and Protocol Design for Mobile Networks and Mobile Computing"
+      ],
+      "volume": null,
+      "page": "201-210",
+      "type": "proceedings-article",
+      "URL": "https://doi.org/10.1145/3704413.3764429"
+    },
+    "R08": {
+      "kind": "arxiv",
+      "identifier": "2601.22159",
+      "source": "https://arxiv.org/abs/2601.22159",
+      "status": 200,
+      "citation_title": [
+        "RedSage: A Cybersecurity Generalist LLM"
+      ],
+      "citation_author": [
+        "Suryanto, Naufal",
+        "Naseer, Muzammal",
+        "Li, Pengfei",
+        "Wasim, Syed Talal",
+        "Yi, Jinhui",
+        "Gall, Juergen",
+        "Ceravolo, Paolo",
+        "Damiani, Ernesto"
+      ],
+      "citation_date": [
+        "2026/01/29"
+      ],
+      "citation_online_date": [
+        "2026/03/09"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2601.22159"
+      ],
+      "citation_arxiv_id": [
+        "2601.22159"
+      ],
+      "citation_abstract": [
+        "Cybersecurity operations demand assistant LLMs that support diverse workflows without exposing sensitive data. Existing solutions either rely on proprietary APIs with privacy risks or on open models lacking domain adaptation. To bridge this gap, we curate 11.8B tokens of cybersecurity-focused continual pretraining data via large-scale web filtering and manual collection of high-quality resources, spanning 28.6K documents across frameworks, offensive techniques, and security tools. Building on this, we design an agentic augmentation pipeline that simulates expert workflows to generate 266K multi-turn cybersecurity samples for supervised fine-tuning. Combined with general open-source LLM data, these resources enable the training of RedSage, an open-source, locally deployable cybersecurity assistant with domain-aware pretraining and post-training. To rigorously evaluate the models, we introduce RedSage-Bench, a benchmark with 30K multiple-choice and 240 open-ended Q&A items covering cybersecurity knowledge, skills, and tool expertise. RedSage is further evaluated on established cybersecurity benchmarks (e.g., CTI-Bench, CyberMetric, SECURE) and general LLM benchmarks to assess broader generalization. At the 8B scale, RedSage achieves consistently better results, surpassing the baseline models by up to +5.59 points on cybersecurity benchmarks and +5.05 points on Open LLM Leaderboard tasks. These findings demonstrate that domain-aware agentic augmentation and pre/post-training can not only enhance cybersecurity-specific expertise but also help to improve general reasoning and instruction-following. All models, datasets, and code are publicly available."
+      ]
+    },
+    "R09": {
+      "kind": "doi",
+      "identifier": "10.1109/FMEC62297.2024.10710218",
+      "source": "https://api.crossref.org/works/10.1109/FMEC62297.2024.10710218",
+      "status": 200,
+      "title": [
+        "A Novel Approach for Intrusion Detection using Online Federated Learning on Streaming Data"
+      ],
+      "author": [
+        {
+          "given": "Victor",
+          "family": "Arvidsson",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Blekinge Institute of Technology,Department of Computer Science,Karlskrona,Sweden"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Sadi",
+          "family": "Alawadi",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Blekinge Institute of Technology,Department of Computer Science,Karlskrona,Sweden"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Martin",
+          "family": "Boldt",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Blekinge Institute of Technology,Department of Computer Science,Karlskrona,Sweden"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ola",
+          "family": "Angelsmark",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Advenica,Malm&#x00F6;,Sweden"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Fanny",
+          "family": "S\u00f6derlund",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Advenica,Malm&#x00F6;,Sweden"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2024,
+            9,
+            2
+          ]
+        ]
+      },
+      "container-title": [
+        "2024 9th International Conference on Fog and Mobile Edge Computing (FMEC)"
+      ],
+      "volume": null,
+      "page": "114-121",
+      "type": "proceedings-article",
+      "URL": "https://doi.org/10.1109/fmec62297.2024.10710218"
+    },
+    "R10": {
+      "kind": "doi",
+      "identifier": "10.1109/TCSS.2024.3496746",
+      "source": "https://api.crossref.org/works/10.1109/TCSS.2024.3496746",
+      "status": 200,
+      "title": [
+        "Robust Cyber Threat Intelligence Sharing Using Federated Learning for\u00a0Smart\u00a0Grids"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0001-8345-0952",
+          "authenticated-orcid": false,
+          "given": "Saifur",
+          "family": "Rahman",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "School of Information Technology, Faculty of Science, Engineering and Built Environment, Deakin University, Melbourne, VIC, Australia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-8784-0154",
+          "authenticated-orcid": false,
+          "given": "Shantanu",
+          "family": "Pal",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Information Technology, Faculty of Science, Engineering and Built Environment, Deakin University, Melbourne, VIC, Australia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-6694-7753",
+          "authenticated-orcid": false,
+          "given": "Zahra",
+          "family": "Jadidi",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Information and Communication Technology, Griffith University, Brisbane, QLD, Australia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0003-1814-0856",
+          "authenticated-orcid": false,
+          "given": "Chandan",
+          "family": "Karmakar",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Information Technology, Faculty of Science, Engineering and Built Environment, Deakin University, Melbourne, VIC, Australia"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            4
+          ]
+        ]
+      },
+      "container-title": [
+        "IEEE Transactions on Computational Social Systems"
+      ],
+      "volume": "12",
+      "page": "635-644",
+      "type": "journal-article",
+      "URL": "https://doi.org/10.1109/tcss.2024.3496746"
+    },
+    "R11": {
+      "kind": "arxiv",
+      "identifier": "2603.25334",
+      "source": "https://arxiv.org/abs/2603.25334",
+      "status": 200,
+      "citation_title": [
+        "Agentic Trust Coordination for Federated Learning through Adaptive Thresholding and Autonomous Decision Making in Sustainable and Resilient Industrial Networks"
+      ],
+      "citation_author": [
+        "Shepherd, Paul",
+        "Dagiuklas, Tasos",
+        "Alkan, Bugra",
+        "Rodriguez, Jonathan"
+      ],
+      "citation_date": [
+        "2026/03/26"
+      ],
+      "citation_online_date": [
+        "2026/03/26"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2603.25334"
+      ],
+      "citation_arxiv_id": [
+        "2603.25334"
+      ],
+      "citation_abstract": [
+        "Distributed intelligence in industrial networks increasingly integrates sensing, communication, and computation across heterogeneous and resource constrained devices. Federated learning (FL) enables collaborative model training in such environments, but its reliability is affected by inconsistent client behaviour, noisy sensing conditions, and the presence of faulty or adversarial updates. Trust based mechanisms are commonly used to mitigate these effects, yet most remain statistical and heuristic, relying on fixed parameters or simple adaptive rules that struggle to accommodate changing operating conditions. This paper presents a lightweight agentic trust coordination approach for FL in sustainable and resilient industrial networks. The proposed Agentic Trust Control Layer operates as a server side control loop that observes trust related and system level signals, interprets their evolution over time, and applies targeted trust adjustments when instability is detected. The approach extends prior adaptive trust mechanisms by enabling context aware intervention decisions, rather than relying on fixed or purely reactive parameter updates. By explicitly separating observation, reasoning, and action, the proposed framework supports stable FL operation without modifying client side training or increasing communication overhead."
+      ]
+    },
+    "R12": {
+      "kind": "arxiv",
+      "identifier": "2512.10341",
+      "source": "https://arxiv.org/abs/2512.10341",
+      "status": 200,
+      "citation_title": [
+        "A Privacy-Preserving Cloud Architecture for Distributed Machine Learning at Scale"
+      ],
+      "citation_author": [
+        "Punniyamoorthy, Vinoth",
+        "Parthi, Ashok Gadi",
+        "Palanigounder, Mayilsamy",
+        "Kodali, Ravi Kiran",
+        "Kumar, Bikesh",
+        "Kannan, Kabilan"
+      ],
+      "citation_doi": [
+        "10.17577/IJERTV14IS110277"
+      ],
+      "citation_date": [
+        "2025/12/11"
+      ],
+      "citation_online_date": [
+        "2025/12/11"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2512.10341"
+      ],
+      "citation_arxiv_id": [
+        "2512.10341"
+      ],
+      "citation_abstract": [
+        "Distributed machine learning systems require strong privacy guarantees, verifiable compliance, and scalable deployment across heterogeneous and multi-cloud environments. This work introduces a cloud-native privacy-preserving architecture that integrates federated learning, differential privacy, zero-knowledge compliance proofs, and adaptive governance powered by reinforcement learning. The framework supports secure model training and inference without centralizing sensitive data, while enabling cryptographically verifiable policy enforcement across institutions and cloud platforms. A full prototype deployed across hybrid Kubernetes clusters demonstrates reduced membership-inference risk, consistent enforcement of formal privacy budgets, and stable model performance under differential privacy. Experimental evaluation across multi-institution workloads shows that the architecture maintains utility with minimal overhead while providing continuous, risk-aware governance. The proposed framework establishes a practical foundation for deploying trustworthy and compliant distributed machine learning systems at scale."
+      ]
+    },
+    "R13": {
+      "kind": "arxiv",
+      "identifier": "2603.17717",
+      "source": "https://arxiv.org/abs/2603.17717",
+      "status": 200,
+      "citation_title": [
+        "Machine Learning for Network Attacks Classification and Statistical Evaluation of Adversarial Learning Methodologies for Synthetic Data Generation"
+      ],
+      "citation_author": [
+        "Zarkadis, Iakovos-Christos",
+        "Douligeris, Christos"
+      ],
+      "citation_date": [
+        "2026/03/18"
+      ],
+      "citation_online_date": [
+        "2026/07/10"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2603.17717"
+      ],
+      "citation_arxiv_id": [
+        "2603.17717"
+      ],
+      "citation_abstract": [
+        "Supervised detection of network attacks has always been a critical part of network intrusion detection systems (NIDS). Nowadays, in a pivotal time for artificial intelligence (AI), with even more sophisticated attacks that utilize advanced techniques, such as generative artificial intelligence (GenAI) and reinforcement learning, it has become a vital component if we wish to protect our personal data, which are scattered across the web. In this paper, we address two tasks, in the first unified multi-modal NIDS dataset, which incorporates flow-level data, packet payload information and temporal contextual features, from the reprocessed CIC-IDS-2017, CIC-IoT-2023, UNSW-NB15 and CIC-DDoS-2019, with the same feature space. In the first task we use machine learning (ML) algorithms, with stratified cross validation, in order to prevent network attacks, with stability and reliability. In the second task we use adversarial learning algorithms to generate synthetic data, compare them with the real ones and evaluate their fidelity, utility and privacy using the SDV framework, f-divergences, distinguishability and non-parametric statistical tests. The findings provide stable ML models for intrusion detection and generative models with high fidelity and utility, by combining the Synthetic Data Vault framework, the TRTS and TSTR tests, with non-parametric statistical tests and f-divergence measures."
+      ]
+    },
+    "R14": {
+      "kind": "doi",
+      "identifier": "10.1109/ACCESS.2024.3386631",
+      "source": "https://api.crossref.org/works/10.1109/ACCESS.2024.3386631",
+      "status": 200,
+      "title": [
+        "FL-IDS: Federated Learning-Based Intrusion Detection System Using Edge Devices for Transportation IoT"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0009-0003-5792-8125",
+          "authenticated-orcid": false,
+          "given": "Mansi H.",
+          "family": "Bhavsar",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Department of Electrical and Computer Engineering, North Carolina Agricultural and Technical State University, Greensboro, NC, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0001-9899-4194",
+          "authenticated-orcid": false,
+          "given": "Yohannes B.",
+          "family": "Bekele",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Electrical and Computer Engineering, North Carolina Agricultural and Technical State University, Greensboro, NC, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "ORCID": "https://orcid.org/0000-0002-9026-5322",
+          "authenticated-orcid": false,
+          "given": "Kaushik",
+          "family": "Roy",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Computer Science Department, North Carolina Agricultural and Technical State University, Greensboro, NC, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "John C.",
+          "family": "Kelly",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Electrical and Computer Engineering, North Carolina Agricultural and Technical State University, Greensboro, NC, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Daniel",
+          "family": "Limbrick",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Electrical and Computer Engineering, North Carolina Agricultural and Technical State University, Greensboro, NC, USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2024
+          ]
+        ]
+      },
+      "container-title": [
+        "IEEE Access"
+      ],
+      "volume": "12",
+      "page": "52215-52226",
+      "type": "journal-article",
+      "URL": "https://doi.org/10.1109/access.2024.3386631"
+    },
+    "R15": {
+      "kind": "arxiv",
+      "identifier": "2502.13256",
+      "source": "https://arxiv.org/abs/2502.13256",
+      "status": 200,
+      "citation_title": [
+        "Cyber-Physical Systems Security: A Comprehensive Review of Anomaly Detection Techniques"
+      ],
+      "citation_author": [
+        "Abshari, Danial",
+        "Sridhar, Meera"
+      ],
+      "citation_doi": [
+        "10.1016/j.iot.2026.101938"
+      ],
+      "citation_date": [
+        "2025/02/18"
+      ],
+      "citation_online_date": [
+        "2026/04/06"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2502.13256"
+      ],
+      "citation_arxiv_id": [
+        "2502.13256"
+      ],
+      "citation_abstract": [
+        "In an increasingly interconnected world, Cyber-Physical Systems (CPS) are essential to critical industries like healthcare, transportation, and manufacturing, merging physical processes with computational intelligence. However, the security of these systems is a major concern. Anomalies, whether from sensor malfunctions or cyberattacks, can lead to catastrophic failures, making effective detection vital for preventing harm and service disruptions. This paper provides a comprehensive review of anomaly detection techniques in CPS. We categorize and compare various methods, including data-driven approaches (machine learning, deep learning, machine learning-deep learning ensemble), model-driven approaches (mathematical, invariant-based), hybrid datamodel approaches (Physics-Informed Neural Networks), and system-oriented approaches. Our analysis highlights the strengths and weaknesses of each technique, offering a practical guide for creating safer and more reliable systems. By identifying current research gaps, we aim to inspire future work that will enhance the security and adaptability of CPS in our automated world."
+      ]
+    },
+    "R16": {
+      "kind": "arxiv",
+      "identifier": "2606.12075",
+      "source": "https://arxiv.org/abs/2606.12075",
+      "status": 200,
+      "citation_title": [
+        "Categorical Robustness Assessment for Machine Learning based Network Intrusion Detection Systems"
+      ],
+      "citation_author": [
+        "Raj, Mayank",
+        "Bastian, Nathaniel D.",
+        "Fiondella, Lance",
+        "Kul, Gokhan"
+      ],
+      "citation_date": [
+        "2026/06/10"
+      ],
+      "citation_online_date": [
+        "2026/06/10"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2606.12075"
+      ],
+      "citation_arxiv_id": [
+        "2606.12075"
+      ],
+      "citation_abstract": [
+        "Network Intrusion Detection Systems (NIDS) heavily utlize Machine Learning (ML) but ML models can be manipulated via adversarial attacks. These attacks add carefully crafted perturbations to network traffic data that leads to misclassifications. While prior work has demonstrated adversarial vulnerabilities in isolated settings, systematic cross-architecture as well as class and category of attack based comparisons under controlled attack conditions remain limited, leaving practitioners without clear guidance on which models to deploy in adversarial environments. This paper asks a simple question: what type of classifier architectures actually hold up when attackers try to manipulate the systems? We put three popular architectures through their paces: a 1D Convolutional Neural Network, a Long Short-Term Memory (LSTM) network, and a Random Forest (RF) ensemble. Using the ACI-IoT-2023 dataset (over 1.2 million samples spanning 12 attack types), we subject each model with FGSM and PGD adversarial attacks, which apply gradient-based perturbations in normalized feature space consistent with established adversarial ML evaluation protocols, at perturbation budgets ranging from $\\epsilon=0.01$ to $\\epsilon=0.1$. Surprisingly, Random Forest achieved near-perfect baseline accuracy (99.98\\%), yet collapsed catastrophically under attack, dropping 73 percentage points at the smallest perturbation we tested. CNN, on the other hand, retained 95.5\\% accuracy at $\\epsilon=0.01$ and degraded gracefully as perturbations increased. LSTM fell somewhere in between. These findings flip the conventional wisdom where high baseline accuracy means nothing if a model shatters at the first sign of adversarial pressure. For practitioners deploying intrusion detection in adversarial environments, we recommend CNN-based architectures and provide scenario-specific deployment guidance."
+      ]
+    },
+    "R17": {
+      "kind": "arxiv",
+      "identifier": "2502.15561",
+      "source": "https://arxiv.org/abs/2502.15561",
+      "status": 200,
+      "citation_title": [
+        "A Defensive Framework Against Adversarial Attacks on Machine Learning-Based Network Intrusion Detection Systems"
+      ],
+      "citation_author": [
+        "Tafreshian, Benyamin",
+        "Zhang, Shengzhi"
+      ],
+      "citation_date": [
+        "2025/02/21"
+      ],
+      "citation_online_date": [
+        "2025/02/21"
+      ],
+      "citation_pdf_url": [
+        "https://arxiv.org/pdf/2502.15561"
+      ],
+      "citation_arxiv_id": [
+        "2502.15561"
+      ],
+      "citation_abstract": [
+        "As cyberattacks become increasingly sophisticated, advanced Network Intrusion Detection Systems (NIDS) are critical for modern network security. Traditional signature-based NIDS are inadequate against zero-day and evolving attacks. In response, machine learning (ML)-based NIDS have emerged as promising solutions; however, they are vulnerable to adversarial evasion attacks that subtly manipulate network traffic to bypass detection. To address this vulnerability, we propose a novel defensive framework that enhances the robustness of ML-based NIDS by simultaneously integrating adversarial training, dataset balancing techniques, advanced feature engineering, ensemble learning, and extensive model fine-tuning. We validate our framework using the NSL-KDD and UNSW-NB15 datasets. Experimental results show, on average, a 35% increase in detection accuracy and a 12.5% reduction in false positives compared to baseline models, particularly under adversarial conditions. The proposed defense against adversarial attacks significantly advances the practical deployment of robust ML-based NIDS in real-world networks."
+      ]
+    },
+    "R18": {
+      "kind": "web",
+      "identifier": "https://www.usenix.org/conference/atc23/presentation/vaswani",
+      "source": "https://www.usenix.org/conference/atc23/presentation/vaswani",
+      "status": 200,
+      "page_title": "Confidential Computing within an AI Accelerator | USENIX"
+    },
+    "R19": {
+      "kind": "doi",
+      "identifier": "10.1109/SRDS69199.2025.00022",
+      "source": "https://api.crossref.org/works/10.1109/SRDS69199.2025.00022",
+      "status": 200,
+      "title": [
+        "CCE: A Cloud-Based SIEM Correlation Engine Built on Serverless Functions"
+      ],
+      "author": [
+        {
+          "given": "Adriano",
+          "family": "Serckumecka",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Universidade de Lisboa,LASIGE, Faculdade de Ciencias,Portugal"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Iberia",
+          "family": "Medeiros",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Universidade de Lisboa,LASIGE, Faculdade de Ciencias,Portugal"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        },
+        {
+          "given": "Alysson",
+          "family": "Bessani",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Universidade de Lisboa,LASIGE, Faculdade de Ciencias,Portugal"
+            }
+          ],
+          "role": [
+            {
+              "role": "author",
+              "vocabulary": "crossref"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            9,
+            29
+          ]
+        ]
+      },
+      "container-title": [
+        "2025 44th International Symposium on Reliable Distributed Systems (SRDS)"
+      ],
+      "volume": null,
+      "page": "95-105",
+      "type": "proceedings-article",
+      "URL": "https://doi.org/10.1109/srds69199.2025.00022"
+    },
+    "R20": {
+      "kind": "doi",
+      "identifier": "10.1109/IPCCC66453.2025.11304649",
+      "source": "https://api.crossref.org/works/10.1109/IPCCC66453.2025.11304649",
+      "status": 200,
+      "title": [
+        "Privacy-Preserving AI Inference in Edge Systems: Ethical and Architectural Tradeoffs"
+      ],
+      "author": [
+        {
+          "given": "Sunitha",
+          "family": "Kanipakam",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Sri Padmavati Mahila VisvaVidyalayam,Tirupati,India"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Vishnupriya S",
+          "family": "Devarajulu",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tulasi",
+          "family": "Kavarakuntla",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2025,
+            11,
+            15
+          ]
+        ]
+      },
+      "container-title": [
+        "2025 IEEE International Performance, Computing, and Communications Conference (IPCCC)"
+      ],
+      "volume": null,
+      "page": "1-6",
+      "type": "proceedings-article",
+      "URL": "https://doi.org/10.1109/ipccc66453.2025.11304649"
+    },
+    "S02": {
+      "kind": "web",
+      "identifier": "https://cloud.google.com/discover/what-is-federated-learning",
+      "source": "https://cloud.google.com/discover/what-is-federated-learning",
+      "status": 200,
+      "page_title": "Federated learning: what it is and how it works | Google Cloud"
+    },
+    "S04": {
+      "kind": "doi",
+      "identifier": "10.1038/s41598-026-40122-4",
+      "source": "https://api.crossref.org/works/10.1038/s41598-026-40122-4",
+      "status": 200,
+      "title": [
+        "Design of a multi-layered privacy-preserving architecture for secure medical data exchange in cloud environments"
+      ],
+      "author": [
+        {
+          "given": "S.",
+          "family": "Muthuvel",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "S.",
+          "family": "Priya",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "K.",
+          "family": "Sampath Kumar",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2026,
+            2,
+            27
+          ]
+        ]
+      },
+      "container-title": [
+        "Scientific Reports"
+      ],
+      "volume": "16",
+      "page": null,
+      "type": "journal-article",
+      "URL": "https://doi.org/10.1038/s41598-026-40122-4"
+    },
+    "S05": {
+      "kind": "web",
+      "identifier": "https://www.infosecinstitute.com/resources/management-compliance-auditing/overview-understanding-soc-compliance-soc-1-vs-soc-2-vs-soc-3/",
+      "source": "https://www.infosecinstitute.com/resources/management-compliance-auditing/overview-understanding-soc-compliance-soc-1-vs-soc-2-vs-soc-3/",
+      "status": 403,
+      "page_title": "Just a moment..."
+    },
+    "S06": {
+      "kind": "web",
+      "identifier": "https://www.ibm.com/think/topics/cybersecurity",
+      "source": "https://www.ibm.com/think/topics/cybersecurity",
+      "status": 200,
+      "page_title": "What Is Cybersecurity? | IBM"
+    },
+    "S07": {
+      "kind": "web",
+      "identifier": "https://evoailabs.medium.com/cybersecurity-llms-new-locally-deployable-models-for-agentic-ai-54908c3f621b",
+      "source": "https://evoailabs.medium.com/cybersecurity-llms-new-locally-deployable-models-for-agentic-ai-54908c3f621b",
+      "status": 403,
+      "page_title": "Just a moment..."
+    },
+    "S08": {
+      "kind": "web",
+      "identifier": "https://docs.snowflake.com/en/user-guide/ml-functions/anomaly-detection",
+      "source": "https://docs.snowflake.com/en/user-guide/ml-functions/anomaly-detection",
+      "status": 200,
+      "page_title": "Anomaly Detection (Snowflake ML Functions) | Snowflake Documentation"
+    },
+    "S14": {
+      "kind": "web",
+      "identifier": "https://assets.anthropic.com/m/c52125297b85a42/original/Confidential_Inference_Paper.pdf",
+      "source": "https://assets.anthropic.com/m/c52125297b85a42/original/Confidential_Inference_Paper.pdf",
+      "status": 200,
+      "downloaded": true
+    },
+    "S15": {
+      "kind": "web",
+      "identifier": "https://panther.com/blog/python-for-cybersecurity-key-use-cases-and-tools",
+      "source": "https://panther.com/blog/python-for-cybersecurity-key-use-cases-and-tools",
+      "status": 200,
+      "page_title": "Python for Cybersecurity: Key Use Cases & Tools"
+    },
+    "S16": {
+      "kind": "web",
+      "identifier": "https://infosecwriteups.com/building-an-integrated-threat-intelligence-platform-using-python-and-kibana-84503afe6251",
+      "source": "https://infosecwriteups.com/building-an-integrated-threat-intelligence-platform-using-python-and-kibana-84503afe6251",
+      "status": 403,
+      "page_title": "Just a moment..."
+    }
+  },
+  "duplicates": {
+    "S01": "R11",
+    "S03": "R12",
+    "S09": "R15",
+    "S10": "R04",
+    "S11": "R05",
+    "S12": "R07",
+    "S13": "R06"
+  }
+}

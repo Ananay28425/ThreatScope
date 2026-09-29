@@ -1,0 +1,290 @@
+{
+  "protocol": {
+    "budget/decision_driven": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 40,
+      "policy_units": 240,
+      "refinements": 120,
+      "payload_bytes": 164640,
+      "mean_rounds": 1.6,
+      "median_local_protocol_seconds": 0.19594870001310483
+    },
+    "budget/fixed_minimal": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 20,
+      "unresolved": 0,
+      "policy_units": 120,
+      "refinements": 0,
+      "payload_bytes": 48180,
+      "mean_rounds": 0.0,
+      "median_local_protocol_seconds": 0.1548188499873504
+    },
+    "budget/fixed_richer": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 40,
+      "policy_units": 240,
+      "refinements": 120,
+      "payload_bytes": 220560,
+      "mean_rounds": 0.8,
+      "median_local_protocol_seconds": 0.21148525003809482
+    },
+    "budget/local_only": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 20,
+      "unresolved": 0,
+      "policy_units": 0,
+      "refinements": 0,
+      "payload_bytes": 0,
+      "mean_rounds": 0.0,
+      "median_local_protocol_seconds": 0.02768424997339025
+    },
+    "budget/static_escalation": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 40,
+      "policy_units": 240,
+      "refinements": 120,
+      "payload_bytes": 220560,
+      "mean_rounds": 2.4,
+      "median_local_protocol_seconds": 0.20778045000042766
+    },
+    "coarse/decision_driven": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 20,
+      "policy_units": 420,
+      "refinements": 300,
+      "payload_bytes": 200340,
+      "mean_rounds": 2.0,
+      "median_local_protocol_seconds": 0.3320705500082113
+    },
+    "coarse/fixed_minimal": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 20,
+      "unresolved": 0,
+      "policy_units": 120,
+      "refinements": 0,
+      "payload_bytes": 48180,
+      "mean_rounds": 0.0,
+      "median_local_protocol_seconds": 0.22039209998911247
+    },
+    "coarse/fixed_richer": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 20,
+      "policy_units": 420,
+      "refinements": 360,
+      "payload_bytes": 230940,
+      "mean_rounds": 0.8,
+      "median_local_protocol_seconds": 0.3704362999997102
+    },
+    "coarse/local_only": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 20,
+      "unresolved": 0,
+      "policy_units": 0,
+      "refinements": 0,
+      "payload_bytes": 0,
+      "mean_rounds": 0.0,
+      "median_local_protocol_seconds": 0.04961394995916635
+    },
+    "coarse/static_escalation": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 20,
+      "policy_units": 420,
+      "refinements": 360,
+      "payload_bytes": 230940,
+      "mean_rounds": 2.4,
+      "median_local_protocol_seconds": 0.3651317000039853
+    },
+    "deny/decision_driven": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 40,
+      "policy_units": 240,
+      "refinements": 120,
+      "payload_bytes": 164640,
+      "mean_rounds": 1.6,
+      "median_local_protocol_seconds": 0.3374146500136703
+    },
+    "deny/fixed_minimal": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 20,
+      "unresolved": 0,
+      "policy_units": 120,
+      "refinements": 0,
+      "payload_bytes": 48180,
+      "mean_rounds": 0.0,
+      "median_local_protocol_seconds": 0.24881744995946065
+    },
+    "deny/fixed_richer": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 40,
+      "policy_units": 480,
+      "refinements": 240,
+      "payload_bytes": 225360,
+      "mean_rounds": 0.8,
+      "median_local_protocol_seconds": 0.35701389994937927
+    },
+    "deny/local_only": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 20,
+      "unresolved": 0,
+      "policy_units": 0,
+      "refinements": 0,
+      "payload_bytes": 0,
+      "mean_rounds": 0.0,
+      "median_local_protocol_seconds": 0.04999194998526946
+    },
+    "deny/static_escalation": {
+      "cases": 50,
+      "true_positive": 0,
+      "false_positive": 0,
+      "unresolved": 40,
+      "policy_units": 480,
+      "refinements": 240,
+      "payload_bytes": 225360,
+      "mean_rounds": 2.4,
+      "median_local_protocol_seconds": 0.3649936000001617
+    },
+    "none/decision_driven": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 0,
+      "unresolved": 0,
+      "policy_units": 540,
+      "refinements": 300,
+      "payload_bytes": 200100,
+      "mean_rounds": 2.0,
+      "median_local_protocol_seconds": 0.35311440005898476
+    },
+    "none/fixed_minimal": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 20,
+      "unresolved": 0,
+      "policy_units": 120,
+      "refinements": 0,
+      "payload_bytes": 48180,
+      "mean_rounds": 0.0,
+      "median_local_protocol_seconds": 0.22997395001584664
+    },
+    "none/fixed_richer": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 0,
+      "unresolved": 0,
+      "policy_units": 660,
+      "refinements": 360,
+      "payload_bytes": 230460,
+      "mean_rounds": 0.8,
+      "median_local_protocol_seconds": 0.39141029998427257
+    },
+    "none/local_only": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 20,
+      "unresolved": 0,
+      "policy_units": 0,
+      "refinements": 0,
+      "payload_bytes": 0,
+      "mean_rounds": 0.0,
+      "median_local_protocol_seconds": 0.04093619994819164
+    },
+    "none/static_escalation": {
+      "cases": 50,
+      "true_positive": 20,
+      "false_positive": 0,
+      "unresolved": 0,
+      "policy_units": 660,
+      "refinements": 360,
+      "payload_bytes": 230460,
+      "mean_rounds": 2.4,
+      "median_local_protocol_seconds": 0.3785035000182688
+    }
+  },
+  "claims": {
+    "claims-Qwen3-4B-Q4_K_M": {
+      "template": {
+        "cases": 2,
+        "claims": 12,
+        "unsupported": 0,
+        "invalid_contract_cases": 0,
+        "mean_coverage": 1.0,
+        "failure_cases": 0,
+        "fallback_cases": 0,
+        "median_generation_seconds": 0.00027674995362758636
+      },
+      "direct": {
+        "cases": 2,
+        "claims": 8,
+        "unsupported": 4,
+        "invalid_contract_cases": 0,
+        "mean_coverage": 0.3333333333333333,
+        "failure_cases": 0,
+        "fallback_cases": 0,
+        "median_generation_seconds": 66.68458999996074
+      },
+      "cited": {
+        "cases": 2,
+        "claims": 4,
+        "unsupported": 1,
+        "invalid_contract_cases": 0,
+        "mean_coverage": 0.25,
+        "failure_cases": 1,
+        "fallback_cases": 0,
+        "median_generation_seconds": 95.02687590004643
+      },
+      "verify_without_lifecycle": {
+        "cases": 2,
+        "claims": 12,
+        "unsupported": 0,
+        "invalid_contract_cases": 0,
+        "mean_coverage": 1.0,
+        "failure_cases": 0,
+        "fallback_cases": 2,
+        "median_generation_seconds": null
+      },
+      "complete": {
+        "cases": 2,
+        "claims": 12,
+        "unsupported": 0,
+        "invalid_contract_cases": 0,
+        "mean_coverage": 1.0,
+        "failure_cases": 0,
+        "fallback_cases": 2,
+        "median_generation_seconds": 215.0737487000879
+      }
+    }
+  },
+  "cic_ids2017": {
+    "status": "not_run",
+    "reason": "official archive endpoint returned an HTML registration page"
+  },
+  "scope": "Synthetic protocol evaluation and finite-claim model study. No human usefulness or real-organization accuracy claim.",
+  "hashes": {
+    "backup-verification.json": "7eb21e75ce2324983d16c3fef5a5d67a5d8bc1c628fcbb4ca76bda214187b1f2",
+    "claims-Qwen3-4B-Q4_K_M.jsonl": "b43024422ea92fd5f75d25d584d6b8107417165323425e7fba7a13e103dbb866",
+    "disclosure.csv": "6eb8d7d28ad6db59b4aab5ff9d456e6aaaa1e4448a01f8a6718e7c5e8967d8b8",
+    "machine.json": "5666b3c501fa8578d01eddb9394673433c91d822183e39b99cc52d8334f380fa",
+    "memory-small.json": "7b6165ae56233238634ed1b9db315c3d6342a20ed79c0aad632449798e7c8afb"
+  }
+}
