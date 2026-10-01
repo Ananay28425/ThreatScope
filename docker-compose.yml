@@ -72,20 +72,23 @@ services:
   orion:
     <<: *app
     profiles: [demo]
+    user: root
     environment: {BACKEND_URL: 'http://backend:8000'}
-    command: [python, -m, node_simulator.agent, --credentials, /private/node.json, --state, /state/ledger.db, --seed, "41"]
+    command: [python, -m, node_simulator.container_entrypoint, --credentials, /private/node.json, --state, /state/ledger.db, --seed, "41"]
     volumes: [./.runtime/private/orion-node.json:/private/node.json:ro, orion_state:/state]
   lyra:
     <<: *app
     profiles: [demo]
+    user: root
     environment: {BACKEND_URL: 'http://backend:8000'}
-    command: [python, -m, node_simulator.agent, --credentials, /private/node.json, --state, /state/ledger.db, --seed, "42"]
+    command: [python, -m, node_simulator.container_entrypoint, --credentials, /private/node.json, --state, /state/ledger.db, --seed, "42"]
     volumes: [./.runtime/private/lyra-node.json:/private/node.json:ro, lyra_state:/state]
   vega:
     <<: *app
     profiles: [demo]
+    user: root
     environment: {BACKEND_URL: 'http://backend:8000'}
-    command: [python, -m, node_simulator.agent, --credentials, /private/node.json, --state, /state/ledger.db, --seed, "43"]
+    command: [python, -m, node_simulator.container_entrypoint, --credentials, /private/node.json, --state, /state/ledger.db, --seed, "43"]
     volumes: [./.runtime/private/vega-node.json:/private/node.json:ro, vega_state:/state]
 volumes:
   postgres_data:
