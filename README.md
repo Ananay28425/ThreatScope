@@ -4,6 +4,17 @@ ThreatScope is a research prototype for policy-controlled security evidence shar
 
 **A supported rule is not proof of compromise.** Derived values still reveal activity patterns. Release costs are policy units, not differential-privacy guarantees. Current experiments use labeled synthetic organization partitions; they do not establish production scalability or publication novelty.
 
+## Revised research drafts
+
+The two independent IEEE-style manuscripts are editable in LaTeX and available as PDFs. Each numbered version has its stated page count. The drafts report measured pilot results and their limits; neither claims an acceptance outcome.
+
+| Paper | 6 pages | 8 pages | 10 pages | 12 pages |
+| --- | --- | --- | --- | --- |
+| Framework and evidence disclosure | [PDF](research/papers/paper1/paper1-6pages.pdf) | [PDF](research/papers/paper1/paper1-8pages.pdf) | [PDF](research/papers/paper1/paper1-10pages.pdf) | [PDF](research/papers/paper1/paper1-12pages.pdf) |
+| Evidence-grounded local explanations | [PDF](research/papers/paper2/paper2-6pages.pdf) | [PDF](research/papers/paper2/paper2-8pages.pdf) | [PDF](research/papers/paper2/paper2-10pages.pdf) | [PDF](research/papers/paper2/paper2-12pages.pdf) |
+
+The corresponding `.tex` source files sit beside each PDF. [Evidence and contribution notes](research/Contribution-and-Evidence-Matrix.md) and [reference audit](research/Reference-Audit.md) document the research boundary. Authors should review every claim and adapt the selected version to the venue template and disclosure rules before submission.
+
 ## Start the three-organization demo
 
 Requirements: Docker Compose v2, Python 3.12 for bootstrap, and sufficient disk space for images. Native PostgreSQL execution is also supported in [deployment instructions](docs/deployment.md).

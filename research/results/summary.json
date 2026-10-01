@@ -224,54 +224,54 @@
   "claims": {
     "claims-Qwen3-4B-Q4_K_M": {
       "template": {
-        "cases": 2,
-        "claims": 12,
+        "cases": 8,
+        "claims": 46,
         "unsupported": 0,
         "invalid_contract_cases": 0,
         "mean_coverage": 1.0,
         "failure_cases": 0,
         "fallback_cases": 0,
-        "median_generation_seconds": 0.00027674995362758636
+        "median_generation_seconds": 0.00023309997050091624
       },
       "direct": {
-        "cases": 2,
-        "claims": 8,
-        "unsupported": 4,
-        "invalid_contract_cases": 0,
-        "mean_coverage": 0.3333333333333333,
-        "failure_cases": 0,
-        "fallback_cases": 0,
-        "median_generation_seconds": 66.68458999996074
-      },
-      "cited": {
-        "cases": 2,
-        "claims": 4,
-        "unsupported": 1,
-        "invalid_contract_cases": 0,
-        "mean_coverage": 0.25,
+        "cases": 8,
+        "claims": 20,
+        "unsupported": 10,
+        "invalid_contract_cases": 2,
+        "mean_coverage": 0.22083333333333333,
         "failure_cases": 1,
         "fallback_cases": 0,
-        "median_generation_seconds": 95.02687590004643
+        "median_generation_seconds": 52.97495655005332
+      },
+      "cited": {
+        "cases": 8,
+        "claims": 20,
+        "unsupported": 8,
+        "invalid_contract_cases": 0,
+        "mean_coverage": 0.26666666666666666,
+        "failure_cases": 3,
+        "fallback_cases": 0,
+        "median_generation_seconds": 86.59602779999841
       },
       "verify_without_lifecycle": {
-        "cases": 2,
-        "claims": 12,
-        "unsupported": 0,
+        "cases": 8,
+        "claims": 48,
+        "unsupported": 3,
         "invalid_contract_cases": 0,
-        "mean_coverage": 1.0,
+        "mean_coverage": 0.9791666666666666,
         "failure_cases": 0,
-        "fallback_cases": 2,
+        "fallback_cases": 8,
         "median_generation_seconds": null
       },
       "complete": {
-        "cases": 2,
-        "claims": 12,
+        "cases": 8,
+        "claims": 46,
         "unsupported": 0,
         "invalid_contract_cases": 0,
         "mean_coverage": 1.0,
         "failure_cases": 0,
-        "fallback_cases": 2,
-        "median_generation_seconds": 215.0737487000879
+        "fallback_cases": 8,
+        "median_generation_seconds": 146.65316590003204
       }
     }
   },
@@ -282,7 +282,7 @@
   "scope": "Synthetic protocol evaluation and finite-claim model study. No human usefulness or real-organization accuracy claim.",
   "hashes": {
     "backup-verification.json": "7eb21e75ce2324983d16c3fef5a5d67a5d8bc1c628fcbb4ca76bda214187b1f2",
-    "claims-Qwen3-4B-Q4_K_M.jsonl": "b43024422ea92fd5f75d25d584d6b8107417165323425e7fba7a13e103dbb866",
+    "claims-Qwen3-4B-Q4_K_M.jsonl": "962e1c207e65b7cb266f7e04a057b468266f6f7981b9bcd7a53187ed988897d3",
     "disclosure.csv": "6eb8d7d28ad6db59b4aab5ff9d456e6aaaa1e4448a01f8a6718e7c5e8967d8b8",
     "machine.json": "5666b3c501fa8578d01eddb9394673433c91d822183e39b99cc52d8334f380fa",
     "memory-small.json": "7b6165ae56233238634ed1b9db315c3d6342a20ed79c0aad632449798e7c8afb"
