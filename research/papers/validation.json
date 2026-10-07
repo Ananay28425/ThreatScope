@@ -1,0 +1,152 @@
+{
+  "checked_on": "2026-10-07",
+  "compiler": "Tectonic; IEEEtran; Times New Roman embedded fonts",
+  "editor_compiler_limitation": "The built-in editor compiler returned Unable to find standard directories for platform; standalone PDF generation succeeded using Tectonic.",
+  "checks": {
+    "all_citation_keys_resolve": true,
+    "all_bibliography_entries_cited": true,
+    "first_citation_numbering": true,
+    "all_final_pages_visually_reviewed": true,
+    "no_undefined_citation_or_missing_glyph_warnings": true,
+    "no_overfull_box_warnings": true,
+    "exact_page_counts": true
+  },
+  "outputs": [
+    {
+      "file": "research/papers/paper1/paper1-10pages.pdf",
+      "pages": 10,
+      "references": 14,
+      "words_per_page": [
+        764,
+        867,
+        908,
+        901,
+        936,
+        920,
+        936,
+        863,
+        960,
+        748
+      ],
+      "sha256": "2bc3ab3cdd80fa191be77de1472192cc169f90fd7219277b1c1c6ccdbbf0c6c3"
+    },
+    {
+      "file": "research/papers/paper1/paper1-12pages.pdf",
+      "pages": 12,
+      "references": 14,
+      "words_per_page": [
+        764,
+        867,
+        908,
+        901,
+        936,
+        920,
+        936,
+        863,
+        960,
+        908,
+        917,
+        636
+      ],
+      "sha256": "85ca2d861ae05c33c6e2fb7dfcd7c58538242a1385599186396b7cd205dd4818"
+    },
+    {
+      "file": "research/papers/paper1/paper1-6pages.pdf",
+      "pages": 6,
+      "references": 14,
+      "words_per_page": [
+        764,
+        867,
+        908,
+        901,
+        936,
+        719
+      ],
+      "sha256": "9afe64d31557eed95824aabbbbe482d7ed8ef934674dd811f6cdf843dc388020"
+    },
+    {
+      "file": "research/papers/paper1/paper1-8pages.pdf",
+      "pages": 8,
+      "references": 14,
+      "words_per_page": [
+        764,
+        867,
+        908,
+        901,
+        936,
+        920,
+        936,
+        911
+      ],
+      "sha256": "00339f76d1e9e86b3b6c312c86eacb4c286732b7d4e626fb86dacadbc52b1590"
+    },
+    {
+      "file": "research/papers/paper2/paper2-10pages.pdf",
+      "pages": 10,
+      "references": 17,
+      "words_per_page": [
+        758,
+        889,
+        883,
+        921,
+        909,
+        918,
+        921,
+        936,
+        939,
+        814
+      ],
+      "sha256": "802125b714a748a6564faeed88ffd8fdeee41e0898d80a4bbc0894d2415404ac"
+    },
+    {
+      "file": "research/papers/paper2/paper2-12pages.pdf",
+      "pages": 12,
+      "references": 17,
+      "words_per_page": [
+        758,
+        889,
+        883,
+        921,
+        909,
+        918,
+        921,
+        936,
+        939,
+        911,
+        834,
+        813
+      ],
+      "sha256": "1d47dc89c32043cbe823c66b75221ffbf5260d5d8528a310b7d73823d99d245c"
+    },
+    {
+      "file": "research/papers/paper2/paper2-6pages.pdf",
+      "pages": 6,
+      "references": 17,
+      "words_per_page": [
+        758,
+        889,
+        883,
+        921,
+        909,
+        623
+      ],
+      "sha256": "5d88c22788ec56343afc28b2d7c80e4ec1848e7c413a11d2670e4d33850c4f21"
+    },
+    {
+      "file": "research/papers/paper2/paper2-8pages.pdf",
+      "pages": 8,
+      "references": 17,
+      "words_per_page": [
+        758,
+        889,
+        883,
+        921,
+        909,
+        918,
+        921,
+        684
+      ],
+      "sha256": "f91627095802b0cdc6fd274da315a7d26cb8f9268aab054b17b74c86bcb98530"
+    }
+  ]
+}

@@ -15,6 +15,8 @@ The two independent IEEE-style manuscripts are editable in LaTeX and available a
 
 The corresponding `.tex` source files sit beside each PDF. [Evidence and contribution notes](research/Contribution-and-Evidence-Matrix.md) and [reference audit](research/Reference-Audit.md) document the research boundary. Authors should review every claim and adapt the selected version to the venue template and disclosure rules before submission.
 
+References revised on 7 October 2026: Paper 1 has 14 cited references and Paper 2 has 17. The audit records the disposition of all 20 supplied review entries and 16 separate-list entries. The [citation register](research/paper-reference-register.json) maps each numbered source to its in-text uses and supported claim. All eight PDFs were rebuilt, checked for missing citations, and visually reviewed; [validation records](research/papers/validation.json) include exact page counts and file hashes.
+
 ## Start the three-organization demo
 
 Requirements: Docker Compose v2, Python 3.12 for bootstrap, and sufficient disk space for images. Native PostgreSQL execution is also supported in [deployment instructions](docs/deployment.md).
