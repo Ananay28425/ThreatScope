@@ -1,0 +1,42 @@
+{
+  "alce": {
+    "pages": 24,
+    "sha256": "ae9868f07f0f7ffaae5346778f79b7827d9ec6b13b1e6aae4dff6b2ffc37a2e1"
+  },
+  "cce": {
+    "pages": 11,
+    "sha256": "68cf511c951091210dda02b1428c121f717cdb38bf7d1348b8824aed2520bd98"
+  },
+  "dunnett": {
+    "pages": 8,
+    "sha256": "10d012a2f015ff4d3ec0eae43c78b95e3c1023bbb89e347e354e91c7323a2ca5"
+  },
+  "factscore": {
+    "pages": 25,
+    "sha256": "8486fe22a15aaf3fe2e1d7043d169000600205dde9c601c9fd31c0dd6f7380e9"
+  },
+  "gsar": {
+    "pages": 32,
+    "sha256": "1eab22ba6257f422278f789c3fd0f9cbff2e0dcc0a06934e17f36a1672ed1920"
+  },
+  "hackphyr": {
+    "pages": 42,
+    "sha256": "a33679fbae5804404478f598ea5bcee3ad85469e37c24c16452504974e035ec9"
+  },
+  "kum": {
+    "pages": 17,
+    "sha256": "78f6127dbfd43a36ddc2ef2d5fc3081bf5f849a5f660657704cea62ad6dcfe97"
+  },
+  "rarr": {
+    "pages": 32,
+    "sha256": "012e1231dc847c4cee6c7cb0e6ffee43f5799f70754930c815db1674ceffeab9"
+  },
+  "revocation": {
+    "pages": 20,
+    "sha256": "3596c76611a32b4a5cfe803e26dff7ba4134504099f0fb9e8dafe747587e81c9"
+  },
+  "S14": {
+    "pages": 32,
+    "sha256": "62c937b22479003cd22eae25923a8e28796f9d40760c0a93f49a1628cdff636c"
+  }
+}

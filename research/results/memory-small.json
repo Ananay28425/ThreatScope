@@ -1,0 +1,8 @@
+{
+  "model": "Qwen3-1.7B-Q4_K_M",
+  "threads": 4,
+  "peak_working_set_bytes": 2962153472,
+  "concurrency": 1,
+  "working_set_bytes": 2870308864,
+  "context": 8192
+}

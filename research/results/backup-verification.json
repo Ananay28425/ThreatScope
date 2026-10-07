@@ -1,0 +1,19 @@
+{
+  "restored_database": "restore_test_9d9220f59007",
+  "counts_match": true,
+  "counts": [
+    "3",
+    "9",
+    "9",
+    "12",
+    "3"
+  ],
+  "tables": [
+    "signals",
+    "evidence",
+    "evidence_history",
+    "notifications",
+    "credentials"
+  ],
+  "dump_sha256": "3aee40d6e6e42852dba5ce5866f936fe7fbc0ab575fa2813cd7f08a9b09576d7"
+}

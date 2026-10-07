@@ -2,7 +2,7 @@
 
 ## Reproducible setup
 
-Use root `docker-compose.yml`, `uv.lock`, and `frontend/package-lock.json`. The Compose database is internal, and API/frontend ports bind to loopback. `python scripts/bootstrap.py` creates private settings and refuses replacement. Build, start services, enroll once, then start the optional `demo` profile as shown in the README. Do not use `down -v` to restart: it deletes database and agent volumes.
+Use root `docker-compose.yml`, `uv.lock`, and `frontend/package-lock.json`. The Compose database is internal, and API/frontend ports bind to loopback. `python scripts/bootstrap.py` creates private settings and refuses replacement. Build, start services, enroll once, then start the optional `demo` profile as shown in the README. Demo agents briefly start as root to preserve ownership of their SQLite volumes and copy their mounted node keys into private container storage. They then drop to UID 10001 before parsing credentials or sending data; this also works when Windows bind mounts expose different file ownership. Run bootstrap and enrollment as the same unprivileged host user. Do not use `down -v` to restart: it deletes database and agent volumes.
 
 The base deployment uses deterministic explanations until an inference endpoint is configured. The dashboard reports whether inference is configured; configuration alone does not establish service health. A failed generation returns a labeled fallback. Optional external monitoring can poll the authenticated `/api/v1/status` endpoint for queue depth and oldest pending age, and `/health/live` and `/health/ready` for process/database checks. Old dashboards with unsupported metrics were removed.
 
