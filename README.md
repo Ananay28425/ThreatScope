@@ -6,16 +6,15 @@ ThreatScope is a research prototype for policy-controlled security evidence shar
 
 ## Revised research drafts
 
-The two independent IEEE-style manuscripts are editable in LaTeX and available as PDFs. Each numbered version has its stated page count. The drafts report measured pilot results and their limits; neither claims an acceptance outcome.
+The framework and local-AI methods now form one IEEE-style research manuscript: **Bounded Evidence Sharing and Verified Local Interpretation for Collaborative Threat Detection**. It is editable in LaTeX and available in four verified PDF lengths. GTSS 2027 is a separately preserved manuscript exception; the accepted literature review remains a separate workstream.
 
 | Paper | 6 pages | 8 pages | 10 pages | 12 pages |
 | --- | --- | --- | --- | --- |
-| Framework and evidence disclosure | [PDF](research/papers/paper1/paper1-6pages.pdf) | [PDF](research/papers/paper1/paper1-8pages.pdf) | [PDF](research/papers/paper1/paper1-10pages.pdf) | [PDF](research/papers/paper1/paper1-12pages.pdf) |
-| Evidence-grounded local explanations | [PDF](research/papers/paper2/paper2-6pages.pdf) | [PDF](research/papers/paper2/paper2-8pages.pdf) | [PDF](research/papers/paper2/paper2-10pages.pdf) | [PDF](research/papers/paper2/paper2-12pages.pdf) |
+| Combined evidence lifecycle | [PDF](research/papers/combined/combined-6pages.pdf) | [PDF](research/papers/combined/combined-8pages.pdf) | [PDF](research/papers/combined/combined-10pages.pdf) | [PDF](research/papers/combined/combined-12pages.pdf) |
 
-The corresponding `.tex` source files sit beside each PDF. [Evidence and contribution notes](research/Contribution-and-Evidence-Matrix.md) and [reference audit](research/Reference-Audit.md) document the research boundary. Authors should review every claim and adapt the selected version to the venue template and disclosure rules before submission.
+The corresponding standalone `.tex` files sit beside each PDF. [The authoritative core](research/papers/combined/core.tex) and substantive extensions keep methods, results and terminology consistent. [Evidence and contribution notes](research/Contribution-and-Evidence-Matrix.md) distinguish the disclosure experiment from the separate eight-case inference pilot; no integrated field or analyst-usefulness result is claimed.
 
-References revised on 7 October 2026: Paper 1 has 14 cited references and Paper 2 has 17. The audit records the disposition of all 20 supplied review entries and 16 separate-list entries. The [citation register](research/paper-reference-register.json) maps each numbered source to its in-text uses and supported claim. All eight PDFs were rebuilt, checked for missing citations, and visually reviewed; [validation records](research/papers/validation.json) include exact page counts and file hashes.
+The 14 October revision cites the same 30 references in every variant. [The current reference and claim map](research/papers/combined/Reference-and-Claim-Map.md) records primary sources and narrow supported claims; [verification records](research/papers/combined/verification.json) record the four page counts, hashes and review of all 36 pages. The earlier two-paper folders and 7 October source audit are preserved as history. See [the active publication plan](research/Publication-Plan.md) for the GTSS exception and substantive-overlap disclosure requirements before submission.
 
 ## Start the three-organization demo
 
