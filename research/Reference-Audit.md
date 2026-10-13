@@ -1,5 +1,7 @@
 # Reference audit and claim map
 
+**Active update, 14 October 2026:** the combined manuscript uses 30 references from the prior 31-entry union. Its current citation order and claim map are in [`papers/combined/Reference-and-Claim-Map.md`](papers/combined/Reference-and-Claim-Map.md). The sections below retain the 7 October source audits and historical split. Only the broad `dara` position paper is omitted from the combined bibliography; direct primary methods remain. The GTSS manuscript is separately preserved.
+
 Revision date: **7 October 2026**. Paper 1 now has **14** references and Paper 2 has **17**, with in-text citations in every length variant. The previous drafts had seven and nine. The additions address missing direct prior work, rather than treating a reference-count target as evidence of research quality.
 
 The authoritative bibliographies are in `papers/paper1/core.tex` and `papers/paper2/body.tex`. They use IEEE-style numbered references ordered by first citation. Published versions are preferred when verified; arXiv entries are explicitly identifiable as preprints. Page ranges and DOI identifiers are included where the authoritative record provides them. A standard or dataset page is cited as such, rather than presented as a research article. Long author lists may use *et al.* in the manuscript; this is a citation convention, not missing authorship.

@@ -53,6 +53,7 @@ Set `TEST_DATABASE_URL` to an isolated PostgreSQL test database to run the same 
 - [Deployment and recovery](docs/deployment.md): native services, migrations, backup, restore, and inference connectivity.
 - [Versioned contracts](docs/contracts.md): ingestion, evidence, sessions, events, and explanations.
 - `research/`: frozen cases, source metadata, evaluation programs, and measured outputs.
+- [Active manuscript status](research/Publication-Status.md): one combined framework/local-AI research paper, 30 references, four length variants, and the preserved GTSS exception.
 - `tests/`: behavioral tests covering authorization, replay, disclosure budgets, and explanation support.
 
 Legacy Kafka, ZooKeeper, Redis, Celery, competing API routes, and token-in-browser storage have been removed. Existing database tables are preserved by the new migration and copied into a quarantined legacy archive. They are not treated as authenticated research evidence. There is one root Compose definition and one Python dependency lock.

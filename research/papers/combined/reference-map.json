@@ -1,0 +1,456 @@
+{
+  "updated_on": "2026-10-14",
+  "scope": "Combined draft; existing primary-source claim maps retained and closest methods rechecked. Metadata lookup can resolve earlier preprint versions; published records control the bibliography.",
+  "references": [
+    {
+      "number": 1,
+      "key": "nist150",
+      "ieee_reference": "C. S. Johnson, M. L. Badger, D. A. Waltermire, J. Snyder, and C. Skorupka, ``Guide to Cyber Threat Information Sharing,'' NIST SP 800-150, 2016, doi: 10.6028/NIST.SP.800-150.",
+      "primary_source": "https://doi.org/10.6028/NIST.SP.800-150",
+      "claim_and_boundary": "Sharing participation and handling rules are explicit governance decisions; no measured performance claim.",
+      "citation_uses": [
+        {
+          "line": 20,
+          "section": "Introduction"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 2,
+      "key": "misp",
+      "ieee_reference": "C. Wagner, A. Dulaunoy, G. Wagener, and A. Iklody, ``MISP: The Design and Implementation of a Collaborative Threat Intelligence Sharing Platform,'' in \\emph{Proc. ACM WISCS}, 2016, pp. 49--56, doi: 10.1145/2994539.2994542.",
+      "primary_source": "https://doi.org/10.1145/2994539.2994542",
+      "claim_and_boundary": "Collaborative structured CTI exchange is established prior work.",
+      "citation_uses": [
+        {
+          "line": 20,
+          "section": "Introduction"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 3,
+      "key": "freudiger",
+      "ieee_reference": "J. Freudiger, E. De Cristofaro, and A. E. Brito, ``Controlled Data Sharing for Collaborative Predictive Blacklisting,'' in \\emph{Proc. DIMVA}, LNCS vol. 9148, 2015, pp. 327--349, doi: 10.1007/978-3-319-20550-2\\_17.",
+      "primary_source": "https://doi.org/10.1007/978-3-319-20550-2_17",
+      "claim_and_boundary": "Controlled sharing and collaborator selection precede this work; published record replaces the earlier arXiv-only reference.",
+      "citation_uses": [
+        {
+          "line": 30,
+          "section": "Sharing and collaborative correlation"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 4,
+      "key": "stix",
+      "ieee_reference": "B. Jordan, R. Piazza, and T. Darley, Eds., ``STIX Version 2.1,'' OASIS Standard, Jun. 2021. [Online]. Available: \\url{https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html}",
+      "primary_source": "https://docs.oasis-open.org/cti/stix/v2.1/os/stix-v2.1-os.html",
+      "claim_and_boundary": "Threat-information representation; this implementation does not claim STIX compliance.",
+      "citation_uses": [
+        {
+          "line": 30,
+          "section": "Sharing and collaborative correlation"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 5,
+      "key": "lincoln",
+      "ieee_reference": "P. Lincoln, P. Porras, and V. Shmatikov, ``Privacy-Preserving Sharing and Correlation of Security Alerts,'' in \\emph{Proc. 13th USENIX Security Symp.}, 2004. [Online]. Available: \\url{https://www.usenix.org/conference/13th-usenix-security-symposium/privacy-preserving-sharing-and-correlation-security-alerts}",
+      "primary_source": "https://www.usenix.org/conference/13th-usenix-security-symposium/privacy-preserving-sharing-and-correlation-security-alerts",
+      "claim_and_boundary": "Sanitized sharing and correlation of security alerts are longstanding prior art.",
+      "citation_uses": [
+        {
+          "line": 30,
+          "section": "Sharing and collaborative correlation"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 6,
+      "key": "sepia",
+      "ieee_reference": "M. Burkhart, M. Strasser, D. Many, and X. Dimitropoulos, ``SEPIA: Privacy-Preserving Aggregation of Multi-Domain Network Events and Statistics,'' in \\emph{Proc. 19th USENIX Security Symp.}, 2010. [Online]. Available: \\url{https://www.usenix.org/events/sec10/tech/full_papers/Burkhart.pdf}",
+      "primary_source": "https://www.usenix.org/conference/usenixsecurity10/sepia-privacy-preserving-aggregation-multi-domain-network-events-and",
+      "claim_and_boundary": "Secure aggregation of multi-domain network events; policy-unit accounting does not provide its cryptographic protection.",
+      "citation_uses": [
+        {
+          "line": 30,
+          "section": "Sharing and collaborative correlation"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 7,
+      "key": "psi",
+      "ieee_reference": "O. E. Arpaci, R. Boutaba, and F. Kerschbaum, ``Over-Threshold Multiparty Private Set Intersection for Collaborative Network Intrusion Detection,'' in \\emph{Proc. 23rd USENIX NSDI}, 2026, pp. 2211--2226. [Online]. Available: \\url{https://www.usenix.org/conference/nsdi26/presentation/arpaci}",
+      "primary_source": "https://www.usenix.org/conference/nsdi26/presentation/arpaci",
+      "claim_and_boundary": "Over-threshold private set intersection for collaborative intrusion detection; our categorical disclosure is a different mechanism.",
+      "citation_uses": [
+        {
+          "line": 30,
+          "section": "Sharing and collaborative correlation"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 8,
+      "key": "kum",
+      "ieee_reference": "H.-C. Kum, E. D. Ragan, G. Ilangovan, M. Ramezani, Q. Li, and C. Schmit, ``Enhancing Privacy through an Interactive On-demand Incremental Information Disclosure Interface: Applying Privacy-by-Design to Record Linkage,'' in \\emph{Proc. SOUPS}, 2019, pp. 175--189. [Online]. Available: \\url{https://www.usenix.org/conference/soups2019/presentation/kum}",
+      "primary_source": "https://www.usenix.org/conference/soups2019/presentation/kum",
+      "claim_and_boundary": "Incremental on-demand disclosure has prior empirical work in record linkage; results are not transferred to security detection.",
+      "citation_uses": [
+        {
+          "line": 32,
+          "section": "Sharing and collaborative correlation"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 9,
+      "key": "bouwman",
+      "ieee_reference": "X. Bouwman \\emph{et al.}, ``Helping hands: Measuring the impact of a large threat intelligence sharing community,'' in \\emph{Proc. 31st USENIX Security Symp.}, 2022, pp. 1149--1165. [Online]. Available: \\url{https://www.usenix.org/conference/usenixsecurity22/presentation/bouwman}",
+      "primary_source": "https://www.usenix.org/conference/usenixsecurity22/presentation/bouwman",
+      "claim_and_boundary": "Empirical community study distinguishes aggregation of existing intelligence from added coverage; does not validate our provenance classifier.",
+      "citation_uses": [
+        {
+          "line": 32,
+          "section": "Sharing and collaborative correlation"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 10,
+      "key": "hackphyr",
+      "ieee_reference": "M. Rigaki, C. Catania, and S. Garcia, ``Hackphyr: A Local Fine-Tuned LLM Agent for Network Security Environments,'' arXiv:2409.11276, 2024, doi: 10.48550/arXiv.2409.11276.",
+      "primary_source": "https://arxiv.org/abs/2409.11276",
+      "claim_and_boundary": "Local cybersecurity model capability, specifically a red-team agent; not evidence of analyst explanation quality.",
+      "citation_uses": [
+        {
+          "line": 35,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 11,
+      "key": "redsage",
+      "ieee_reference": "N. Suryanto \\emph{et al.}, ``RedSage: A Cybersecurity Generalist LLM,'' in \\emph{Proc. ICLR}, 2026. [Online]. Available: \\url{https://openreview.net/pdf?id=W4FAenIrQ2}",
+      "primary_source": "https://openreview.net/pdf?id=W4FAenIrQ2",
+      "claim_and_boundary": "Locally deployable cybersecurity-generalist model; local deployment alone is not our novelty. The conference PDF and [author preprint](https://arxiv.org/abs/2601.22159v2) confirm the publication status.",
+      "citation_uses": [
+        {
+          "line": 35,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 12,
+      "key": "alce",
+      "ieee_reference": "T. Gao, H. Yen, J. Yu, and D. Chen, ``Enabling Large Language Models to Generate Text with Citations,'' in \\emph{Proc. EMNLP}, 2023, pp. 6465--6488, doi: 10.18653/v1/2023.emnlp-main.398.",
+      "primary_source": "https://aclanthology.org/2023.emnlp-main.398/",
+      "claim_and_boundary": "Citation-bearing generation and citation-quality evaluation.",
+      "citation_uses": [
+        {
+          "line": 35,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 13,
+      "key": "rarr",
+      "ieee_reference": "L. Gao \\emph{et al.}, ``RARR: Researching and Revising What Language Models Say, Using Language Models,'' in \\emph{Proc. ACL}, vol. 1, 2023, pp. 16477--16508, doi: 10.18653/v1/2023.acl-long.910.",
+      "primary_source": "https://aclanthology.org/2023.acl-long.910/",
+      "claim_and_boundary": "Post-generation evidence attribution and revision are existing techniques.",
+      "citation_uses": [
+        {
+          "line": 35,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 14,
+      "key": "factscore",
+      "ieee_reference": "S. Min \\emph{et al.}, ``FActScore: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation,'' in \\emph{Proc. EMNLP}, 2023, pp. 12076--12100, doi: 10.18653/v1/2023.emnlp-main.741.",
+      "primary_source": "https://aclanthology.org/2023.emnlp-main.741/",
+      "claim_and_boundary": "Atomic factual-support evaluation; our finite tuple score is not its general factuality metric.",
+      "citation_uses": [
+        {
+          "line": 35,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 15,
+      "key": "lexis",
+      "ieee_reference": "M. Atoum, M. Al-Essa, Y. Alsarhan, A. K. A. Hwaitat, and M. Imran, ``LLM Enhanced Explainable Intrusion Detection System for Generating Actionable Security Insights,'' \\emph{Computers, Materials \\& Continua}, vol. 89, no. 2, Art. no. 50, 2026, doi: 10.32604/cmc.2026.085403.",
+      "primary_source": "https://www.techscience.com/cmc/v89n2/68791/html",
+      "claim_and_boundary": "Structured security-report drafts from XAI evidence are close prior work.",
+      "citation_uses": [
+        {
+          "line": 35,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 16,
+      "key": "investigation",
+      "ieee_reference": "E. Eilertsen, V. Mavroeidis, and G. Grov, ``Towards Agentic Investigation of Security Alerts,'' in \\emph{Proc. IEEE BigData}, 2025, pp. 7793--7802, doi: 10.1109/BigData66926.2025.11402161.",
+      "primary_source": "https://doi.org/10.1109/BigData66926.2025.11402161",
+      "claim_and_boundary": "Agentic alert investigation with constrained queries; [author preprint](https://arxiv.org/abs/2604.25846) confirms the publication relationship.",
+      "citation_uses": [
+        {
+          "line": 35,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 17,
+      "key": "gsar",
+      "ieee_reference": "F. A. Kamelhar, ``GSAR: Typed Grounding for Hallucination Detection and Recovery in Multi-Agent LLMs,'' arXiv:2604.23366, 2026, doi: 10.48550/arXiv.2604.23366.",
+      "primary_source": "https://arxiv.org/abs/2604.23366",
+      "claim_and_boundary": "Typed grounding and bounded recovery are adjacent prior art; preprint status is retained.",
+      "citation_uses": [
+        {
+          "line": 35,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 18,
+      "key": "revocation",
+      "ieee_reference": "Y. T. Shen, K. Toyoda, and A. Leung, ``Revoked but Still Authoritative: An Empirical Study of Revocation Enforcement in Agent-Memory Systems,'' arXiv:2609.08258, 2026, doi: 10.48550/arXiv.2609.08258.",
+      "primary_source": "https://arxiv.org/abs/2609.08258",
+      "claim_and_boundary": "Soft revocation labels can leave memory authoritative; no claim that our pilot replicates its benchmark.",
+      "citation_uses": [
+        {
+          "line": 37,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 19,
+      "key": "securityshap",
+      "ieee_reference": "N. Srisumrith and S. Sodsee, ``Detecting Cybersecurity Threats by Integrating Explainable AI with SHAP Interpretability and Strategic Data Sampling,'' arXiv:2602.19087, 2026, doi: 10.48550/arXiv.2602.19087.",
+      "primary_source": "https://arxiv.org/abs/2602.19087",
+      "claim_and_boundary": "SHAP-based detector interpretation differs from recipient-authorized factual claim admission.",
+      "citation_uses": [
+        {
+          "line": 37,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 20,
+      "key": "refchecker",
+      "ieee_reference": "X. Hu \\emph{et al.}, ``Knowledge-Centric Hallucination Detection,'' in \\emph{Proc. EMNLP}, 2024, pp. 6953--6975, doi: 10.18653/v1/2024.emnlp-main.395.",
+      "primary_source": "https://aclanthology.org/2024.emnlp-main.395/",
+      "claim_and_boundary": "Reference-based claim-triplet checking; our verifier instead uses exact finite tuples and current authorization.",
+      "citation_uses": [
+        {
+          "line": 37,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 21,
+      "key": "selfcheck",
+      "ieee_reference": "P. Manakul, A. Liusie, and M. Gales, ``SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative Large Language Models,'' in \\emph{Proc. EMNLP}, 2023, pp. 9004--9017, doi: 10.18653/v1/2023.emnlp-main.557.",
+      "primary_source": "https://aclanthology.org/2023.emnlp-main.557/",
+      "claim_and_boundary": "Sampling consistency as a hallucination signal; consistency does not establish recipient permission.",
+      "citation_uses": [
+        {
+          "line": 37,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 22,
+      "key": "faithlm",
+      "ieee_reference": "Y.-N. Chuang \\emph{et al.}, ``FaithLM: Towards Faithful Explanations for Large Language Models,'' in \\emph{Proc. EACL}, vol. 1, 2026, pp. 3802--3824, doi: 10.18653/v1/2026.eacl-long.177.",
+      "primary_source": "https://aclanthology.org/2026.eacl-long.177/",
+      "claim_and_boundary": "Intervention-based explanation faithfulness differs from fidelity to an authorized evidence snapshot.",
+      "citation_uses": [
+        {
+          "line": 37,
+          "section": "Local models and supported explanations"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 23,
+      "key": "cicpaper",
+      "ieee_reference": "I. Sharafaldin, A. H. Lashkari, and A. A. Ghorbani, ``Toward Generating a New Intrusion Detection Dataset and Intrusion Traffic Characterization,'' in \\emph{Proc. ICISSP}, 2018, pp. 108--116, doi: 10.5220/0006639801080116.",
+      "primary_source": "https://doi.org/10.5220/0006639801080116",
+      "claim_and_boundary": "Dataset construction and labelled traffic context. Our CIC replay remains incomplete.",
+      "citation_uses": [
+        {
+          "line": 40,
+          "section": "Evaluation and trust assumptions"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 24,
+      "key": "cicdata",
+      "ieee_reference": "Canadian Institute for Cybersecurity, ``Intrusion Detection Evaluation Dataset (CIC-IDS2017),'' Univ. of New Brunswick. [Online]. Available: \\url{https://www.unb.ca/cic/datasets/ids-2017.html}",
+      "primary_source": "https://www.unb.ca/cic/datasets/ids-2017.html",
+      "claim_and_boundary": "Official dataset description and access source, separate from the dataset paper.",
+      "citation_uses": [
+        {
+          "line": 40,
+          "section": "Evaluation and trust assumptions"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 25,
+      "key": "dwork",
+      "ieee_reference": "C. Dwork and A. Roth, ``The Algorithmic Foundations of Differential Privacy,'' \\emph{Foundations and Trends in Theoretical Computer Science}, vol. 9, nos. 3--4, pp. 211--407, 2014, doi: 10.1561/0400000042.",
+      "primary_source": "https://doi.org/10.1561/0400000042",
+      "claim_and_boundary": "Formal differential privacy is distinct from operator-defined disclosure costs.",
+      "citation_uses": [
+        {
+          "line": 40,
+          "section": "Evaluation and trust assumptions"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 26,
+      "key": "cce",
+      "ieee_reference": "A. Serckumecka, I. Medeiros, and A. Bessani, ``CCE: A Cloud-Based SIEM Correlation Engine Built on Serverless Functions,'' in \\emph{Proc. IEEE SRDS}, 2025, pp. 95--105, doi: 10.1109/SRDS69199.2025.00022.",
+      "primary_source": "https://doi.org/10.1109/SRDS69199.2025.00022",
+      "claim_and_boundary": "Serverless SIEM correlation is an architectural alternative; our single-worker results do not imply elasticity. [Author-hosted manuscript](https://di.fc.ul.pt/~imedeiros/papers/SRDS2025_CCE.pdf).",
+      "citation_uses": [
+        {
+          "line": 40,
+          "section": "Evaluation and trust assumptions"
+        }
+      ],
+      "original_manuscript": "framework"
+    },
+    {
+      "number": 27,
+      "key": "injection",
+      "ieee_reference": "K. Greshake, S. Abdelnabi, S. Mishra, C. Endres, T. Holz, and M. Fritz, ``Not What You've Signed Up For: Compromising Real-World LLM-Integrated Applications with Indirect Prompt Injection,'' in \\emph{Proc. ACM AISec}, 2023, pp. 79--90, doi: 10.1145/3605764.3623985.",
+      "primary_source": "https://doi.org/10.1145/3605764.3623985",
+      "claim_and_boundary": "Instructions inside retrieved data create indirect prompt-injection risks. The DOI registration confirms published metadata; [author preprint](https://arxiv.org/abs/2302.12173) provides open content.",
+      "citation_uses": [
+        {
+          "line": 40,
+          "section": "Evaluation and trust assumptions"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 28,
+      "key": "confidential",
+      "ieee_reference": "K. Vaswani \\emph{et al.}, ``Confidential Computing within an AI Accelerator,'' in \\emph{Proc. USENIX ATC}, 2023, pp. 501--518. [Online]. Available: \\url{https://www.usenix.org/conference/atc23/presentation/vaswani}",
+      "primary_source": "https://www.usenix.org/conference/atc23/presentation/vaswani",
+      "claim_and_boundary": "Hardware confidentiality and host isolation differ from ordinary local CPU execution.",
+      "citation_uses": [
+        {
+          "line": 40,
+          "section": "Evaluation and trust assumptions"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 29,
+      "key": "qwen3",
+      "ieee_reference": "A. Yang \\emph{et al.}, ``Qwen3 Technical Report,'' arXiv:2505.09388, 2025, doi: 10.48550/arXiv.2505.09388.",
+      "primary_source": "https://arxiv.org/abs/2505.09388",
+      "claim_and_boundary": "Model-family identity and thinking modes; no imported performance result.",
+      "citation_uses": [
+        {
+          "line": 40,
+          "section": "Evaluation and trust assumptions"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    },
+    {
+      "number": 30,
+      "key": "offloading",
+      "ieee_reference": "L. Yuan, D.-J. Han, S. Wang, and C. G. Brinton, ``Local-Cloud Inference Offloading for LLMs in Multi-Modal, Multi-Task, Multi-Dialogue Settings,'' in \\emph{Proc. ACM MobiHoc}, 2025, pp. 201--210, doi: 10.1145/3704413.3764429.",
+      "primary_source": "https://doi.org/10.1145/3704413.3764429",
+      "claim_and_boundary": "Quality/latency/cost trade-offs in local–cloud serving; our fixed local pilot does not evaluate offloading. [Author preprint](https://arxiv.org/abs/2502.11007).",
+      "citation_uses": [
+        {
+          "line": 40,
+          "section": "Evaluation and trust assumptions"
+        }
+      ],
+      "original_manuscript": "local_interpretation"
+    }
+  ],
+  "variants": [
+    {
+      "target_pages": 6,
+      "source": "combined-6pages.tex",
+      "sha256": "2596c7e28c2ae4d3c4209d07b71b6fa6a0c3d32aaa693d09ece560468c705d6d",
+      "references": 30
+    },
+    {
+      "target_pages": 8,
+      "source": "combined-8pages.tex",
+      "sha256": "9f34c5d9af4f24b2db65eee072089be2a61c119ed52250b2be5fe0ce8a06e134",
+      "references": 30
+    },
+    {
+      "target_pages": 10,
+      "source": "combined-10pages.tex",
+      "sha256": "e2e7bba9ed0236e7bef0d261de6bfd5534ad49932e6578dfca95aa13077fa7e8",
+      "references": 30
+    },
+    {
+      "target_pages": 12,
+      "source": "combined-12pages.tex",
+      "sha256": "4f99da0ae6214547c8155f57cedbda45dc908ac93da8f5a7fcaf47deef300872",
+      "references": 30
+    }
+  ],
+  "excluded": {
+    "dara": "Broad collaborative-IDS position paper; direct sharing/correlation precedents retained instead."
+  },
+  "gtss_exception": "GTSS 2027 manuscript remains a separate unchanged submission workstream; this file does not establish permission to reuse material at simultaneous submissions."
+}

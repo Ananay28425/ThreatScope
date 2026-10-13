@@ -1,0 +1,121 @@
+{
+  "checked_on": "2026-10-14",
+  "reference_count": 30,
+  "protocol_rows": 1000,
+  "variants": [
+    {
+      "file": "combined-6pages.pdf",
+      "pages": 6,
+      "references": 30,
+      "figures": 3,
+      "words": 4072,
+      "fonts": [
+        "AKHCZK+CMMI10",
+        "BZIVMZ+TimesNewRomanPS-BoldItalicMT",
+        "CAFSZL+CMR10",
+        "DDIEWW+CMSY10",
+        "FKPJSN+CMSY7",
+        "IHAIZV+TimesNewRomanPSMT",
+        "IXFAWU+TimesNewRomanPS-BoldMT",
+        "JAGKKY+CMR7",
+        "NOMARO+LINE10",
+        "PVTTLK+CMMI5",
+        "TQTHRL+TimesNewRomanPS-ItalicMT",
+        "VDVGTR+CMMI7",
+        "YEUUOC+LMMono10-Regular"
+      ],
+      "pdf_sha256": "48967af007f58b86bf883f43a35435209c6f4b765996634b1667fbde3d13b224",
+      "tex_sha256": "2596c7e28c2ae4d3c4209d07b71b6fa6a0c3d32aaa693d09ece560468c705d6d"
+    },
+    {
+      "file": "combined-8pages.pdf",
+      "pages": 8,
+      "references": 30,
+      "figures": 3,
+      "words": 5626,
+      "fonts": [
+        "AKHCZK+CMMI10",
+        "BZIVMZ+TimesNewRomanPS-BoldItalicMT",
+        "CAFSZL+CMR10",
+        "DDIEWW+CMSY10",
+        "FKPJSN+CMSY7",
+        "IHAIZV+TimesNewRomanPSMT",
+        "IXFAWU+TimesNewRomanPS-BoldMT",
+        "JAGKKY+CMR7",
+        "KPXLOM+CMEX10",
+        "NOMARO+LINE10",
+        "PVTTLK+CMMI5",
+        "TQTHRL+TimesNewRomanPS-ItalicMT",
+        "VDVGTR+CMMI7",
+        "YEUUOC+LMMono10-Regular"
+      ],
+      "pdf_sha256": "70b95788aa6517466b81a71d1d98a4a06dfaa131e606a952126595a4ae4669d7",
+      "tex_sha256": "9f34c5d9af4f24b2db65eee072089be2a61c119ed52250b2be5fe0ce8a06e134"
+    },
+    {
+      "file": "combined-10pages.pdf",
+      "pages": 10,
+      "references": 30,
+      "figures": 3,
+      "words": 8164,
+      "fonts": [
+        "AKHCZK+CMMI10",
+        "BZIVMZ+TimesNewRomanPS-BoldItalicMT",
+        "CAFSZL+CMR10",
+        "DDIEWW+CMSY10",
+        "FKPJSN+CMSY7",
+        "IHAIZV+TimesNewRomanPSMT",
+        "IXFAWU+TimesNewRomanPS-BoldMT",
+        "JAGKKY+CMR7",
+        "KPXLOM+CMEX10",
+        "NOMARO+LINE10",
+        "PVTTLK+CMMI5",
+        "TQTHRL+TimesNewRomanPS-ItalicMT",
+        "VDVGTR+CMMI7",
+        "YEUUOC+LMMono10-Regular"
+      ],
+      "pdf_sha256": "16fca06d91bda6290008ebf0ffcddb9e8cbbbe441ffab3ec039849d83ffc1bc7",
+      "tex_sha256": "e2e7bba9ed0236e7bef0d261de6bfd5534ad49932e6578dfca95aa13077fa7e8"
+    },
+    {
+      "file": "combined-12pages.pdf",
+      "pages": 12,
+      "references": 30,
+      "figures": 3,
+      "words": 9742,
+      "fonts": [
+        "AKHCZK+CMMI10",
+        "BZIVMZ+TimesNewRomanPS-BoldItalicMT",
+        "CAFSZL+CMR10",
+        "DDIEWW+CMSY10",
+        "FKPJSN+CMSY7",
+        "IHAIZV+TimesNewRomanPSMT",
+        "IXFAWU+TimesNewRomanPS-BoldMT",
+        "JAGKKY+CMR7",
+        "KPXLOM+CMEX10",
+        "NOMARO+LINE10",
+        "PVTTLK+CMMI5",
+        "TQTHRL+TimesNewRomanPS-ItalicMT",
+        "VDVGTR+CMMI7",
+        "YEUUOC+LMMono10-Regular"
+      ],
+      "pdf_sha256": "095928bf6e3db6497154da3ce620f1d19cecae537ba32031e3f358914e0d153d",
+      "tex_sha256": "4f99da0ae6214547c8155f57cedbda45dc908ac93da8f5a7fcaf47deef300872"
+    }
+  ],
+  "visual_review": "pass: all 36 pages reviewed; detailed checks of diagrams, results and comparison tables",
+  "protected_sources": {
+    "research/papers/paper1/core.tex": "7864833acc9ccda9bbc30cbe6556e9122f41f3c054c24658161a7b1d33e1ed02",
+    "research/papers/paper1/paper1-10pages.tex": "8d17a9c2414c33dfd09d529698a9c7e9044b9b514d05d735238b7dacd972f0d8",
+    "research/papers/paper1/paper1-12pages.tex": "29a1b792fd09b7c7034b1c296945360610c9293e50d0cda07541a581b5f3f4e2",
+    "research/papers/paper1/paper1-6pages.tex": "ae581b8128ff29d927a28593c0b39bf52f77e144d8a63df97f2b23e6c7fecb73",
+    "research/papers/paper1/paper1-8pages.tex": "9c22c44fb2ee4a6657a5879cc27d4814349c4652f68c53892d3427ffab892796",
+    "research/papers/paper2/body.tex": "26a7b3fda607c63a789cf2856688d4266aa28beb17f39fef451e762ca1e50e4f",
+    "research/papers/paper2/paper2-10pages.tex": "a38ca4e62af6a187880e91160db14f7e7468f2f4e993d6936dc2142ae19f2b0d",
+    "research/papers/paper2/paper2-12pages.tex": "e3852d3055ce39b9fcf9277101374fe17d27b8c8cb210af03eca08d5af462bba",
+    "research/papers/paper2/paper2-6pages.tex": "98c1496de69664609816422e58fca6a04c96f5eec7742a0e663800833d407727",
+    "research/papers/paper2/paper2-8pages.tex": "41c62cc70d0012d3dea0376667d492baa74355b47e70ec5a80157c419d7e9717",
+    "external_gtss_pdf": "ddd553126dfa8b87125a789c9e0aa1e278f30a534539157574db22197d42d9a5"
+  },
+  "generation_reproducibility": "pass: bundled source generator reproduces all four verified LaTeX files byte for byte"
+}

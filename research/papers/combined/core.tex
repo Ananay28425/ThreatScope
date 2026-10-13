@@ -1,0 +1,173 @@
+% Authoritative combined manuscript. Generated standalone variants share this core.
+\documentclass[conference,letterpaper]{IEEEtran}
+\usepackage{amsmath,amssymb,url,graphicx}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\ifdefined\PaperLength\else\def\PaperLength{8}\fi
+\title{Bounded Evidence Sharing and Verified Local Interpretation for Collaborative Threat Detection}
+\author{\IEEEauthorblockN{Ananay Srivastava, Jitendra Singh, Manik Bhardwaj, Ashish Jain, Mukunj Singh}\\
+\IEEEauthorblockA{Department of Computer Science and Engineering, Sharda University, Greater Noida, India}}
+\begin{document}
+\maketitle
+\begin{abstract}
+Collaborative threat detection needs evidence from several organizations, but routine log export exposes information that an incident may not require. A local language model can then add unsupported detail or repeat evidence that has been corrected or withdrawn. We implement a common evidence lifecycle addressing both boundaries. Organizations retain raw events, send versioned signals, and approve, coarsen, or deny finite catalogue requests. A coordinator requests the least costly untried predicate while a declared rule remains unresolved, accounts for provenance groups, and records supported, contradicted, or unresolved outcomes. A separate local explanation process proposes finite claims against a recipient-authorized evidence snapshot. Exact tuple verification and current-snapshot checks precede controlled rendering; failed generation uses a deterministic fallback. In 1,000 synthetic protocol cases, the no-fault adaptive strategy matched the richer baseline's declared-rule outcomes with 18.2\% fewer policy units and 13.2\% fewer serialized payload bytes. In a separate eight-case Qwen3-4B CPU pilot, the complete explanation method displayed zero unsupported claims among 46, but fell back in every case and incurred a median generation time of 146.7 seconds. The studies demonstrate bounded protocol behavior and evidence-version enforcement. They do not establish field detection accuracy, formal privacy, analyst usefulness, or a benefit from model generation over templates.
+\end{abstract}
+\begin{IEEEkeywords}
+collaborative threat detection, selective disclosure, evidence provenance, local inference, claim verification, evidence lifecycle
+\end{IEEEkeywords}
+
+\section{Introduction}
+An organization can observe an authentication burst without knowing whether other organizations see the same pattern. A coordinator can seek corroboration, but raw login records expose identities, timings, and internal topology. A high anomaly score also leaves alternatives open: credential rejection and an identity-provider outage may both produce failed logins. Useful collaboration must establish which additional observations are needed and preserve the owner's authority to refuse them. NIST guidance makes sharing participation and handling explicit decisions~\cite{nist150}; MISP demonstrates practical collaborative intelligence exchange~\cite{misp}.
+
+The interpretation boundary adds another problem. An analyst may receive an incident outcome with some fields intentionally withheld. A fluent local model can turn partial evidence into an account that names an attacker or asserts a successful compromise. A previously valid report may also become inaccurate or unauthorized when evidence changes. Local execution changes the location of inference; it does not establish that each statement remains supported.
+
+We connect these boundaries through versioned evidence. The disclosure protocol produces finite, owner-approved records. Correlation attributes its outcome to declared rules and independent enrolled provenance groups. The explanation service uses only the recipient's current authorized snapshot and renders admitted claims with controlled wording. The model cannot request raw records, change the incident outcome, or execute advice. This creates an inspectable path from a local observation to a displayed claim.
+
+The contributions are an implemented finite disclosure protocol with cumulative local accounting, a recipient-specific claim contract with invalidation, and two component evaluations with explicit negative findings. The protocol evaluation compares sharing strategies while holding the workload constant. The explanation pilot checks claim support and lifecycle failures. These are separate studies: the pilot snapshots are constructed cases, and no experiment measures the complete live path from network events to analyst task outcomes.
+
+\section{Related Work and Contribution Boundary}
+\subsection{Sharing and collaborative correlation}
+Controlled predictive blacklisting studies how much information collaborators should share~\cite{freudiger}. STIX supplies a threat-information representation~\cite{stix}, although our wire contract does not claim STIX compliance. Sanitized security-alert correlation~\cite{lincoln} and secure aggregation in SEPIA~\cite{sepia} establish earlier collaborative privacy mechanisms. Over-threshold multiparty private set intersection supports cross-network intrusion detection while protecting nonmatching information~\cite{psi}. Our categorical releases provide administrative controls rather than those cryptographic guarantees.
+
+Incremental disclosure is also established in record linkage~\cite{kum}. A large empirical threat-intelligence community study distinguishes aggregation of existing intelligence from additional coverage~\cite{bouwman}. Accordingly, requesting information on demand and counting messages are insufficient novelty claims. Our protocol ties a finite request sequence to an unresolved security rule, local cumulative debits, immutable retry responses, and explicit outcomes when useful evidence is unavailable. Operator-assigned provenance groups remain an assumption about independence.
+
+\subsection{Local models and supported explanations}
+Hackphyr studies a local network-security agent~\cite{hackphyr}; RedSage develops a cybersecurity generalist model~\cite{redsage}. ALCE evaluates generation with citations~\cite{alce}, RARR studies attribution and revision~\cite{rarr}, and FActScore decomposes factual evaluation into atomic claims~\cite{factscore}. LEXIS generates structured security-report drafts from detector explanations~\cite{lexis}; agentic alert investigation uses constrained queries over logs~\cite{investigation}. GSAR provides typed grounding and bounded recovery~\cite{gsar}. These methods establish close precedents for supported reporting and recovery.
+
+Revocation research shows that marking memory as withdrawn can leave it authoritative to a generator~\cite{revocation}. SHAP-based cybersecurity interpretation concerns influential detector features~\cite{securityshap}. RefChecker checks extracted claim triplets against references~\cite{refchecker}, whereas SelfCheckGPT uses sampling consistency~\cite{selfcheck}. FaithLM examines whether explanations reflect a model's decisions through interventions~\cite{faithlm}. Our exact finite tuple checks establish fidelity to an authorized snapshot, not causal explanation faithfulness or unrestricted natural-language truth.
+
+\subsection{Evaluation and trust assumptions}
+CIC-IDS2017 supplies labelled network traffic and documented attack periods~\cite{cicpaper,cicdata}. Our planned replay remains uncompleted; the reported protocol cases are synthetic. Differential privacy has a formal neighbouring-dataset definition~\cite{dwork}; our integer release units are not its privacy parameter. CCE studies serverless security-event correlation~\cite{cce}; our single worker instead simplifies durable state ownership. Indirect prompt injection motivates treating evidence text as untrusted~\cite{injection}. Confidential accelerator execution protects against an untrusted host~\cite{confidential}, a guarantee absent from our ordinary local CPU deployment. Qwen3 provides the evaluated model family~\cite{qwen3}. Local-cloud offloading research considers joint quality, latency, and cost trade-offs~\cite{offloading}; our fixed local pilot does not evaluate cloud offloading.
+
+\section{System and Evidence Model}
+\subsection{Trust boundaries and durable state}
+Three separately enrolled organization agents retain raw observations and independent SQLite WAL release ledgers. Enrollment maps a random credential, stored as a hash, to its organization and node identity. FastAPI authenticates and validates a typed signal, commits a PostgreSQL inbox record, and only then acknowledges acceptance. PostgreSQL stores incidents, requests, evidence versions, browser sessions, explanation jobs, and notification history. An advisory lock permits one inbox correlation worker owner. Evidence responses and revisions also evaluate incidents under database row locks; correlation is not authoritative process-local memory.
+
+Each signal includes stable signal and snapshot identifiers, schema and detector versions, a UTC observation interval, anomaly family, score, policy version, and provenance identity. Conflicting reuse of an identifier is rejected. Default correlation uses a 120-second tumbling window, score threshold 0.80, quorum of three enrolled provenance groups, and a 90-second request deadline. These defaults are operational choices, not optimized research parameters. Unknown fingerprints cannot corroborate unrelated anomalies. Model readiness describes local training progress and does not suppress a rule score during warmup.
+
+\begin{figure*}[t]
+\centering
+\setlength{\unitlength}{1mm}
+\begin{picture}(168,82)
+\put(0,50){\framebox(36,18){\parbox{34mm}{\centering\footnotesize Organization agents A/B/C\\Local detector and snapshots\\Raw observations stay local}}}
+\put(44,50){\framebox(36,18){\parbox{34mm}{\centering\footnotesize Owner policy and SQLite ledger\\Signal outbox and release debit\\Approve / coarsen / deny}}}
+\put(88,50){\framebox(36,18){\parbox{34mm}{\centering\footnotesize Authenticated API\\Durable PostgreSQL inbox\\Typed, versioned evidence}}}
+\put(132,50){\framebox(36,18){\parbox{34mm}{\centering\footnotesize Correlation and requests\\Independent group votes\\Supported / contradicted / unresolved}}}
+\put(0,6){\framebox(36,18){\parbox{34mm}{\centering\footnotesize Tuple and lifecycle checks\\Repair or template fallback\\Controlled report rendering}}}
+\put(44,6){\framebox(36,18){\parbox{34mm}{\centering\footnotesize Separate local inference\\Finite claim proposals\\No tools or wider access}}}
+\put(88,6){\framebox(36,18){\parbox{34mm}{\centering\footnotesize Authorized snapshot\\Current versions and digest\\Recipient scope checked}}}
+\put(132,6){\framebox(36,18){\parbox{34mm}{\centering\footnotesize Scoped analyst dashboard\\Incident, gaps and report status\\Cursor-based recovery}}}
+\put(36,59){\vector(1,0){8}}\put(80,59){\vector(1,0){8}}\put(124,59){\vector(1,0){8}}
+\put(150,68){\line(0,1){8}}\put(150,76){\line(-1,0){88}}\put(62,76){\vector(0,-1){8}}
+\put(62,78){\makebox(88,3){\footnotesize finite catalogue requests}}
+\put(106,50){\vector(0,-1){26}}
+\put(88,15){\vector(-1,0){8}}\put(44,15){\vector(-1,0){8}}\put(124,15){\vector(1,0){8}}
+\put(18,6){\line(0,-1){6}}\put(18,0){\line(1,0){132}}\put(150,0){\vector(0,1){6}}
+\put(18,1){\makebox(132,3){\scriptsize current verified report or visible fallback}}
+\end{picture}
+\caption{Common evidence lifecycle. Owner-approved releases support correlation; a separate local process proposes claims from recipient-authorized snapshots. Current-version checks also apply before a report is served.}
+\label{fig:architecture}
+\end{figure*}
+
+The coordinator may be curious, and an enrolled source may be compromised. Authentication establishes who submitted a value; it does not establish its truth. Provenance groups are assigned by an operator and do not prove independent sensing. Shared upstream telemetry, colluding groups, or fabricated aggregates can defeat corroboration. A database outage prevents durable acceptance; agents retain pending work. Restart recovery is supported, but one database and worker remain availability limits.
+
+\subsection{Catalogue and outcomes}
+Authentication evidence consists of failure-rate category (cost 1), source spread (cost 2), and failure kind (cost 2). Traffic uses request-rate category (cost 1), source spread (cost 2), and service-error category (cost 1). Values are enumerated; raw addresses, log paths, arbitrary query strings, and unrestricted metric maps have no catalogue representation. Initial signals cost one policy unit. Coarsening returns \texttt{unknown} with zero refinement cost in the tested policy.
+
+For source $o$ and family $f$, let $d_f(V_o)\in\{S,C,U\}$ represent support, contradiction, or unresolved from active released values $V_o$. Authentication support requires high failures, wide sources, and rejected credentials. Low failures, narrow sources, or service-unavailable failures contradict that rule. Traffic support requires spike rate, wide sources, and high service errors; normal rate or low errors contradict it. Every other combination remains unresolved. These are declared scenario predicates, not general definitions of attacks.
+
+Only one source snapshot represents an organization within an incident. Reports in one provenance group must agree to produce a group vote. At least three supporting groups yield support; three contradicting groups yield contradiction; simultaneous quorums yield unresolved conflict. Denial, missing evidence and timeout never supply a support vote. Analyst workflow status, such as investigating or resolved, is stored separately from these evidence outcomes.
+
+\section{Disclosure and Interpretation Method}
+\subsection{Bounded adaptive disclosure}
+For an unresolved source with no pending request, the coordinator chooses
+\begin{equation}
+e^*=\operatorname*{arg\,min}_{e\in E_f\setminus(A_o\cup V_o)}(c(e),\operatorname{id}(e)),
+\label{eq:select}
+\end{equation}
+where $E_f$ is the family catalogue, $A_o$ the attempted entries, and lexical identity breaks cost ties. The source rule is recomputed after each response. Selection stops after a decision, refusal, exhaustion, expiry, or lack of useful authorized evidence. The rule adapts through stopping; it does not estimate information gain or prove a globally optimal request sequence.
+
+The owner checks the request's identity, recipient, catalogue entry, deadline, snapshot and current policy. Approval stores the exact representation and charge in one SQLite transaction before transmission. The release key is $(\text{snapshot},\text{recipient},\text{entry})$, so different request identifiers cannot charge or disclose that entry repeatedly. Retries reuse the immutable response. A tighter policy can deny its later delivery; it cannot erase a value already received. Per-snapshot and rolling-hour caps span retries and overlapping investigations. Concurrent cap checks execute inside the write transaction. Failure before commit exposes neither charge nor response.
+
+One denial terminates further requests to that source for the investigation. An unavailable or coarse value can leave an incident unresolved, with its reason and coverage visible. This conservative rule protects release authority while sacrificing some liveness. Increasing catalogue size, deadlines or budgets changes that trade-off and requires separate evaluation.
+
+\subsection{Authorized claims and report lifecycle}
+For analyst recipient $r$, the API constructs current snapshot $E_r$ from authorized active evidence, incident outcome, anomaly family and coverage. Each evidence item has an identifier and version; the snapshot has a digest $h(E_r)$. A model proposes $c=(t,p,v,e,k)$: type, predicate, value, optional evidence identifier and optional version. Types distinguish observation, inference, unknown and advice. The finite predicates are evidence value, outcome, family, coverage and a fixed local-log-review suggestion.
+
+Admission is
+\begin{equation}
+A(c,E_r)=R(c,E_r)\land V(c,E_r)\land K(c,E_r)\land P(c,E_r),
+\label{eq:admit}
+\end{equation}
+where the checks resolve references, exact versions, allowed kinds and predicate/value tuples. Authorized snapshot construction is a precondition. An evidence citation alone cannot admit arbitrary prose. A high failure-rate category may be reported as an observation; it cannot license an exact password count, named actor or successful compromise absent from the vocabulary.
+
+Admitted tuples receive controlled wording. Free-form model commentary is omitted. One bounded repair may use the same snapshot and failure list. Invalid JSON, unsupported tuples, timeout or unavailable inference lead to a deterministic report containing permitted facts and unknowns. A correction, withdrawal, expiry or changed permission invalidates old snapshots and dependent reports. Current authorization and digest checks occur before reuse, including when permissions change during generation. Detection continues independently of explanation availability.
+
+\subsection{Implementation and scope}
+The local endpoint uses \texttt{llama.cpp} with an interchangeable model, bounded context and response size, one concurrent generation, and at most 512 output tokens. The pilot uses Qwen3-4B Q4\_K\_M; a smaller 1.7B configuration is available but does not share the pilot's result. The model has no shell, network tools or raw-log query capability and no automatic cloud fallback. A second-laptop endpoint requires authenticated TLS and certificate verification; the measured pilot uses loopback transport.
+
+Browser sessions use HttpOnly cookies, origin and CSRF checks, and incident-scoped permissions. Bounded subscriber queues and cursor recovery keep slow dashboards outside ingestion work. Migrations preserve legacy records but quarantine evidence lacking verified identity/provenance. Source storage and derived values remain sensitive. Local execution, transport authentication and policy units provide different controls; none establishes anonymity or formal differential privacy.
+
+% DIAGRAMS_6
+
+\section{Evaluation}
+\subsection{Disclosure protocol experiment}
+Five labelled scenarios are normal traffic, authentication attack, provider outage, traffic attack and flash crowd. Ten seeds, three synthetic nodes and a ten-second event window produce 50 cases per strategy/condition cell. Labels remain in the evaluator. Local only, fixed minimal, fixed richer, static escalation and decision driven are tested under no fault, denial, source-spread coarsening and a two-unit snapshot cap. The factorial design yields $5\times10\times5\times4=1{,}000$ records. Synthetic partitions are not independently operated organizations.
+
+We count attack-labelled cases supported (TP), benign cases supported (FP), unresolved outcomes, policy units, refinements and serialized signal/request/response bytes. The byte metric excludes HTTP/TLS headers, retransmission and dashboard traffic. Local protocol timing excludes network transit. The generated labels and scenario predicates share a known design, so these measurements test the disclosure protocol rather than independent detector generalization.
+
+\begin{table}[t]
+\centering\caption{No-fault protocol slice: 50 cases per strategy.}
+\label{tab:sharing}\scriptsize
+\begin{tabular}{lrrrrr}\hline
+Strategy & TP & FP & Units & Releases & Bytes\\\hline
+Local only &20&20&0&0&0\\
+Fixed minimal &20&20&120&0&48,180\\
+Fixed richer &20&0&660&360&230,460\\
+Static escalation &20&0&660&360&230,460\\
+Decision driven &20&0&540&300&200,100\\\hline
+\end{tabular}
+\end{table}
+
+Decision driven matches the richer baseline's 20 supported attacks and zero supported benign cases in the no-fault slice (Table~\ref{tab:sharing}). It saves 120 policy units (18.2\%), 60 refinements (16.7\%) and 30,360 payload bytes (13.2\%). Savings arise in provider outages and flash crowds, where contradiction stops further requests. Neither attack scenario saves bytes because all supporting predicates are needed. A deployment with fewer short-circuit benign cases may realize less saving.
+
+Denial and budget exhaustion each leave 40 of 50 decision-driven cases unresolved; coarsening leaves 20 unresolved. Each fault condition has zero supported attacks and zero supported benign cases. Consequently, the absence of false positives under these faults also reflects withheld attack decisions. Reporting only the false-positive count would conceal the operational cost of limited disclosure.
+
+\subsection{Local explanation pilot}
+Eight frozen cases cover support, contradiction, partial coverage, withdrawal, correction, restricted evidence, an instruction-like note and deliberate model failure. They compare templates, direct generation, citation prompting, verification without lifecycle checks and the complete method. These are separate synthetic snapshots, not output cases from the 1,000-record study. Lifecycle cases generate against an initial snapshot and score against the current one. The no-lifecycle ablation reuses cited raw output and validates against the initial snapshot, avoiding an extra random sample.
+
+The host runs Windows on an AMD Ryzen 5 4500U with six logical processors, about 20.9~GB RAM, four inference threads, context 8192 and concurrency one. Each parseable claim is unsupported if it fails the current finite contract. This includes outdated, unauthorized and out-of-vocabulary claims; it is not an independent human judgement that a sentence is false. Invalid structures and failure cases are reported separately.
+
+\begin{table}[t]
+\centering\caption{Separate eight-case Qwen3-4B CPU pilot.}
+\label{tab:claims}\scriptsize
+\begin{tabular}{lrrrr}\hline
+Condition & Claims & Unsupported & Fallbacks & Median s\\\hline
+Template &46&0&0&$<0.01$\\
+Direct &20&10&0&53.0\\
+Cited &20&8&0&86.6\\
+No lifecycle &48&3&8&n/a\\
+Complete &46&0&8&146.7\\\hline
+\end{tabular}
+\end{table}
+
+Direct generation has one failure and two invalid-contract cases; citation prompting has three failures. Initial-snapshot verification retains one unsupported claim each in withdrawal, correction and restriction. The complete method uses current-snapshot invalidation and ultimately falls back in all eight cases, displaying zero unsupported claims among 46. Median generation time includes the initial attempt and any repair; it excludes analyst task time and is not fallback-rendering time. The no-lifecycle ablation has no independent timing measurement.
+
+Templates and the complete method enumerate the same allowed set, so their perfect finite coverage is expected by construction. The result establishes a checked boundary with a negative model result. It does not show improved usefulness, semantic understanding or practical speed over templates. No analyst study, independently labelled field dataset or full-system performance study has been completed.
+
+% EXTENSION_8
+% EXTENSION_10
+% EXTENSION_12
+
+\section{Limitations and Research Implications}
+An authenticated source can lie about a value that the verifier faithfully reports. A common upstream failure can affect several nominally separate organizations. Tumbling windows can split campaigns, and the first eligible source snapshot can omit changing conditions. The finite catalogue covers two scenario families; its costs and thresholds are operator choices. Provenance enrollment, host trust, database correctness and independent scope enforcement are preconditions. The work provides no Byzantine consensus, hardware attestation, automatic failover or leakage proof.
+
+The explanation language deliberately excludes arbitrary numerical and causal claims. This makes exact admission possible while reducing expressive power. A stronger model might provide better proposals, but the recorded configuration did not. Smaller task models and alternative local runtimes are possible future comparators, not implemented or evaluated contributions of this study. A broader claim about useful local interpretation requires frozen unseen cases, resource measurements and actual analyst evaluation.
+
+The combined lifecycle exposes a further question: withholding evidence can reduce disclosure while also reducing what an explanation may say. Our component studies do not quantify that joint trade-off. A future experiment must run shared incident cases through release, correlation, authorization and rendering, measuring disclosure alongside accepted claim coverage and analyst decisions. It should retain unresolved and fallback outcomes rather than excluding them from a success rate. The incomplete CIC-IDS2017 replay remains explicitly outside the reported results.
+
+\section{Conclusion}
+A common evidence lifecycle can keep release authority at the source and make displayed claims depend on current recipient permissions. The implemented adaptive protocol reduces disclosure relative to richer sharing within a fixed synthetic workload; policy restrictions leave many cases unresolved. The local explanation contract rejects unsupported and stale tuples, but its eight-case CPU pilot falls back throughout and shows no benefit from generation over templates. Further evaluation must establish realistic detection, joint disclosure/interpretation behavior and analyst usefulness before broader performance claims are justified.
+
+% BIBLIOGRAPHY
+\end{document}
