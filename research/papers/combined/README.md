@@ -1,6 +1,6 @@
 # Combined research manuscript
 
-**Bounded Evidence Sharing and Verified Local Interpretation for Collaborative Threat Detection**
+**ThreatScope: Bounded Evidence Sharing, Threat Correlation, and Grounded Local AI**
 
 This manuscript combines the former framework and local interpretation research papers. It follows evidence through disclosure, correlation, authorization and report validation. The GTSS 2027 manuscript is a separately preserved exception.
 

@@ -14,7 +14,7 @@ The user reports that the mentor expects one research paper for Semester 8. This
 
 ## Combined contribution
 
-Working title: **Bounded Evidence Sharing and Verified Local Interpretation for Collaborative Threat Detection**.
+Working title: **ThreatScope: Bounded Evidence Sharing, Threat Correlation, and Grounded Local AI**.
 
 The argument follows the same evidence record through source policy, durable release accounting, provenance-aware correlation, recipient authorization, finite claim admission, correction/withdrawal invalidation and controlled report rendering. Disclosure remains source-controlled. Interpretation remains downstream of the security decision. A model cannot expand permissions, change release budgets or execute advice.
 

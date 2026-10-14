@@ -6,7 +6,7 @@ ThreatScope is a research prototype for policy-controlled security evidence shar
 
 ## Revised research drafts
 
-The framework and local-AI methods now form one IEEE-style research manuscript: **Bounded Evidence Sharing and Verified Local Interpretation for Collaborative Threat Detection**. It is editable in LaTeX and available in four verified PDF lengths. GTSS 2027 is a separately preserved manuscript exception; the accepted literature review remains a separate workstream.
+The framework and local-AI methods now form one IEEE-style research manuscript: **ThreatScope: Bounded Evidence Sharing, Threat Correlation, and Grounded Local AI**. It is editable in LaTeX and available in four verified PDF lengths. GTSS 2027 is a separately preserved manuscript exception; the accepted literature review remains a separate workstream.
 
 | Paper | 6 pages | 8 pages | 10 pages | 12 pages |
 | --- | --- | --- | --- | --- |

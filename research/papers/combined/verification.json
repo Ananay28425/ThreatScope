@@ -24,8 +24,8 @@
         "VDVGTR+CMMI7",
         "YEUUOC+LMMono10-Regular"
       ],
-      "pdf_sha256": "48967af007f58b86bf883f43a35435209c6f4b765996634b1667fbde3d13b224",
-      "tex_sha256": "2596c7e28c2ae4d3c4209d07b71b6fa6a0c3d32aaa693d09ece560468c705d6d"
+      "pdf_sha256": "0e078f0cbbb845559d14f8b02bab98e558c85766b5e1e6bad225af953cfd9bbe",
+      "tex_sha256": "f1b45a2ae1d06878f12de1d6a071b7c43a1efea622f214a9e958b78350bf80b2"
     },
     {
       "file": "combined-8pages.pdf",
@@ -49,8 +49,8 @@
         "VDVGTR+CMMI7",
         "YEUUOC+LMMono10-Regular"
       ],
-      "pdf_sha256": "70b95788aa6517466b81a71d1d98a4a06dfaa131e606a952126595a4ae4669d7",
-      "tex_sha256": "9f34c5d9af4f24b2db65eee072089be2a61c119ed52250b2be5fe0ce8a06e134"
+      "pdf_sha256": "20e4c98de0cd25da1d52b6e90b8027b7ffa6cb92a1a3033acfadc01a31e21aac",
+      "tex_sha256": "089816db5951b54f9db786a0fa6286f5868ae8ff19585d96f6e8221c3ca6c9e4"
     },
     {
       "file": "combined-10pages.pdf",
@@ -74,8 +74,8 @@
         "VDVGTR+CMMI7",
         "YEUUOC+LMMono10-Regular"
       ],
-      "pdf_sha256": "16fca06d91bda6290008ebf0ffcddb9e8cbbbe441ffab3ec039849d83ffc1bc7",
-      "tex_sha256": "e2e7bba9ed0236e7bef0d261de6bfd5534ad49932e6578dfca95aa13077fa7e8"
+      "pdf_sha256": "d7322b65cf107d27efe303b83126476497d9d583bee5c63ab52a27aca87d1595",
+      "tex_sha256": "32d1c179245583bc3a305aae7ef417ad564b51a4086e1cb32a9d078654b90969"
     },
     {
       "file": "combined-12pages.pdf",
@@ -99,8 +99,8 @@
         "VDVGTR+CMMI7",
         "YEUUOC+LMMono10-Regular"
       ],
-      "pdf_sha256": "095928bf6e3db6497154da3ce620f1d19cecae537ba32031e3f358914e0d153d",
-      "tex_sha256": "4f99da0ae6214547c8155f57cedbda45dc908ac93da8f5a7fcaf47deef300872"
+      "pdf_sha256": "19b1358454bfd443aa1a9d18c9139c25a9e7fdfc9216dbb0bec56570b325b03c",
+      "tex_sha256": "c3069fc099bba09e6ae30ad4e70a50ffa4a5179f2539ec02d231602fa3bf2236"
     }
   ],
   "visual_review": "pass: all 36 pages reviewed; detailed checks of diagrams, results and comparison tables",
@@ -117,5 +117,6 @@
     "research/papers/paper2/paper2-8pages.tex": "41c62cc70d0012d3dea0376667d492baa74355b47e70ec5a80157c419d7e9717",
     "external_gtss_pdf": "ddd553126dfa8b87125a789c9e0aa1e278f30a534539157574db22197d42d9a5"
   },
-  "generation_reproducibility": "pass: bundled source generator reproduces all four verified LaTeX files byte for byte"
+  "generation_reproducibility": "pass: bundled source generator reproduces all four verified LaTeX files byte for byte",
+  "title_check": "Updated framework title and exact page counts verified on 2026-10-14"
 }
