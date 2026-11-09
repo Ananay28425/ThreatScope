@@ -10,6 +10,7 @@ COPY backend ./backend
 COPY common ./common
 COPY node_simulator ./node_simulator
 COPY migrations ./migrations
+COPY scripts/demo_check.py ./scripts/demo_check.py
 COPY alembic.ini ./
 RUN useradd --uid 10001 --create-home app && mkdir /state && chown -R app:app /app /state
 USER app

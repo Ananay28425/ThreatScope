@@ -53,6 +53,8 @@ jobs:
       - run: docker compose --profile setup run --rm enroll
       - run: docker compose --profile demo up -d orion lyra vega
       - run: python scripts/compose_smoke.py
+      - run: docker compose --profile demo stop orion lyra vega
+      - run: docker compose --profile evaluation run --rm --build evaluate
       - if: always()
         run: docker compose --profile demo logs --no-color --tail 80
       - if: always()

@@ -108,7 +108,7 @@ export default function App() {
     catch (e) { setError(e.message); } finally { setBusy(false); }
   }
 
-  if (loading) return <main className="loading">Opening ThreatScopeâ€¦</main>;
+  if (loading) return <main className="loading">Opening ThreatScope…</main>;
   if (!user) return <main className="login">
     <div className="login-art"><div className="brand-mark">T</div><p className="eyebrow">COLLABORATIVE THREAT INTELLIGENCE</p>
       <h1>Local evidence.<br /><em>Shared awareness.</em></h1>
@@ -120,7 +120,7 @@ export default function App() {
       <label>Email<input name="email" type="email" autoComplete="username" required /></label>
       <label>Password<input name="password" type="password" autoComplete="current-password" required /></label>
       {error && <p className="error" role="alert">{error}</p>}
-      <button disabled={busy}>{busy ? "Signing inâ€¦" : "Open workspace"}</button>
+      <button disabled={busy}>{busy ? "Signing in…" : "Open workspace"}</button>
       <p className="muted">Use the account enrolled by your administrator.</p>
     </form>
   </main>;
@@ -145,7 +145,7 @@ export default function App() {
       <section className="metrics" aria-label="Incident counts">
         {["Supported", "Unresolved", "Contradicted"].map((title, index) =>
           <div className="metric" key={title}><span>{title}</span><strong>{counts[index]}</strong><small>Declared rule outcome</small></div>)}
-        <div className="metric"><span>Organizations</span><strong>{organizations.length}</strong><small>{status.pending_signals ?? "â€”"} reports awaiting correlation</small></div>
+        <div className="metric"><span>Organizations</span><strong>{organizations.length}</strong><small>{status.pending_signals ?? "—"} reports awaiting correlation</small></div>
       </section>
       <div className="content-grid">
         <section className="panel incident-list">
@@ -154,7 +154,7 @@ export default function App() {
           {incidents.map((item) => <button className={"incident " + (selected === item.incident_id ? "selected" : "")}
             key={item.incident_id} onClick={() => setSelected(item.incident_id)}>
             <div><Badge value={item.outcome} /><small>{time(item.created_at)}</small></div>
-            <strong>{label(item.family)}</strong><span>{label(item.reason)}</span><small>Revision {item.version} Â· {label(item.coverage)}</small>
+            <strong>{label(item.family)}</strong><span>{label(item.reason)}</span><small>Revision {item.version} · {label(item.coverage)}</small>
           </button>)}
         </section>
         <section className="panel detail">
@@ -170,7 +170,7 @@ export default function App() {
             </div>
             <div className="evidence-table">
               {current.evidence.length === 0 ? <p className="muted">No refinements released yet.</p> : current.evidence.map((item) =>
-                <div className="evidence-row" key={item.id}><div><strong>{label(item.entry)}</strong><small>{item.id.slice(0, 8)} Â· version {item.version}</small></div>
+                <div className="evidence-row" key={item.id}><div><strong>{label(item.entry)}</strong><small>{item.id.slice(0, 8)} · version {item.version}</small></div>
                   <Badge value={item.active ? item.value : "withdrawn"} /><small>{item.cost} policy units</small></div>)}
             </div>
             <h3>Disclosure decisions</h3>
@@ -187,17 +187,17 @@ export default function App() {
       </div>
       <section className="panel explanation">
         <div className="panel-heading"><div><p className="eyebrow">LOCAL INTERPRETATION</p><h2>Explanation with evidence references</h2></div>
-          <button onClick={explain} disabled={!selected || busy}>{busy ? "Requestingâ€¦" : "Explain selected incident"}</button></div>
-        {!job && <p className="muted">Generate an explanation from this accountâ€™s authorized evidence.</p>}
+          <button onClick={explain} disabled={!selected || busy}>{busy ? "Requesting…" : "Explain selected incident"}</button></div>
+        {!job && <p className="muted">Generate an explanation from this account’s authorized evidence.</p>}
         {job && <><Badge value={job.status} />
           {["queued", "running"].includes(job.status) && <p className="muted">Preparing explanation. Incident monitoring continues.</p>}
           {job.status === "stale" && <p className="notice">Evidence or permissions changed. Generate a new explanation before using its conclusions.</p>}
-          {job.result && <><p className="muted">{job.result.mode === "template" ? "Structured fallback" : "Local model"} Â· Facts checked against the supported evidence contract</p>
+          {job.result && <><p className="muted">{job.result.mode === "template" ? "Structured fallback" : "Local model"} · Facts checked against the supported evidence contract</p>
             <ol>{job.result.claims.map((claim, index) => <li key={index}><Badge value={claim.kind} /><p>{claim.text}</p>
-              {claim.evidence_id && <small>Evidence {claim.evidence_id.slice(0, 8)} Â· version {claim.evidence_version}</small>}</li>)}</ol></>}
+              {claim.evidence_id && <small>Evidence {claim.evidence_id.slice(0, 8)} · version {claim.evidence_version}</small>}</li>)}</ol></>}
         </>}
       </section>
-      <footer>ThreatScope research prototype Â· Scenario demonstrations are labeled in the run manifest.</footer>
+      <footer>ThreatScope research prototype · Scenario demonstrations are labeled in the run manifest.</footer>
     </main>
   </div>;
 }
