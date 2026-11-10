@@ -1,8 +1,13 @@
-"""Exercise the real API, three independent local ledgers, worker, and explanation service."""
+"""Drive a synthetic incident through the running API and verify its explanation."""
+
+import argparse
 import asyncio
 import json
+import secrets
 import time
+from datetime import timedelta
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import httpx
 
@@ -14,46 +19,99 @@ from node_simulator.ledger import Ledger
 ROOT = Path(__file__).resolve().parents[1]
 
 
-async def main():
-    credentials = json.loads((ROOT / '.runtime/private/demo-credentials.json').read_text())
-    agents = []
-    end = utcnow()
-    for index, org in enumerate(credentials['organizations']):
-        ledger = Ledger(ROOT / f'.runtime/demo-{index}.db')
-        observe(ledger, LocalDetector(), 'auth_attack', 71 + index, 10, end=end)
-        agents.append(Agent('http://127.0.0.1:18000', org['api_key'], ledger))
-    async with httpx.AsyncClient(base_url='http://127.0.0.1:18000', headers={
-        'Origin': 'http://127.0.0.1:5173'}, timeout=10, trust_env=False) as client:
-        response = await client.post('/api/v1/auth/login', json=credentials['admin'])
-        response.raise_for_status()
-        client.headers['X-CSRF-Token'] = response.json()['csrf']
-        started = time.perf_counter()
-        for _ in range(30):
-            for agent in agents:
-                await agent.tick()
-            views = (await client.get('/api/v1/incidents')).json()['incidents']
-            if views and views[0]['outcome'] == 'supported':
-                break
-            await asyncio.sleep(0.5)
-        assert views and views[0]['outcome'] == 'supported', 'demo_did_not_reach_supported'
-        result = {'incident': views[0], 'decision_seconds': time.perf_counter() - started,
-                  'agents': [a.ledger.stats() for a in agents]}
-        job = (await client.post('/api/v1/incidents/' + views[0]['incident_id'] + '/explanations')).json()
-        for _ in range(260):
-            reply = await client.get('/api/v1/explanations/' + job['job_id'])
-            reply.raise_for_status()
-            explanation = reply.json()
-            if explanation['status'] not in {'queued', 'running'}:
-                break
-            await asyncio.sleep(1)
-        assert explanation['status'] in {'complete', 'fallback'}, explanation['status']
-        result['explanation'] = explanation
-        (ROOT / '.runtime/demo-result.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
-        print(json.dumps({'outcome': result['incident']['outcome'], 'evidence': len(views[0]['evidence']),
-                          'decision_seconds': result['decision_seconds'], 'explanation': explanation['status']}))
-    for agent in agents:
-        await agent.client.aclose()
+async def run(args):
+    credentials = json.loads(args.credentials.read_text(encoding="utf-8"))
+    started = time.monotonic()
+    async with httpx.AsyncClient(
+        base_url=args.url, headers={"Origin": args.origin}, timeout=8, trust_env=False,
+    ) as client:
+        login = await client.post("/api/v1/auth/login", json=credentials["admin"])
+        login.raise_for_status()
+        client.headers["X-CSRF-Token"] = login.json()["csrf"]
+        initial = await client.get("/api/v1/incidents", params={"limit": 100})
+        initial.raise_for_status()
+        old_ids = {i["incident_id"] for i in initial.json()["incidents"]}
+
+        # Use the same synthetic observation time for all nodes and spread repeat
+        # rehearsals over historical buckets so they don't reuse the live window.
+        end = utcnow() - timedelta(seconds=secrets.randbelow(12 * 3600))
+        with TemporaryDirectory(prefix="threatscope-demo-") as temp:
+            agents = []
+            try:
+                for index, org in enumerate(credentials["organizations"]):
+                    ledger = Ledger(Path(temp) / f"agent-{index}.db")
+                    observe(ledger, LocalDetector(), "auth_attack", 71 + index, 10, end=end)
+                    agents.append(Agent(args.agent_url or args.url, org["api_key"], ledger))
+                if len(agents) != 3:
+                    raise RuntimeError("Evaluation requires three enrolled organizations.")
+
+                deadline = time.monotonic() + args.timeout
+                while time.monotonic() < deadline:
+                    for agent in agents:
+                        await agent.tick()
+                    response = await client.get("/api/v1/incidents", params={"limit": 100})
+                    response.raise_for_status()
+                    incident = next((
+                        i for i in response.json()["incidents"]
+                        if i["incident_id"] not in old_ids and i["outcome"] == "supported"
+                        and i["summary"]["supporting_groups"] == 3
+                        and i["evidence"] and i["requests"]
+                    ), None)
+                    if incident and all(not agent.ledger.stats()["pending"] for agent in agents):
+                        break
+                    await asyncio.sleep(0.5)
+                else:
+                    raise RuntimeError(
+                        "No fresh supported incident with three provenance groups. "
+                        "Check backend and correlation logs, then rerun."
+                    )
+
+                decision_seconds = time.monotonic() - started
+                reply = await client.post(f"/api/v1/incidents/{incident['incident_id']}/explanations")
+                reply.raise_for_status()
+                job_id = reply.json()["job_id"]
+                deadline = time.monotonic() + args.timeout
+                while time.monotonic() < deadline:
+                    reply = await client.get(f"/api/v1/explanations/{job_id}")
+                    reply.raise_for_status()
+                    explanation = reply.json()
+                    if explanation["status"] not in {"queued", "running"}:
+                        break
+                    await asyncio.sleep(0.5)
+                else:
+                    raise RuntimeError("Explanation did not finish. Check explanation worker logs.")
+
+                if explanation["status"] not in {"complete", "fallback"} or not explanation["result"]:
+                    raise RuntimeError(f"Unexpected explanation status: {explanation['status']}")
+                if args.output:
+                    args.output.parent.mkdir(parents=True, exist_ok=True)
+                    args.output.write_text(json.dumps({
+                        "incident": incident, "decision_seconds": decision_seconds,
+                        "agents": [agent.ledger.stats() for agent in agents], "explanation": explanation,
+                    }, indent=2), encoding="utf-8")
+                print(json.dumps({
+                    "incident_id": incident["incident_id"],
+                    "outcome": incident["outcome"],
+                    "supporting_groups": incident["summary"]["supporting_groups"],
+                    "evidence": len(incident["evidence"]),
+                    "decision_seconds": round(decision_seconds, 2),
+                    "explanation": explanation["status"],
+                }))
+            finally:
+                for agent in agents:
+                    await agent.client.aclose()
 
 
-if __name__ == '__main__':
-    asyncio.run(main())
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--url", default="http://127.0.0.1:18000")
+    parser.add_argument("--agent-url", help="Direct coordinator URL when the dashboard uses a proxy.")
+    parser.add_argument("--origin", default="http://127.0.0.1:5173")
+    parser.add_argument("--credentials", type=Path, default=ROOT / ".runtime/private/demo-credentials.json")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--timeout", type=float, default=35)
+    asyncio.run(run(parser.parse_args()))
+
+
+if __name__ == "__main__":
+    main()

@@ -47,6 +47,21 @@ services:
     command: [python, -m, backend.app.admin, seed-demo, --output, /private/demo-credentials.json]
     volumes: [./.runtime/private:/private]
     restart: "no"
+  evaluate:
+    <<: *app
+    profiles: [evaluation]
+    user: ${LOCAL_UID:-10001}:${LOCAL_GID:-10001}
+    environment: {}
+    command: [python, -m, scripts.demo_check, --url, "http://frontend:8080", --agent-url, "http://backend:8000", --credentials, /private/demo-credentials.json]
+    volumes: [./.runtime/private:/private:ro]
+    depends_on:
+      frontend:
+        condition: service_started
+      correlation:
+        condition: service_started
+      explanations:
+        condition: service_started
+    restart: "no"
   backend:
     <<: *app
     command: [python, -m, uvicorn, backend.main:app, --host, 0.0.0.0, --port, "8000", --workers, "1", --no-access-log]

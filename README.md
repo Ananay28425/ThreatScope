@@ -17,7 +17,44 @@ The corresponding `.tex` source files sit beside each PDF. [Evidence and contrib
 
 References revised on 7 October 2026: Paper 1 has 14 cited references and Paper 2 has 17. The audit records the disposition of all 20 supplied review entries and 16 separate-list entries. The [citation register](research/paper-reference-register.json) maps each numbered source to its in-text uses and supported claim. All eight PDFs were rebuilt, checked for missing citations, and visually reviewed; [validation records](research/papers/validation.json) include exact page counts and file hashes.
 
-## Start the three-organization demo
+## Run the evaluation demo
+
+Use Docker Desktop with the Linux engine running and Python 3.12. In PowerShell,
+run these commands from the repository root. Stop if any command reports an error.
+
+```powershell
+docker info
+if (-not (Test-Path .env)) { python scripts/bootstrap.py }
+docker compose up -d --build --wait backend correlation explanations frontend
+if (-not (Test-Path .runtime/private/demo-credentials.json)) {
+    docker compose --profile setup run --rm enroll
+}
+docker compose --profile evaluation run --rm --build evaluate
+```
+
+The last command sends synthetic authentication failures from three separately
+enrolled organizations. It waits for a **new** supported incident, policy-approved
+evidence, and a completed explanation. It prints the incident ID and result.
+The evaluation uses temporary local ledgers for synthetic observations only.
+Keep the continuous demo agents stopped while running it.
+
+Open <http://127.0.0.1:5173>. Open
+`.runtime/private/demo-credentials.json` privately and use the email and password
+under `admin`. Select the newly created authentication incident, show its
+evidence and request history, and click **Generate explanation**. With inference
+disabled, **Structured fallback** is the expected result. It uses the same
+authorized evidence contract and makes no model or cloud request. A supported
+rule is evidence for investigation; it does not prove compromise.
+
+For a second rehearsal, rerun the last command. Check the services with
+`docker compose ps -a` and
+`docker compose logs --tail 100 backend correlation explanations frontend`.
+If ports 8000 or 5173 are occupied, stop the conflicting local stack before
+starting this one. Keep the database, `.env`, and credentials together; do
+not delete volumes or rerun enrollment to reset credentials. Stop services
+with `docker compose stop` when finished.
+
+## Run the continuous simulator
 
 Requirements: Docker Compose v2, Python 3.12 for bootstrap, and sufficient disk space for images. Native PostgreSQL execution is also supported in [deployment instructions](docs/deployment.md).
 
