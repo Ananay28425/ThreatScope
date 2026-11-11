@@ -4,8 +4,8 @@ from datetime import timedelta
 import pytest
 from sqlalchemy import func, select
 
-from backend.app.correlation import process_pending
 from backend.app.config import Settings
+from backend.app.correlation import process_pending
 from backend.app.tables import Credential, Evidence, Incident, Signal
 from common.contracts import utcnow
 from node_simulator.ledger import Ledger
