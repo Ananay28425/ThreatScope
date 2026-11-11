@@ -2,6 +2,9 @@
 from datetime import timedelta
 
 from sqlalchemy import func, select
+import pytest
+
+from backend.app.config import Settings
 
 from backend.app.correlation import process_pending
 from backend.app.tables import Credential, Evidence, Incident, Signal
@@ -9,6 +12,32 @@ from common.contracts import utcnow
 from node_simulator.ledger import Ledger
 from tests.conftest import login
 from tests.test_protocol import signal
+
+
+def test_demo_access_rejected_in_production_and_nonlocal_origins():
+    with pytest.raises(ValueError, match="demo_access_forbidden_in_production"):
+        Settings(app_env="production", cookie_secure=True, demo_access=True)
+    with pytest.raises(ValueError, match="demo_access_requires_loopback_origins"):
+        Settings(app_env="test", demo_access=True, allowed_origins="https://example.com")
+
+
+async def test_demo_access_is_explicit_and_keeps_session_checks(system):
+    client = system["client"]
+    assert (await client.post("/api/v1/auth/demo")).status_code == 404
+    system["settings"].demo_access = True
+    assert (await client.post("/api/v1/auth/demo", headers={"Origin": "https://other.example"})).status_code == 403
+    assert (await client.post("/api/v1/auth/demo")).status_code == 503
+    async with system["db"].sessions() as db, db.begin():
+        from backend.app.tables import User
+        admin = (await db.execute(select(User).where(User.email == "admin@example.test"))).scalar_one()
+        admin.email = "admin@threatscope.local"
+    result = await client.post("/api/v1/auth/demo")
+    assert result.status_code == 200, result.text
+    assert result.json()["user"]["role"] == "admin"
+    assert (await client.get("/api/v1/incidents")).status_code == 200
+    assert (await client.patch("/api/v1/incidents/missing/workflow", json={"status": "resolved"})).status_code == 403
+    client.headers["X-CSRF-Token"] = result.json()["csrf"]
+    assert (await client.patch("/api/v1/incidents/missing/workflow", json={"status": "resolved"})).status_code == 404
 
 
 async def send_three(system, tmp_path):
