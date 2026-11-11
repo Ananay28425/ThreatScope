@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+asyncpg://threatscope@localhost/threatscope"
     allowed_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
     cookie_secure: bool = False
+    demo_access: bool = False
     session_hours: int = Field(default=8, ge=1, le=24)
     window_seconds: int = Field(default=120, ge=10, le=600)
     quorum: int = Field(default=3, ge=2, le=20)
@@ -38,6 +39,10 @@ class Settings(BaseSettings):
             raise ValueError("sqlite_coordinator_is_test_only")
         if self.app_env == "production" and not self.cookie_secure:
             raise ValueError("production_requires_secure_cookie")
+        if self.demo_access and self.app_env == "production":
+            raise ValueError("demo_access_forbidden_in_production")
+        if self.demo_access and any(urlparse(origin).hostname not in {"localhost", "127.0.0.1", "::1"} for origin in self.origins):
+            raise ValueError("demo_access_requires_loopback_origins")
         parsed = urlparse(self.llm_url)
         if parsed.username or parsed.password or parsed.query or parsed.fragment:
             raise ValueError("llm_url_must_not_contain_credentials_or_query")
