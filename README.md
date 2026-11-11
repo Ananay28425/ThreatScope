@@ -38,9 +38,9 @@ evidence, and a completed explanation. It prints the incident ID and result.
 The evaluation uses temporary local ledgers for synthetic observations only.
 Keep the continuous demo agents stopped while running it.
 
-Open <http://127.0.0.1:5173>. Open
-`.runtime/private/demo-credentials.json` privately and use the email and password
-under `admin`. Select the newly created authentication incident, show its
+Open <http://127.0.0.1:5173>. The local evaluation stack starts an audited
+browser session automatically. No login form or password entry is needed.
+Select the newly created authentication incident, show its
 evidence and request history, and click **Generate explanation**. With inference
 disabled, **Structured fallback** is the expected result. It uses the same
 authorized evidence contract and makes no model or cloud request. A supported
@@ -52,7 +52,9 @@ For a second rehearsal, rerun the last command. Check the services with
 If ports 8000 or 5173 are occupied, stop the conflicting local stack before
 starting this one. Keep the database, `.env`, and credentials together; do
 not delete volumes or rerun enrollment to reset credentials. Stop services
-with `docker compose stop` when finished.
+with `docker compose stop` when finished. `DEMO_ACCESS=true` is set only in this
+loopback-bound Compose demo. It is rejected in production; do not expose this
+evaluation stack on a public network.
 
 ## Run the continuous simulator
 

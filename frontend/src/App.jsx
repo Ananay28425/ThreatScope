@@ -1,4 +1,4 @@
-/** Purpose: an authenticated incident workspace with evidence and explanation provenance. */
+/** Purpose: an evaluation workspace with automatic local demo access. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./styles.css";
 
@@ -10,7 +10,7 @@ async function api(path, options = {}) {
     headers: { "Content-Type": "application/json", "X-CSRF-Token": csrf, ...options.headers },
   });
   const body = await response.json();
-  if (!response.ok) throw new Error(response.status === 401 ? "Please sign in." : readable(body.detail));
+  if (!response.ok) throw new Error(readable(body.detail));
   return body;
 }
 const readable = (value) => typeof value === "string" ? value.replaceAll("_", " ") : "Request could not be completed.";
@@ -44,8 +44,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    api("/auth/me").then((data) => { csrf = data.csrf; setUser(data.user); })
-      .catch(() => {}).finally(() => setLoading(false));
+    api("/auth/me").catch(() => api("/auth/demo", { method: "POST" }))
+      .then((data) => { csrf = data.csrf; setUser(data.user); setError(""); })
+      .catch((e) => setError("Demo access unavailable: " + e.message))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -92,16 +94,6 @@ export default function App() {
     return () => { cancelled = true; clearInterval(timer); };
   }, [job?.job_id]);
 
-  async function signIn(event) {
-    event.preventDefault();
-    setBusy(true);
-    const data = new FormData(event.currentTarget);
-    try {
-      const result = await api("/auth/login", { method: "POST", body: JSON.stringify(Object.fromEntries(data)) });
-      csrf = result.csrf; setUser(result.user); setError("");
-    } catch (e) { setError(e.message); } finally { setBusy(false); }
-  }
-
   async function explain() {
     setBusy(true);
     try { setJob(await api("/incidents/" + selected + "/explanations", { method: "POST" })); }
@@ -109,20 +101,9 @@ export default function App() {
   }
 
   if (loading) return <main className="loading">Opening ThreatScope…</main>;
-  if (!user) return <main className="login">
-    <div className="login-art"><div className="brand-mark">T</div><p className="eyebrow">COLLABORATIVE THREAT INTELLIGENCE</p>
-      <h1>Local evidence.<br /><em>Shared awareness.</em></h1>
-      <p>Inspect security signals while each organization controls what it shares.</p>
-      <div className="login-grid"><span>01 / OBSERVE</span><span>02 / CORRELATE</span><span>03 / EXPLAIN</span></div>
-    </div>
-    <form onSubmit={signIn} className="login-form">
-      <p className="eyebrow">THREATSCOPE / ANALYST ACCESS</p><h2>Sign in to your workspace</h2>
-      <label>Email<input name="email" type="email" autoComplete="username" required /></label>
-      <label>Password<input name="password" type="password" autoComplete="current-password" required /></label>
-      {error && <p className="error" role="alert">{error}</p>}
-      <button disabled={busy}>{busy ? "Signing in…" : "Open workspace"}</button>
-      <p className="muted">Use the account enrolled by your administrator.</p>
-    </form>
+  if (!user) return <main className="loading"><h1>ThreatScope unavailable</h1>
+    <p className="error" role="alert">{error || "Start evaluation services and enroll demo organizations."}</p>
+    <button onClick={() => location.reload()}>Retry</button>
   </main>;
 
   const counts = ["supported", "unresolved", "contradicted"].map((state) => incidents.filter((item) => item.outcome === state).length);
@@ -133,10 +114,7 @@ export default function App() {
       <div className="nav-active">â—ˆ &nbsp; Incident overview</div>
       <p className="sidebar-note">Evidence stays under source control. Conclusions show their limits.</p>
       <div className="sidebar-bottom"><Badge value={connected ? "connected" : "reconnecting"} />
-        <small>{user.email}</small><button className="secondary" onClick={async () => {
-          try { await api("/auth/logout", { method: "POST" }); setUser(null); setIncidents([]); setJob(null); csrf = ""; cursor.current = 0; }
-          catch (e) { setError(e.message); }
-        }}>Sign out</button></div>
+        <small>Local evaluation session</small></div>
     </aside>
     <main className="main">
       <header><div><p className="eyebrow">EVIDENCE / CORRELATION / INTERPRETATION</p><h1>Incident overview</h1></div>
