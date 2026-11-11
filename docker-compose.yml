@@ -7,6 +7,7 @@ x-app: &app
     DATABASE_URL: postgresql+asyncpg://threatscope:${APP_DATABASE_PASSWORD:?Run scripts/bootstrap.py}@postgres:5432/threatscope
     ALLOWED_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
     LLM_ENABLED: ${LLM_ENABLED:-false}
+    DEMO_ACCESS: "true"
     LLM_URL: ${LLM_URL:-http://127.0.0.1:18080/v1}
     LLM_API_KEY: ${LLM_API_KEY:-}
     LLM_MODEL: ${LLM_MODEL:-Qwen3-1.7B-Q4_K_M}
