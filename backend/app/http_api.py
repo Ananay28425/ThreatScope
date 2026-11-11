@@ -87,6 +87,29 @@ async def me(request: Request, db=Depends(session_dependency)):
     return {"user": {"id": user.id, "email": user.email, "role": user.role}, "csrf": session.csrf}
 
 
+@router.post("/auth/demo")
+async def demo_session(request: Request, response: Response, db=Depends(session_dependency)):
+    """Explicit, loopback-only evaluation access; ordinary deployments stay authenticated."""
+    settings = request.app.state.settings
+    if not settings.demo_access:
+        raise HTTPException(404, "demo_access_disabled")
+    if request.headers.get("origin") not in settings.origins:
+        raise HTTPException(403, "origin_rejected")
+    user = (await db.execute(select(User).where(User.email == "admin@threatscope.local", User.active.is_(True)))).scalar_one_or_none()
+    if user is None or user.role != "admin":
+        raise HTTPException(503, "demo_admin_not_enrolled")
+    previous = await db.get(Session, hash_token(request.cookies.get(COOKIE, "")))
+    if previous:
+        await db.delete(previous)
+    token, browser_session = new_session(user.id, settings.session_hours)
+    db.add(browser_session)
+    db.add(Audit(actor_id=user.id, action="demo_login", resource_id=None))
+    await db.commit()
+    response.set_cookie(COOKIE, token, httponly=True, secure=settings.cookie_secure,
+                        samesite="strict", path="/", max_age=settings.session_hours * 3600)
+    return {"user": {"id": user.id, "email": user.email, "role": user.role}, "csrf": browser_session.csrf}
+
+
 @router.post("/auth/logout")
 async def logout(request: Request, response: Response, db=Depends(session_dependency)):
     await actor(request, db)
