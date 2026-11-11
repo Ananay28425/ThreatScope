@@ -1,12 +1,11 @@
 """Real HTTP contract tests for authentication, correlation, revisions, and scoped retrieval."""
 from datetime import timedelta
 
-from sqlalchemy import func, select
 import pytest
-
-from backend.app.config import Settings
+from sqlalchemy import func, select
 
 from backend.app.correlation import process_pending
+from backend.app.config import Settings
 from backend.app.tables import Credential, Evidence, Incident, Signal
 from common.contracts import utcnow
 from node_simulator.ledger import Ledger
