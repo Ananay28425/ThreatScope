@@ -32,6 +32,8 @@ export default function App() {
   const cursor = useRef(0);
   const job = requestedJob?.incidentId === selected ? requestedJob : null;
   const current = incidents.find((item) => item.incident_id === selected);
+  const [view, setView] = useState("dashboard");
+  const [detail, setDetail] = useState("evidence");
 
   const refresh = useCallback(async () => {
     try {
@@ -39,7 +41,7 @@ export default function App() {
       setIncidents(items.incidents);
       setOrganizations(nodes.organizations);
       setStatus(health);
-      setSelected((old) => old || items.incidents[0]?.incident_id || null);
+      setSelected((old) => items.incidents.some((item) => item.incident_id === old) ? old : items.incidents[0]?.incident_id ?? null);
       setError("");
     } catch (e) { setError(e.message); }
   }, []);
@@ -94,156 +96,191 @@ export default function App() {
   }, [job?.job_id]);
 
   async function explain() {
+    setDetail("explanation");
     setBusy(true);
     try { setJob({ ...await api("/incidents/" + selected + "/explanations", { method: "POST" }), incidentId: selected }); }
     catch (e) { setError(e.message); } finally { setBusy(false); }
   }
 
-  const counts = ["supported", "unresolved", "contradicted"].map((state) =>
-    incidents.filter((item) => item.outcome === state).length);
-  const [layer, setLayer] = useState(0);
-  const store = status.coordinator_store === "sqlite" ? "SQLite" : status.coordinator_store === "postgresql" ? "PostgreSQL" : null;
-  const infer = status.inference_configured ? "Hosted model API" : "Checked template";
-  const stages = [
-    { title: "Organization nodes", tag: "PRIVATE BOUNDARY", detail: "Orion, Lyra and Vega detect authentication and traffic bursts on their own event streams. Each node has a SQLite release ledger. Raw events stay inside the node." },
-    { title: "FastAPI + durable store", tag: "COORDINATOR", detail: "FastAPI authenticates enrolled nodes, validates versioned signals and commits them before acknowledging. PostgreSQL is the reference store; this single-process laptop demo uses SQLite." },
-    { title: "Correlation + explanation", tag: "TWO WORKERS", detail: "Correlation evaluates three provenance groups in a 120-second window and requests the cheapest useful missing evidence. The explanation worker builds a scoped snapshot, checks model claims and invalidates results when evidence changes." },
-    { title: "Analyst dashboard", tag: "SCOPED ACCESS", detail: "The React dashboard shows incidents, evidence and disclosure decisions permitted for the current session. A recoverable event stream updates the view as workers commit changes." },
-  ];
+  const outcomes = ["supported", "unresolved", "contradicted"];
+  const counts = outcomes.map((state) => incidents.filter((item) => item.outcome === state).length);
+  const store = { sqlite: "SQLite", postgresql: "PostgreSQL" }[status.coordinator_store];
+  const model = status.inference_configured ? "Hosted API" : "Checked template";
+  const ready = Boolean(user && status.service === "ready");
+  const stream = connected ? "Live updates" : ready ? "Polling API" : loading ? "Connecting" : "Awaiting API";
 
-  return <>
-    <a className="skip" href="#workspace">Skip to investigations</a>
-    <header className="site-header" id="overview">
-      <nav className="nav wrap" aria-label="Main navigation">
-        <a className="brand" href="#overview"><span className="brand-mark">T<span>/</span>S</span>ThreatScope</a>
-        <div className="nav-links"><a href="#architecture">Architecture</a><a href="#features">Features</a><a href="#workspace">Investigations</a></div>
-        <a className="button nav-action" href="#workspace">Open workspace</a>
-      </nav>
-    </header>
-    <main>
-      <section className="hero wrap" aria-labelledby="hero-title">
-        <p className="tag"><i /> Distributed threat intelligence</p>
-        <h1 id="hero-title">Connect threat signals.<br /><em>Keep raw logs private.</em></h1>
-        <p className="lede">See how three organizations detect anomalies, share bounded evidence and investigate a coordinated threat.</p>
-        <div className="hero-actions">
-          <a className="button primary" href="#workspace">Explore investigations</a>
-          <a className="button secondary" href="#architecture">See how it works</a>
+  return (
+    <div className="workspace">
+      <a className="skip-link" href="#main">Skip to workspace</a>
+      <aside className="sidebar">
+        <div className="brand">
+          <span className="brand-mark" aria-hidden="true">T<span>/</span>S</span>
+          <div><strong>THREATSCOPE<span>.</span></strong><small>ANALYST CONSOLE</small></div>
         </div>
-      </section>
+        <nav aria-label="Workspace navigation">
+          <p className="side-title">WORKSPACE</p>
+          {[["dashboard", "Dashboard"], ["architecture", "Architecture"]].map(([key, title], index) =>
+            <button key={key} className="nav-item" aria-current={view === key ? "page" : undefined}
+              onClick={() => setView(key)}><span>0{index + 1}</span>{title}</button>)}
+        </nav>
+        <section className="nodes" aria-labelledby="nodes-title">
+          <h2 id="nodes-title" className="side-title">ENROLLED NODES <span>{ready ? organizations.length : "–"}</span></h2>
+          {organizations.map((org) => <div className="node" key={org.id}>
+            <i className={org.active ? "lamp live" : "lamp"} aria-hidden="true" />
+            <div><strong>{org.name}</strong><small>{org.active ? time(org.last_signal) : "Inactive"}</small></div>
+          </div>)}
+          {!organizations.length && <p className="muted">{loading ? "Connecting…" : "No nodes to show."}</p>}
+        </section>
+        <div className="sidebar-bottom">
+          <span className="mono">EVALUATION SESSION</span>
+          <strong><i className={connected ? "lamp live" : "lamp"} aria-hidden="true" />{stream}</strong>
+          {store && <small>{store} coordinator · {model}</small>}
+        </div>
+      </aside>
 
-      <section className="architecture wrap" id="architecture" aria-labelledby="arch-title">
-        <div className="frame">
-          <header className="frame-head">
-            <div><p className="eyebrow">01 / SYSTEM ARCHITECTURE</p><h2 id="arch-title">From local event to shared incident</h2></div>
-            <span className="tag subtle"><i /> {store ? `${store} demo` : "Single-PC topology"}</span>
-          </header>
-          <div className="topology" aria-label="Architecture components">
-            {stages.map((stage, index) => <button type="button" className="stage" aria-pressed={layer === index}
-              key={stage.title} onClick={() => setLayer(index)}>
-              <span className="stage-kicker"><b>0{index + 1}</b>{stage.tag}</span>
-              <strong>{stage.title}</strong>
-              <span className="stage-items">
-                {[
-                  ["Orion", "Lyra", "Vega"],
-                  ["Authenticated signals", "Durable inbox"],
-                  ["120 s · 3 groups", "Claim verifier"],
-                  ["Incident + evidence", "Recoverable stream"],
-                ][index].map((name) => <span key={name}>{name}</span>)}
-              </span>
-            </button>)}
+      <main id="main" className="main">
+        <header className="page-heading">
+          <div><p className="eyebrow">THREATSCOPE / {view === "dashboard" ? "OPERATIONS" : "SYSTEM"}</p>
+            <h1>{view === "dashboard" ? "Incident dashboard" : "System architecture"}</h1>
+            <p className="heading-copy">{view === "dashboard" ? "Cross-organization findings and authorized evidence." : "How local signals become evidence-backed findings."}</p>
           </div>
-          <div className="stage-detail" aria-live="polite"><span className="eyebrow">0{layer + 1} / {stages[layer].tag}</span><p>{stages[layer].detail}</p></div>
-          <div className="frame-foot">
-            <span><b>Model boundary</b> · Optional HTTPS API receives approved categories with temporary evidence references. The verifier checks returned claims before display.</span>
-            <span className="mono">{status.inference_configured === undefined ? "API OR TEMPLATE" : infer}</span>
-          </div>
-        </div>
-      </section>
-
-      <section className="section wrap" id="features" aria-labelledby="features-title">
-        <p className="eyebrow">02 / FUNCTIONAL SPECIFICATIONS</p>
-        <h2 id="features-title">What ThreatScope does</h2>
-        <div className="features">
-          {[
-            ["F1", "Detect anomalies locally", "Each node processes its own events and flags authentication or traffic bursts."],
-            ["F2", "Share signals securely", "Enrolled credentials identify the source. Stable signal IDs make retries safe; the coordinator stores the signal before replying."],
-            ["F3", "Correlate and request evidence", "Compare independent reports. Local policy approves, coarsens or denies refinements and records release costs."],
-            ["F4", "Verify explanation claims", "Check evidence IDs, versions, values and access before rendering. Use a checked template when inference is unavailable."],
-            ["F5", "Investigate in one workspace", "Track incident outcomes, inspect authorized evidence and request an explanation as findings change."],
-          ].map(([id, title, description]) => <article className="feature" key={id}>
-            <span className="eyebrow">{id}</span><h3>{title}</h3><p>{description}</p>
-          </article>)}
-        </div>
-        <p className="boundary">The evaluation uses synthetic data. A supported rule does not prove compromise. Policy units track disclosure cost and do not provide formal differential privacy.</p>
-      </section>
-
-      <section className="section wrap" id="workspace" aria-labelledby="workspace-title">
-        <header className="section-heading">
-          <div><p className="eyebrow">03 / ANALYST WORKSPACE</p><h2 id="workspace-title">Investigations</h2></div>
-          {user && <div className="workspace-actions"><span className="tag subtle"><i className={connected ? "online" : ""} />{connected ? "Live updates" : "Polling API"}</span><button className="button secondary" onClick={refresh}>Refresh</button></div>}
+          {view === "dashboard" && user && <button className="button" onClick={refresh}>Refresh data</button>}
         </header>
-        {error && <p className="error" role="alert">{error}</p>}
-        {loading ? <p className="empty">Opening the demo workspace…</p> : !user ?
-          <div className="empty"><p>Start ThreatScope with the demo launcher to open a local session.</p><button className="button secondary" onClick={() => location.reload()}>Retry</button></div> : <>
-          <div className="stats">
-            {["Supported", "Unresolved", "Contradicted", "Organizations"].map((name, index) =>
-              <div key={name}><span>{name}</span><strong>{index === 3 ? organizations.length : counts[index]}</strong></div>)}
-          </div>
-          <div className="work-grid">
-            <div className="panel incident-list">
-              <div className="panel-heading"><h3>Incident feed</h3><span className="mono">{incidents.length} RECORDS</span></div>
-              {!incidents.length && <p className="empty">No incident reports yet. Run <code>uv run python -m scripts.demo_check</code> to generate a synthetic incident.</p>}
-              {incidents.map((item) => <button className="incident" aria-pressed={selected === item.incident_id}
-                key={item.incident_id} onClick={() => setSelected(item.incident_id)}>
-                <strong>{label(item.family)}</strong><span><Badge value={item.outcome} /><small>{time(item.created_at)}</small></span>
-              </button>)}
-              <div className="panel-heading node-head"><h3>Enrolled nodes</h3></div>
-              {organizations.map((org) => <div className="org" key={org.id}><i className={org.active ? "online" : ""} /><span>{org.name}</span><small>{time(org.last_signal)}</small></div>)}
-            </div>
-            <div className="panel incident-detail">
-              <div className="panel-heading"><h3>Authorized evidence</h3>{current && <span className="mono">REV {current.version}</span>}</div>
-              {!current ? <p className="empty">Select an incident to inspect its evidence and disclosure decisions.</p> :
-                <div className="panel-body">
-                  <div className="incident-title"><h3>{label(current.family)}</h3><Badge value={current.outcome} /></div>
-                  <p className="muted">{label(current.reason)} · {label(current.coverage)}</p>
-                  <div className="incident-meta">
-                    {current.summary && <span>{current.summary.independent_groups} independent groups · {current.summary.supporting_groups} supporting</span>}
-                    {user.role !== "analyst" && <label>Workflow <select aria-label="Investigation workflow" value={current.workflow} onChange={async (event) => {
-                      try { await api("/incidents/" + selected + "/workflow", { method: "PATCH", body: JSON.stringify({ status: event.target.value }) }); refresh(); }
-                      catch (e) { setError(e.message); }
-                    }}><option value="open">Open</option><option value="investigating">Investigating</option><option value="resolved">Resolved</option></select></label>}
+
+        {view === "architecture" ? <Architecture /> : <>
+          {error && <p className="error" role="alert">{error}</p>}
+          {loading ? <p className="panel empty" role="status">Opening dashboard…</p> : !user ?
+            <div className="panel empty"><p>Start the local demo launcher to open a session.</p>
+              <button className="button" onClick={() => location.reload()}>Retry</button></div> : <>
+              <section className="metrics" aria-label="Dashboard totals">
+                {["Supported", "Unresolved", "Contradicted", "Enrolled nodes"].map((name, index) =>
+                  <div className="metric" key={name}>
+                    <span>{name}</span>
+                    <strong>{ready ? String(index === 3 ? organizations.length : counts[index]).padStart(2, "0") : "–"}</strong>
+                    <small>{index === 3 ? "REPORTING ORGANIZATIONS" : "INCIDENTS IN FEED"}</small>
+                  </div>)}
+              </section>
+
+              <div className="work-grid">
+                <section className="panel" aria-labelledby="feed-title">
+                  <header className="panel-heading"><h2 id="feed-title">Incident feed</h2><span>{incidents.length} RECORDS</span></header>
+                  <div className="incident-list">
+                    {!incidents.length && <div className="empty">
+                      <strong>{ready ? "No incidents yet" : "Waiting for data"}</strong>
+                      {ready && <p>Use <code>scripts.demo_check</code> to generate a sample incident.</p>}
+                    </div>}
+                    {incidents.map((item) =>
+                      <button className="incident" key={item.incident_id} aria-pressed={selected === item.incident_id}
+                        onClick={() => { setSelected(item.incident_id); setDetail("evidence"); }}>
+                        <div><Badge value={item.outcome} /><small>{time(item.created_at)}</small></div>
+                        <strong>{label(item.family)}</strong>
+                        <small>REV {item.version} / {item.incident_id.slice(0, 8)}</small>
+                      </button>)}
                   </div>
-                  <h4>Evidence releases</h4>
-                  {!current.evidence.length ? <p className="muted">No refinements released.</p> : current.evidence.map((item) =>
-                    <div className="evidence-row" key={item.id}><span>{label(item.entry)} <small>v{item.version}</small></span>
-                      <Badge value={item.active ? item.value : "withdrawn"} /><small>{item.cost} policy units</small></div>)}
-                  <h4>Disclosure decisions</h4>
-                  {!current.requests.length ? <p className="muted">No refinements requested.</p> : current.requests.map((item) =>
-                    <div className="evidence-row" key={item.id}><span>{label(item.entry)}</span><Badge value={item.status} /></div>)}
-                </div>}
-              <div className="panel-heading explanation-head">
-                <h3>Checked explanation</h3>
-                <button className="button primary" onClick={explain} disabled={!current || busy || ["queued", "running"].includes(job?.status)}>
-                  {busy ? "Requesting…" : "Generate explanation"}</button>
-              </div>
-              <div className="panel-body">
-                {!job && <p className="muted">{status.inference_configured ? "The hosted API receives a minimized, authorized evidence snapshot." : "The demo uses a checked template when no model API is configured."}</p>}
-                {job && <><Badge value={job.status} />
-                  {["queued", "running"].includes(job.status) && <p className="muted">Checking evidence. Incident monitoring continues.</p>}
-                  {job.status === "stale" && <p className="muted">Evidence or access changed. Generate a new explanation.</p>}
-                  {job.result && job.status !== "stale" && <>
-                    <p className="muted">{job.result.mode === "template" ? "Checked template" : job.result.mode === "api_model" ? "Hosted API · verified claims" : "Model · verified claims"}</p>
-                    <ul className="claims">{job.result.claims.map((claim, index) =>
-                      <li key={index}><Badge value={claim.kind} /><p>{claim.text}</p>
-                        {claim.evidence_id && <small>Evidence {claim.evidence_id.slice(0, 8)} · v{claim.evidence_version}</small>}</li>)}</ul>
+                </section>
+
+                <section className="panel" aria-labelledby="inspector-title">
+                  <header className="panel-heading"><h2 id="inspector-title">Incident inspector</h2>{current && <span>REV {current.version}</span>}</header>
+                  {!current ? <p className="empty">Select an incident to inspect its evidence.</p> : <>
+                    <div className="case-summary">
+                      <div className="case-heading">
+                        <div><h3>{label(current.family)}</h3><p className="muted">{label(current.reason)}</p></div>
+                        <Badge value={current.outcome} />
+                      </div>
+                      <dl className="case-meta">
+                        {current.summary && <>
+                          <div><dt>Independent groups</dt><dd>{current.summary.independent_groups}</dd></div>
+                          <div><dt>Supporting groups</dt><dd>{current.summary.supporting_groups}</dd></div>
+                        </>}
+                        <div><dt>Coverage</dt><dd>{label(current.coverage)}</dd></div>
+                      </dl>
+                      <div className="case-actions">
+                        {user.role !== "analyst" && <label className="workflow">Workflow <select value={current.workflow} onChange={async (event) => {
+                          try { await api("/incidents/" + selected + "/workflow", { method: "PATCH", body: JSON.stringify({ status: event.target.value }) }); refresh(); }
+                          catch (e) { setError(e.message); }
+                        }}><option value="open">Open</option><option value="investigating">Investigating</option><option value="resolved">Resolved</option></select></label>}
+                        <button className="button primary" onClick={explain} disabled={busy || ["queued", "running"].includes(job?.status)}>
+                          {busy ? "Requesting…" : "Generate explanation"}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="detail-nav" role="group" aria-label="Inspector sections">
+                      {[
+                        ["evidence", "Evidence", current.evidence.length],
+                        ["decisions", "Disclosure decisions", current.requests.length],
+                        ["explanation", "Explanation", null],
+                      ].map(([key, title, count]) =>
+                        <button key={key} aria-pressed={detail === key} onClick={() => setDetail(key)}>
+                          {title}{count !== null && <span>{count}</span>}
+                        </button>)}
+                    </div>
+                    {detail === "evidence" && <Evidence items={current.evidence} />}
+                    {detail === "decisions" && <Decisions items={current.requests} />}
+                    {detail === "explanation" && <Explanation job={job} model={model} busy={busy} />}
                   </>}
-                </>}
+                </section>
               </div>
-            </div>
-          </div>
+              <p className="footer-note">Synthetic evaluation. A supported rule is evidence for investigation, not proof of compromise.</p>
+            </>}
         </>}
-      </section>
-    </main>
-    <footer className="footer"><div className="wrap"><strong>ThreatScope</strong><span>Research prototype · Synthetic evaluation</span><a href="#overview">Back to top ↑</a></div></footer>
-  </>;
+      </main>
+    </div>
+  );
+}
+
+function Evidence({ items }) {
+  if (!items.length) return <p className="empty">No evidence has been released.</p>;
+  return <div className="table-wrap"><table>
+    <thead><tr><th scope="col">Evidence</th><th scope="col">Value</th><th scope="col" className="numeric">Policy units</th></tr></thead>
+    <tbody>{items.map((item) => <tr key={item.id}>
+      <td><strong>{label(item.entry)}</strong><small>{item.id.slice(0, 8)} · v{item.version}</small></td>
+      <td><Badge value={item.active ? item.value : "withdrawn"} /></td>
+      <td className="numeric">{item.cost}</td>
+    </tr>)}</tbody>
+  </table></div>;
+}
+
+function Decisions({ items }) {
+  if (!items.length) return <p className="empty">No refinements requested.</p>;
+  return <div className="table-wrap"><table>
+    <thead><tr><th scope="col">Requested refinement</th><th scope="col">Decision</th></tr></thead>
+    <tbody>{items.map((item) => <tr key={item.id}>
+      <td><strong>{label(item.entry)}</strong><small>{item.id.slice(0, 8)}</small></td>
+      <td><Badge value={item.status} /></td>
+    </tr>)}</tbody>
+  </table></div>;
+}
+
+function Explanation({ job, model, busy }) {
+  if (!job) return <p className="empty" role="status">{busy ? "Requesting explanation…" : `No explanation requested. Available mode: ${model}.`}</p>;
+  return <div className="explanation">
+    <div className="explanation-status" role="status">
+      <Badge value={job.status} />
+      {["queued", "running"].includes(job.status) && <span>Checking authorized evidence…</span>}
+      {job.status === "stale" && <span>Evidence or access changed. Generate a new explanation.</span>}
+      {job.result && job.status !== "stale" && <span>{job.result.mode === "template" ? "Checked template" : "Verified model claims"}</span>}
+    </div>
+    {job.result && job.status !== "stale" && <ul className="claims">{job.result.claims.map((claim, index) =>
+      <li key={index}><Badge value={claim.kind} /><p>{claim.text}</p>
+        {claim.evidence_id && <small>Evidence {claim.evidence_id.slice(0, 8)} · v{claim.evidence_version}</small>}
+      </li>)}</ul>}
+  </div>;
+}
+
+const systemFlow = [
+  ["F1", "Local detection", "Orion, Lyra and Vega detect authentication or traffic bursts independently. Raw logs stay with each organization."],
+  ["F2", "Signal ingestion", "FastAPI validates signals and stores them before acknowledging. The laptop demo uses SQLite; the reference deployment uses PostgreSQL."],
+  ["F3", "Correlation and disclosure", "The worker compares independent provenance groups across a 120-second window. Local policy can approve, coarsen or deny requests for evidence."],
+  ["F4", "Explanation verification", "The verifier checks claims against authorized evidence. A hosted model is optional; the demo can use a checked template."],
+  ["F5", "Analyst dashboard", "The incident feed updates over a live event stream and shows authorized evidence, disclosure decisions and checked explanations."],
+];
+
+function Architecture() {
+  return <section className="panel architecture" aria-labelledby="flow-title">
+    <header className="panel-heading"><h2 id="flow-title">Signal flow</h2><span>5 STAGES</span></header>
+    <ol>{systemFlow.map(([code, title, description]) => <li key={code}>
+      <span className="flow-code">{code}</span><div><h3>{title}</h3><p className="muted">{description}</p></div>
+    </li>)}</ol>
+  </section>;
 }
