@@ -40,7 +40,7 @@ async def run(args):
             try:
                 for index, org in enumerate(credentials["organizations"]):
                     ledger = Ledger(Path(temp) / f"agent-{index}.db")
-                    observe(ledger, LocalDetector(), "auth_attack", 71 + index, 10, end=end)
+                    observe(ledger, LocalDetector(), args.scenario, 71 + index, 10, end=end)
                     agents.append(Agent(args.agent_url or args.url, org["api_key"], ledger))
                 if len(agents) != 3:
                     raise RuntimeError("Evaluation requires three enrolled organizations.")
@@ -104,13 +104,16 @@ async def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--url", default="http://127.0.0.1:18000")
+    parser.add_argument("--url", default="http://127.0.0.1:5173")
     parser.add_argument("--agent-url", help="Direct coordinator URL when the dashboard uses a proxy.")
-    parser.add_argument("--origin", default="http://127.0.0.1:5173")
-    parser.add_argument("--credentials", type=Path, default=ROOT / ".runtime/private/demo-credentials.json")
+    parser.add_argument("--origin", help="Defaults to the dashboard URL.")
+    parser.add_argument("--credentials", type=Path, default=ROOT / ".runtime/native-demo/demo-credentials.json")
+    parser.add_argument("--scenario", choices=["auth_attack", "traffic_attack"], default="auth_attack")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--timeout", type=float, default=35)
-    asyncio.run(run(parser.parse_args()))
+    args = parser.parse_args()
+    args.origin = args.origin or args.url
+    asyncio.run(run(args))
 
 
 if __name__ == "__main__":

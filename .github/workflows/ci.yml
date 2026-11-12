@@ -41,21 +41,40 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-  compose:
-    runs-on: ubuntu-latest
-    needs: [backend, frontend]
+  native-demo:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - run: python scripts/bootstrap.py
-      - run: docker compose config --quiet
-      - run: docker compose build
-      - run: docker compose up -d --wait backend correlation explanations frontend
-      - run: docker compose --profile setup run --rm enroll
-      - run: docker compose --profile demo up -d orion lyra vega
-      - run: python scripts/compose_smoke.py
-      - run: docker compose --profile demo stop orion lyra vega
-      - run: docker compose --profile evaluation run --rm --build evaluate
-      - if: always()
-        run: docker compose --profile demo logs --no-color --tail 80
-      - if: always()
-        run: docker compose down
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.10.12"
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - shell: pwsh
+        run: |
+          uv sync --frozen
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $server = Start-Process .venv/Scripts/python.exe -ArgumentList '-m','scripts.demo' -PassThru -NoNewWindow -RedirectStandardOutput demo.stdout -RedirectStandardError demo.stderr
+          try {
+            $ready = $false
+            for ($attempt = 0; $attempt -lt 120 -and -not $server.HasExited; $attempt++) {
+              try {
+                $response = Invoke-WebRequest -Uri http://127.0.0.1:5173/health/ready -TimeoutSec 1
+                if ($response.StatusCode -eq 200) { $ready = $true; break }
+              } catch { Start-Sleep -Milliseconds 500 }
+            }
+            if (-not $ready) { throw "Native demo failed to start" }
+            $dashboard = Invoke-WebRequest -Uri http://127.0.0.1:5173/
+            if ($dashboard.Content -notmatch '<title>ThreatScope</title>') { throw "Dashboard missing" }
+            foreach ($scenario in @('auth_attack', 'traffic_attack')) {
+              .venv/Scripts/python.exe -m scripts.demo_check --scenario $scenario
+              if ($LASTEXITCODE -ne 0) { throw "Scenario failed: $scenario" }
+            }
+          } finally {
+            if (-not $server.HasExited) { Stop-Process -Id $server.Id }
+            Get-Content demo.stdout,demo.stderr -Tail 60
+          }

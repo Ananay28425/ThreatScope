@@ -14,6 +14,13 @@ from common.contracts import utcnow
 log = logging.getLogger(__name__)
 
 
+async def correlate_once(db, settings) -> None:
+    async with db.sessions() as session, session.begin():
+        await process_pending(session, settings)
+        minute = int(utcnow().timestamp() // 60)
+        await session.execute(delete(RateBucket).where(RateBucket.minute < minute - 60))
+
+
 async def run() -> None:
     settings = get_settings()
     db = Database(settings)
@@ -34,10 +41,7 @@ async def run() -> None:
                 try:
                     # Detect a lost ownership connection before doing more work.
                     await ownership.execute(text("SELECT 1"))
-                    async with db.sessions() as session, session.begin():
-                        await process_pending(session, settings)
-                        minute = int(utcnow().timestamp() // 60)
-                        await session.execute(delete(RateBucket).where(RateBucket.minute < minute - 60))
+                    await correlate_once(db, settings)
                 except Exception:
                     log.exception("correlation_batch_failed")
                     raise  # Supervisor restarts; never silently lose work or ownership.

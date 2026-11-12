@@ -21,9 +21,9 @@ class Settings(BaseSettings):
     ingest_per_minute: int = Field(default=120, ge=1, le=10000)
     login_per_minute: int = Field(default=10, ge=1, le=100)
     max_body_bytes: int = 16384
-    llm_url: str = "http://127.0.0.1:8080/v1"
+    llm_url: str = ""
     llm_api_key: str = ""
-    llm_model: str = "Qwen3-1.7B-Q4_K_M"
+    llm_model: str = ""
     llm_enabled: bool = False
     llm_timeout_seconds: int = Field(default=45, ge=1, le=120)
     llm_ca_file: str | None = None
@@ -33,10 +33,14 @@ class Settings(BaseSettings):
     def origins(self) -> set[str]:
         return {s.strip() for s in self.allowed_origins.split(",") if s.strip()}
 
+    @property
+    def hosted_inference(self) -> bool:
+        return urlparse(self.llm_url).hostname not in {None, "localhost", "127.0.0.1", "::1"}
+
     @model_validator(mode="after")
     def validate_boundaries(self):
-        if self.database_url.startswith("sqlite") and self.app_env != "test":
-            raise ValueError("sqlite_coordinator_is_test_only")
+        if self.database_url.startswith("sqlite") and self.app_env not in {"test", "demo"}:
+            raise ValueError("sqlite_coordinator_requires_test_or_demo")
         if self.app_env == "production" and not self.cookie_secure:
             raise ValueError("production_requires_secure_cookie")
         if self.demo_access and self.app_env == "production":
@@ -46,8 +50,12 @@ class Settings(BaseSettings):
         parsed = urlparse(self.llm_url)
         if parsed.username or parsed.password or parsed.query or parsed.fragment:
             raise ValueError("llm_url_must_not_contain_credentials_or_query")
-        if self.llm_enabled and parsed.hostname not in {"localhost", "127.0.0.1", "::1", "llm"}:
-            if parsed.scheme != "https" or not self.llm_api_key:
+        if self.llm_enabled:
+            if parsed.scheme not in {"http", "https"} or not parsed.hostname or not self.llm_model.strip():
+                raise ValueError("inference_requires_url_and_model")
+            if self.app_env == "demo" and not self.hosted_inference:
+                raise ValueError("demo_inference_requires_hosted_api")
+            if self.hosted_inference and (parsed.scheme != "https" or not self.llm_api_key.strip()):
                 raise ValueError("remote_inference_requires_tls_and_api_key")
         if "*" in self.origins:
             raise ValueError("explicit_origins_required")

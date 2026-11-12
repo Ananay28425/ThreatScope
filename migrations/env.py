@@ -21,4 +21,7 @@ async def run():
     await engine.dispose()
 
 
-asyncio.run(run())
+if (connection := context.config.attributes.get("connection")) is not None:
+    migrate(connection)
+else:
+    asyncio.run(run())
