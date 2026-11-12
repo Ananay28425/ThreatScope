@@ -1,9 +1,12 @@
 """Tests distinguish reference validity from bounded semantic support and safe fallback."""
+import json
 from types import SimpleNamespace
 
+import httpx
 import pytest
 
-from backend.app.explanations import check_claims, expected_claims, explain, fallback
+from backend.app.config import Settings
+from backend.app.explanations import check_claims, expected_claims, explain, fallback, generate_raw
 
 
 @pytest.fixture
@@ -51,3 +54,34 @@ def test_template_preserves_unknown_and_coverage(snapshot):
     result = fallback(snapshot, "timeout")
     assert any("unresolved" in c["text"] for c in result["claims"])
     assert any("partial" in c["text"] for c in result["claims"])
+
+
+async def test_hosted_api_minimizes_evidence_and_restores_verified_references(snapshot):
+    snapshot.update(audience="private-recipient", created_at="private-timestamp", requests=[{"id": "private-request"}])
+    snapshot["evidence"].append({"id": "withdrawn-id", "entry": "private", "active": False})
+    settings = Settings(_env_file=None, app_env="demo", llm_enabled=True,
+                        llm_url="https://model.example/v1", llm_model="test-model", llm_api_key="test-key")
+
+    def provider(request):
+        assert request.url.path == "/v1/chat/completions"
+        assert request.headers["authorization"] == "Bearer test-key"
+        payload = json.loads(request.content)
+        assert "chat_template_kwargs" not in payload
+        prompt = json.loads(payload["messages"][1]["content"])["authorized_snapshot"]
+        assert set(prompt) == {"family", "outcome", "coverage", "evidence"}
+        assert prompt["evidence"] == [{
+            "id": "ref-1", "entry": "auth_failure", "value": "high", "version": 2, "active": True,
+        }]
+        claim = {
+            "kind": "observation", "predicate": "evidence_value", "value": "high",
+            "evidence_id": "ref-1", "evidence_version": 2,
+        }
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps({"claims": [claim]})}}]})
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(provider)) as client:
+        async def generate(view, config, repair=None):
+            return await generate_raw(view, config, repair=repair, client=client)
+
+        result = await explain(snapshot, settings, generate)
+    assert result["mode"] == "api_model"
+    assert result["claims"][0]["evidence_id"] == "e1"

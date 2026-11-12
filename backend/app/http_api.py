@@ -346,6 +346,7 @@ async def system_status(request: Request, db=Depends(session_dependency)):
         "oldest_pending_age_seconds": max(0, (utcnow() - aware(oldest)).total_seconds()) if oldest else 0,
         "inference_configured": request.app.state.settings.llm_enabled,
         "inference_model": request.app.state.settings.llm_model,
+        "coordinator_store": db.bind.dialect.name,
     }
 
 

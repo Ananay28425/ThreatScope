@@ -16,11 +16,11 @@ from backend.app.tables import Audit, Credential, Organization, User
 from common.contracts import utcnow
 
 
-async def seed_demo(output: Path) -> None:
+async def seed_demo(output: Path, settings=None) -> None:
     """Create distinct identities and store credentials locally, never in repository history."""
     if output.exists():
         raise RuntimeError("credential_output_already_exists")
-    db = Database(get_settings())
+    db = Database(settings or get_settings())
     credentials = {"schema_version": 1, "organizations": []}
     try:
         async with db.sessions() as session, session.begin():

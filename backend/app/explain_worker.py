@@ -42,19 +42,22 @@ async def process_one(db, settings) -> bool:
     return True
 
 
+async def recover_jobs(db) -> None:
+    async with db.sessions() as session, session.begin():
+        jobs = (await session.execute(select(Explanation).where(
+            Explanation.status == "running",
+        ))).scalars().all()
+        for job in jobs:
+            job.status = "queued"
+
+
 async def run():
     settings, db = get_settings(), Database(get_settings())
     try:
         async with db.engine.connect() as owner:
             if not await owner.scalar(text("SELECT pg_try_advisory_lock(78421366)")):
                 raise RuntimeError("explanation_worker_already_running")
-            async with db.sessions() as session, session.begin():
-                # Only the owner recovers interrupted jobs; no duplicate model requests on restart.
-                jobs = (await session.execute(select(Explanation).where(
-                    Explanation.status == "running",
-                ))).scalars().all()
-                for job in jobs:
-                    job.status = "queued"
+            await recover_jobs(db)
             while True:
                 await owner.execute(text("SELECT 1"))
                 if not await process_one(db, settings):
