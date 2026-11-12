@@ -109,25 +109,48 @@ export default function App() {
   const counts = ["supported", "unresolved", "contradicted"].map((state) => incidents.filter((item) => item.outcome === state).length);
   return <div className="workspace">
     <aside className="sidebar">
-      <div className="brand"><span className="brand-mark">T</span><strong>ThreatScope</strong></div>
-      <p className="eyebrow">OPERATIONS WORKSPACE</p>
-      <div className="nav-active">â—ˆ &nbsp; Incident overview</div>
-      <p className="sidebar-note">Evidence stays under source control. Conclusions show their limits.</p>
-      <div className="sidebar-bottom"><Badge value={connected ? "connected" : "reconnecting"} />
-        <small>Local evaluation session</small></div>
+      <div className="brand"><span className="brand-mark">T<span className="brand-scan">/</span>S</span><strong>THREATSCOPE<span className="brand-period">.</span></strong></div>
+      <div className="menu-block"><p className="side-title">SYSTEM_MENU</p>
+        <div className="side-link active"><span>01 //</span> OVERVIEW</div>
+        <a className="side-link" href="#investigations"><span>02 //</span> INVESTIGATIONS</a>
+        <a className="side-link" href="#evidence"><span>03 //</span> EVIDENCE</a>
+        <a className="side-link" href="#interpretation"><span>04 //</span> INTERPRETATION</a>
+      </div>
+      <div className="telemetry-block"><p className="side-title">LIVE_TELEMETRY</p>
+        <div className="telemetry-entry"><time>NET.STATUS</time><strong>{connected ? "UPLINK_ESTABLISHED" : "RECONNECTING"} // PORT_5173</strong></div>
+        <div className="telemetry-entry"><time>DATA.STREAM</time><strong>{status.pending_signals ?? 0} SIGNALS_PENDING // {organizations.length} NODES</strong></div>
+      </div>
+      <div className="sidebar-bottom"><span className="sidebar-bottom-label">SESSION_STATE</span>
+        <strong><i className={connected ? "status-lamp online" : "status-lamp"} />{connected ? "SYSTEM_ONLINE" : "CONNECTING"}</strong>
+        <small>LOCAL EVALUATION // CONTROLLED ACCESS</small></div>
     </aside>
     <main className="main">
-      <header><div><p className="eyebrow">EVIDENCE / CORRELATION / INTERPRETATION</p><h1>Incident overview</h1></div>
-        <button className="secondary" onClick={refresh}>Refresh</button></header>
+      <div className="topline"><span>REF_TS-001 // DISTRIBUTED INTELLIGENCE</span><span>RESEARCH PROTOTYPE&nbsp; / &nbsp;LIVE MONITOR</span></div>
+      <header className="hero">
+        <div className="hero-copy"><p className="eyebrow accent">◼ &nbsp; THREAT INTELLIGENCE PROTOCOL</p>
+          <h1>LOCAL EVIDENCE.<br /><em>SHARED AWARENESS.</em></h1>
+          <p className="hero-description">Signals stay with their source. Authorized evidence builds a shared picture of the threat.</p>
+          <div className="hero-bottom"><span>01 / OBSERVE</span><span>02 / CORRELATE</span><span>03 / EXPLAIN</span></div>
+        </div>
+        <div className="signal-display" aria-hidden="true"><span className="display-top">NETWORK_MAP // ACTIVE_NODES</span>
+          <div className="radar"><span className="radar-ring ring-one" /><span className="radar-ring ring-two" /><span className="radar-ring ring-three" />
+            <span className="radar-axis horizontal" /><span className="radar-axis vertical" /><span className="radar-center">TS</span>
+            <span className="radar-node node-a">01</span><span className="radar-node node-b">02</span><span className="radar-node node-c">03</span></div>
+          <div className="display-bottom"><span>{String(organizations.length).padStart(2, "0")} / NODES REGISTERED</span><span>SYNC // {connected ? "LIVE" : "PENDING"}</span></div>
+        </div>
+        <span className="corner tl" /><span className="corner tr" /><span className="corner bl" /><span className="corner br" />
+      </header>
+      <div className="section-intro"><div className="section-index">01</div><div><span className="eyebrow accent">OPERATIONS UNIT</span><h2>INCIDENT COMMAND<span className="brand-period">.</span></h2></div>
+        <button className="secondary refresh" onClick={refresh}>↻ &nbsp; REFRESH DATA</button></div>
       {error && <div className="error" role="alert">{error}</div>}
       <section className="metrics" aria-label="Incident counts">
         {["Supported", "Unresolved", "Contradicted"].map((title, index) =>
-          <div className="metric" key={title}><span>{title}</span><strong>{counts[index]}</strong><small>Declared rule outcome</small></div>)}
-        <div className="metric"><span>Organizations</span><strong>{organizations.length}</strong><small>{status.pending_signals ?? "—"} reports awaiting correlation</small></div>
+          <div className="metric" key={title}><span>SYS.{title.toUpperCase()}</span><strong>{String(counts[index]).padStart(2, "0")}</strong><small>DECLARED RULE OUTCOME</small><b className="metric-line" /></div>)}
+        <div className="metric" key="Organizations"><span>SYS.ORGANIZATIONS</span><strong>{String(organizations.length).padStart(2, "0")}</strong><small>{status.pending_signals ?? "—"} SIGNALS AWAITING CORRELATION</small><b className="metric-line" /></div>
       </section>
       <div className="content-grid">
-        <section className="panel incident-list">
-          <div className="panel-heading"><h2>Investigations</h2><span>{incidents.length}</span></div>
+        <section className="panel incident-list" id="investigations">
+          <div className="panel-heading"><h2>02 // INVESTIGATIONS</h2><span>{String(incidents.length).padStart(2, "0")} RECORDS</span></div>
           {incidents.length === 0 && <div className="empty">Waiting for organization reports.<p>New investigations appear when eligible anomaly signals arrive.</p></div>}
           {incidents.map((item) => <button className={"incident " + (selected === item.incident_id ? "selected" : "")}
             key={item.incident_id} onClick={() => setSelected(item.incident_id)}>
@@ -135,8 +158,8 @@ export default function App() {
             <strong>{label(item.family)}</strong><span>{label(item.reason)}</span><small>Revision {item.version} · {label(item.coverage)}</small>
           </button>)}
         </section>
-        <section className="panel detail">
-          <div className="panel-heading"><h2>Authorized evidence</h2>{current && <span>REV {current.version}</span>}</div>
+        <section className="panel detail" id="evidence">
+          <div className="panel-heading"><h2>03 // AUTHORIZED EVIDENCE</h2>{current && <span>REV_{String(current.version).padStart(2, "0")}</span>}</div>
           {!current ? <div className="empty">Select an investigation to inspect its evidence.</div> : <>
             <div className="incident-title"><h2>{label(current.family)}</h2><Badge value={current.outcome} /></div>
             <p className="muted">{label(current.reason)}. A supported rule does not establish successful compromise.</p>
@@ -157,15 +180,15 @@ export default function App() {
           </>}
         </section>
         <section className="panel organizations">
-          <div className="panel-heading"><h2>Organizations</h2></div>
+          <div className="panel-heading"><h2>NETWORK // ORGANIZATIONS</h2></div>
           {organizations.map((org) => <div className="org" key={org.id}><span className={"dot " + (org.active ? "online" : "")} />
             <div><strong>{org.name}</strong><small>{time(org.last_signal)}</small></div></div>)}
           <div className="boundary-note"><h3>Sharing boundary</h3><p>Only approved evidence appears here. Missing or denied evidence remains unknown.</p></div>
         </section>
       </div>
-      <section className="panel explanation">
-        <div className="panel-heading"><div><p className="eyebrow">LOCAL INTERPRETATION</p><h2>Explanation with evidence references</h2></div>
-          <button onClick={explain} disabled={!selected || busy}>{busy ? "Requesting…" : "Explain selected incident"}</button></div>
+      <section className="panel explanation" id="interpretation">
+        <div className="panel-heading"><div><p className="eyebrow accent">04 // LOCAL INTERPRETATION</p><h2>EXPLANATION WITH EVIDENCE REFERENCES</h2></div>
+          <button onClick={explain} disabled={!selected || busy}>{busy ? "REQUESTING…" : "EXPLAIN SELECTED INCIDENT +"}</button></div>
         {!job && <p className="muted">Generate an explanation from this account’s authorized evidence.</p>}
         {job && <><Badge value={job.status} />
           {["queued", "running"].includes(job.status) && <p className="muted">Preparing explanation. Incident monitoring continues.</p>}
@@ -175,7 +198,7 @@ export default function App() {
               {claim.evidence_id && <small>Evidence {claim.evidence_id.slice(0, 8)} · version {claim.evidence_version}</small>}</li>)}</ol></>}
         </>}
       </section>
-      <footer>ThreatScope research prototype · Scenario demonstrations are labeled in the run manifest.</footer>
+      <footer><span>SYSTEM_STABLE // DATA_FLUX_1.0.4</span><span>THREATSCOPE RESEARCH PROTOTYPE // SCENARIO DEMONSTRATION</span></footer>
     </main>
   </div>;
 }
