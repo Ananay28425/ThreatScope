@@ -6,6 +6,7 @@ let csrf = "";
 async function api(path, options = {}) {
   const response = await fetch("/api/v1" + path, {
     credentials: "same-origin",
+    cache: "no-store",
     ...options,
     headers: { "Content-Type": "application/json", "X-CSRF-Token": csrf, ...options.headers },
   });
@@ -31,6 +32,7 @@ export default function App() {
   const [busy, setBusy] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [refreshResult, setRefreshResult] = useState("");
   const cursor = useRef(0);
   const job = requestedJob?.incidentId === selected ? requestedJob : null;
   const current = incidents.find((item) => item.incident_id === selected);
@@ -46,12 +48,20 @@ export default function App() {
       setLastUpdated(new Date());
       setSelected((old) => items.incidents.some((item) => item.incident_id === old) ? old : items.incidents[0]?.incident_id ?? null);
       setError("");
-    } catch (e) { setError(e.message); }
+      return items.incidents;
+    } catch (e) { setError(e.message); throw e; }
   }, []);
 
   async function refreshManually() {
     setRefreshing(true);
-    try { await refresh(); } finally { setRefreshing(false); }
+    setRefreshResult("");
+    try {
+      const before = new Map(incidents.map((item) => [item.incident_id, item.version]));
+      const items = await refresh();
+      const changes = items.filter((item) => before.get(item.incident_id) !== item.version).length;
+      setRefreshResult(changes ? `${changes} new or updated incident${changes === 1 ? "" : "s"}.` : "No new incidents. Data is current.");
+    } catch (e) { setRefreshResult(`Refresh failed: ${e.message}`); }
+    finally { setRefreshing(false); }
   }
 
   useEffect(() => {
@@ -63,8 +73,8 @@ export default function App() {
 
   useEffect(() => {
     if (!user) return;
-    refresh();
-    const timer = setInterval(refresh, 5000);
+    refresh().catch(() => {});
+    const timer = setInterval(() => refresh().catch(() => {}), 5000);
     let socket, reconnect, stopped = false;
     function connect() {
       if (stopped) return;
@@ -157,6 +167,7 @@ export default function App() {
               {refreshing ? "Refreshing…" : "Refresh data"}
             </button>
             <small role="status">{lastUpdated ? `API checked at ${lastUpdated.toLocaleTimeString()}` : "Waiting for API"}</small>
+            {refreshResult && <small role="status">{refreshResult}</small>}
           </div>}
         </header>
 
