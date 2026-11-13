@@ -29,6 +29,8 @@ export default function App() {
   const [error, setError] = useState("");
   const [requestedJob, setJob] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
   const cursor = useRef(0);
   const job = requestedJob?.incidentId === selected ? requestedJob : null;
   const current = incidents.find((item) => item.incident_id === selected);
@@ -41,10 +43,16 @@ export default function App() {
       setIncidents(items.incidents);
       setOrganizations(nodes.organizations);
       setStatus(health);
+      setLastUpdated(new Date());
       setSelected((old) => items.incidents.some((item) => item.incident_id === old) ? old : items.incidents[0]?.incident_id ?? null);
       setError("");
     } catch (e) { setError(e.message); }
   }, []);
+
+  async function refreshManually() {
+    setRefreshing(true);
+    try { await refresh(); } finally { setRefreshing(false); }
+  }
 
   useEffect(() => {
     api("/auth/me").catch(() => api("/auth/demo", { method: "POST" }))
@@ -144,7 +152,12 @@ export default function App() {
             <h1>{view === "dashboard" ? "Incident dashboard" : "System architecture"}</h1>
             <p className="heading-copy">{view === "dashboard" ? "Cross-organization findings and authorized evidence." : "How local signals become evidence-backed findings."}</p>
           </div>
-          {view === "dashboard" && user && <button className="button" onClick={refresh}>Refresh data</button>}
+          {view === "dashboard" && user && <div className="refresh-control">
+            <button className="button" onClick={refreshManually} disabled={refreshing}>
+              {refreshing ? "Refreshing…" : "Refresh data"}
+            </button>
+            <small role="status">{lastUpdated ? `API checked at ${lastUpdated.toLocaleTimeString()}` : "Waiting for API"}</small>
+          </div>}
         </header>
 
         {view === "architecture" ? <Architecture /> : <>
