@@ -67,6 +67,8 @@ button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid
   background-size: 32px 32px;
 }
 .page-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 23px; }
+.refresh-control { display: grid; justify-items: end; gap: 5px; flex: none; }
+.refresh-control small { color: var(--muted); font: 10px var(--mono); }
 .page-heading h1 { font-size: clamp(26px, 3.1vw, 40px); line-height: 1.03; font-weight: 900; letter-spacing: -.035em; margin: 7px 0; }
 .heading-copy, .muted, .footer-note { color: var(--muted); font-size: 13px; line-height: 1.5; }
 .button {
