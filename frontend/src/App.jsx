@@ -1,6 +1,7 @@
 /** Purpose: an evaluation workspace with automatic local demo access. */
 import { useCallback, useEffect, useRef, useState } from "react";
 import "./styles.css";
+import Replay from "./Replay";
 
 let csrf = "";
 async function api(path, options = {}) {
@@ -36,7 +37,9 @@ export default function App() {
   const cursor = useRef(0);
   const job = requestedJob?.incidentId === selected ? requestedJob : null;
   const current = incidents.find((item) => item.incident_id === selected);
-  const [view, setView] = useState("dashboard");
+  const [view, setView] = useState("replay");
+  const [theme, setTheme] = useState(() => localStorage.getItem("threatscope-theme") === "dark" ? "dark" : "light");
+  useEffect(() => { document.documentElement.dataset.theme = theme; localStorage.setItem("threatscope-theme", theme); }, [theme]);
   const [detail, setDetail] = useState("evidence");
 
   const refresh = useCallback(async () => {
@@ -137,7 +140,7 @@ export default function App() {
         </div>
         <nav aria-label="Workspace navigation">
           <p className="side-title">WORKSPACE</p>
-          {[["dashboard", "Dashboard"], ["architecture", "Architecture"]].map(([key, title], index) =>
+          {[["replay", "Workflow replay"], ["dashboard", "Incident archive"], ["architecture", "Architecture"]].map(([key, title], index) =>
             <button key={key} className="nav-item" aria-current={view === key ? "page" : undefined}
               onClick={() => setView(key)}><span>0{index + 1}</span>{title}</button>)}
         </nav>
@@ -158,10 +161,11 @@ export default function App() {
 
       <main id="main" className="main">
         <header className="page-heading">
-          <div><p className="eyebrow">THREATSCOPE / {view === "dashboard" ? "OPERATIONS" : "SYSTEM"}</p>
-            <h1>{view === "dashboard" ? "Incident dashboard" : "System architecture"}</h1>
-            <p className="heading-copy">{view === "dashboard" ? "Cross-organization findings and authorized evidence." : "How local signals become evidence-backed findings."}</p>
+          <div><p className="eyebrow">THREATSCOPE / {view === "architecture" ? "SYSTEM" : "OPERATIONS"}</p>
+            <h1>{view === "replay" ? "Threat workflow" : view === "dashboard" ? "Incident archive" : "System architecture"}</h1>
+            <p className="heading-copy">{view === "replay" ? "Follow each signal from a local check to a shared case and a verified explanation." : view === "dashboard" ? "Cross-organization findings and authorized evidence." : "How local signals become evidence-backed findings."}</p>
           </div>
+          <div className="page-tools"><button className="button" onClick={() => setTheme(theme === "light" ? "dark" : "light")}>{theme === "light" ? "Dark theme" : "Light theme"}</button>
           {view === "dashboard" && user && <div className="refresh-control">
             <button className="button" onClick={refreshManually} disabled={refreshing}>
               {refreshing ? "Refreshing…" : "Refresh data"}
@@ -169,9 +173,10 @@ export default function App() {
             <small role="status">{lastUpdated ? `API checked at ${lastUpdated.toLocaleTimeString()}` : "Waiting for API"}</small>
             {refreshResult && <small role="status">{refreshResult}</small>}
           </div>}
+          </div>
         </header>
 
-        {view === "architecture" ? <Architecture /> : <>
+        {view === "replay" && user ? <Replay api={api} theme={theme} /> : view === "architecture" ? <Architecture /> : <>
           {error && <p className="error" role="alert">{error}</p>}
           {loading ? <p className="panel empty" role="status">Opening dashboard…</p> : !user ?
             <div className="panel empty"><p>Start the local demo launcher to open a session.</p>

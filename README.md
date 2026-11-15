@@ -25,31 +25,21 @@ Install [uv](https://docs.astral.sh/uv/) and Node.js 22 with npm, then run this 
 uv run --frozen python -m scripts.demo
 ```
 
-The launcher installs frontend dependencies on the first run, builds React, creates an isolated SQLite coordinator, enrolls three synthetic organizations, and starts the dashboard and both workers. Open **http://127.0.0.1:5173/**. The evaluation session opens automatically. Use Ctrl+C to stop. If another app holds port 5173, add `--port 15173`.
+Open **http://127.0.0.1:15173/**. The launcher builds the frontend, enrolls Orion, Lyra and Vega, and starts the dashboard and workers without Docker. In **Workflow replay**, choose a scenario and press **Play**. Pause freezes input; Reset clears the replay display. Cases remain in **Incident archive**. **System info** explains every dashboard metric. In another terminal, `uv run --frozen python -m scripts.demo_check` still runs the original CLI smoke check.
 
-In another terminal, create a sample incident using the three enrolled nodes:
+Use another `--port` if 15173 is occupied. The laptop database and logs stay under `.runtime/native-demo`. PostgreSQL remains the reference deployment; see [native deployment](docs/deployment.md).
+
+### Run the same replay with a local model
+
+Install a llama.cpp release that includes `llama-server` and download an instruction-tuned GGUF. On Windows:
 
 ```powershell
-uv run --frozen python -m scripts.demo_check
-uv run --frozen python -m scripts.demo_check --scenario traffic_attack
+uv run --frozen python -m scripts.demo --llama-server "D:\llama.cpp\llama-server.exe" --model "D:\models\your-model.gguf"
 ```
 
-Run either command or both. If you changed the launcher port, pass the matching `--url http://127.0.0.1:15173`. Open **Investigations**, select the new incident, inspect the evidence and disclosure decisions, and click **Generate explanation**. Both scenarios are synthetic. Each node generates and processes its own local events; the coordinator receives only the versioned signal and policy-approved refinements.
+Select **Local model simulation**, then press **Play**. ThreatScope starts its own loopback model server, checks that it is ready, and stops it on Pause, completion, or app shutdown. You do not need to start a separate service. Use `--model-port` if the default 18081 is occupied. The model is used for explaining evidence; it does not drive activity detection or case outcomes. If its claims fail validation, the screen shows **Checked fallback**. Neither replay mode contacts a hosted API, even when one is configured for the separate Incident archive.
 
-The laptop demo uses a separate database and enrollment under `.runtime/native-demo`. It leaves old databases and Docker volumes alone. PostgreSQL is the coordinator store in the reference architecture and remains available with the [native deployment instructions](docs/deployment.md).
-
-## Use a hosted model API
-
-The demo runs without a model or a key. To enable hosted generation, set the following values in a private `.env` file and restart:
-
-```dotenv
-LLM_ENABLED=true
-LLM_URL=https://your-provider.example/v1
-LLM_MODEL=your-json-capable-chat-model
-LLM_API_KEY=your-provider-key
-```
-
-Use a provider that supports OpenAI-compatible Chat Completions and JSON object responses. The URL is the API base, without `/chat/completions`. The backend sends categorical findings and temporary evidence aliases, and validates returned claims locally before displaying them. The request still shares those categories with the configured provider. Use the demo with synthetic data. With no API configured, or if the request or verification fails, the dashboard labels the result **Checked template**.
+[Download the three 10,000-row CSVs](replay/organization-logs.zip). [Replay methods, source mapping and evaluator walkthrough](docs/replay.md) describe exactly what is synthetic and what the dashboard proves.
 
 ## Develop and verify
 

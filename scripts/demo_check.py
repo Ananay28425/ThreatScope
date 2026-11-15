@@ -104,7 +104,7 @@ async def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--url", default="http://127.0.0.1:5173")
+    parser.add_argument("--url", default="http://127.0.0.1:15173")
     parser.add_argument("--agent-url", help="Direct coordinator URL when the dashboard uses a proxy.")
     parser.add_argument("--origin", help="Defaults to the dashboard URL.")
     parser.add_argument("--credentials", type=Path, default=ROOT / ".runtime/native-demo/demo-credentials.json")

@@ -63,12 +63,12 @@ jobs:
             $ready = $false
             for ($attempt = 0; $attempt -lt 120 -and -not $server.HasExited; $attempt++) {
               try {
-                $response = Invoke-WebRequest -Uri http://127.0.0.1:5173/health/ready -TimeoutSec 1
+                $response = Invoke-WebRequest -Uri http://127.0.0.1:15173/health/ready -TimeoutSec 1
                 if ($response.StatusCode -eq 200) { $ready = $true; break }
               } catch { Start-Sleep -Milliseconds 500 }
             }
             if (-not $ready) { throw "Native demo failed to start" }
-            $dashboard = Invoke-WebRequest -Uri http://127.0.0.1:5173/
+            $dashboard = Invoke-WebRequest -Uri http://127.0.0.1:15173/
             if ($dashboard.Content -notmatch '<title>ThreatScope</title>') { throw "Dashboard missing" }
             foreach ($scenario in @('auth_attack', 'traffic_attack')) {
               .venv/Scripts/python.exe -m scripts.demo_check --scenario $scenario

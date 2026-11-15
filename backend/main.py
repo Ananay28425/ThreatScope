@@ -21,7 +21,7 @@ from backend.app.worker import correlate_once
 
 
 def create_app(settings: Settings | None = None, database: Database | None = None, *,
-               demo_workers: bool = False, frontend_dir: Path | None = None) -> FastAPI:
+               demo_workers: bool = False, frontend_dir: Path | None = None, replay=None) -> FastAPI:
     config = settings or get_settings()
     db = database or Database(config)
     if demo_workers and (config.app_env != "demo" or db.engine.dialect.name != "sqlite"):
@@ -49,6 +49,8 @@ def create_app(settings: Settings | None = None, database: Database | None = Non
                 ]
             yield
         finally:
+            if replay:
+                await replay.halt()
             for task in tasks:
                 task.cancel()
             await asyncio.gather(*tasks, return_exceptions=True)
@@ -98,6 +100,11 @@ def create_app(settings: Settings | None = None, database: Database | None = Non
 
     app.include_router(router)
     app.include_router(stream_router)
+    if replay:
+        from backend.app.replay import router as replay_router
+
+        app.state.replay = replay
+        app.include_router(replay_router)
     if frontend_dir:
         app.mount("/", StaticFiles(directory=frontend_dir, html=True), name="dashboard")
     return app

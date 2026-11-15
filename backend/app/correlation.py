@@ -14,7 +14,15 @@ from backend.app.tables import (
     Participation,
     Signal,
 )
-from common.contracts import CATALOGUE, EVIDENCE_TTL_SECONDS, PREDICATES, Family, aware, utcnow
+from common.contracts import (
+    CATALOGUE,
+    EVIDENCE_TTL_SECONDS,
+    PREDICATES,
+    REPLAY_FAMILIES,
+    Family,
+    aware,
+    utcnow,
+)
 
 
 def source_decision(family: str, values: dict[str, str]) -> str:
@@ -34,6 +42,11 @@ def source_decision(family: str, values: dict[str, str]) -> str:
         if all(values.get(k) == v for k, v in {
             "request_rate": "spike", "source_spread": "wide", "service_errors": "high"
         }.items()):
+            return "supported"
+    elif family in REPLAY_FAMILIES:
+        if values.get(family) == "low" or values.get("source_spread") == "narrow":
+            return "contradicted"
+        if values.get(family) == "high" and values.get("source_spread") == "wide":
             return "supported"
     return "unresolved"
 

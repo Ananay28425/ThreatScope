@@ -20,6 +20,9 @@ def aware(value: datetime) -> datetime:
 class Family(StrEnum):
     AUTH = "authentication_burst"
     TRAFFIC = "traffic_burst"
+    PHISHING = "phishing_links"
+    BEACON = "malware_checkins"
+    EXFIL = "data_transfer"
     UNKNOWN = "unknown"
     NONE = "none"
 
@@ -33,9 +36,13 @@ CATALOGUE = {
     "request_rate": {"cost": 1, "values": ("normal", "elevated", "spike", "unknown")},
     "service_errors": {"cost": 1, "values": ("low", "high", "unknown")},
 }
+REPLAY_FAMILIES = (Family.PHISHING, Family.BEACON, Family.EXFIL)
+CATALOGUE.update({family.value: {"cost": 1, "values": ("low", "high", "unknown")} for family in REPLAY_FAMILIES})
+
 PREDICATES = {
     Family.AUTH: ("auth_failure", "source_spread", "failure_kind"),
     Family.TRAFFIC: ("request_rate", "source_spread", "service_errors"),
+    **{family: (family.value, "source_spread") for family in REPLAY_FAMILIES},
 }
 
 
@@ -51,7 +58,7 @@ class SignalIn(Contract):
     observation_end: datetime
     family: Family
     anomaly_score: float = Field(ge=0, le=1)
-    detector_version: Literal["rules-iforest/2"] = "rules-iforest/2"
+    detector_version: Literal["rules-iforest/2", "replay-rules/1"] = "rules-iforest/2"
     model_state: Literal["warmup", "ready", "rules_only"] = "rules_only"
     confidence: float | None = Field(default=None, ge=0, le=1)
     policy_version: int = Field(ge=1, default=1)

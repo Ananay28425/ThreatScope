@@ -1,0 +1,20 @@
+{
+  "baseline_counts": {
+    "authentication_burst": 8,
+    "traffic_burst": 6,
+    "phishing_links": 5,
+    "malware_checkins": 5,
+    "data_transfer": 4
+  },
+  "sample_summary": {
+    "ids_sample_flows": 20000,
+    "ids_ddos_labels": 19932,
+    "ids_median_forward_bytes": 20.0,
+    "phishing_urls": 48812,
+    "phishing_flagged_labels": 24406,
+    "intelligence_domains": 162,
+    "intelligence_domains_with_votes": 48,
+    "witfoo_report_sample": 100,
+    "witfoo_median_suspicion": 0.25
+  }
+}
