@@ -379,6 +379,8 @@ async def access(request, db):
 async def status(request: Request, db=Depends(session_dependency)):
     replay, _ = await access(request, db)
     if replay.state in {"paused", "complete"} and not replay.lock.locked():
+        # The loopback SQLite pool has one connection. Release authentication before reading cases.
+        await db.close()
         async with replay.lock:
             await replay.sync(request.app)
     return replay.view()
