@@ -17,9 +17,27 @@ The corresponding `.tex` source files sit beside each PDF. [Evidence and contrib
 
 References revised on 7 October 2026: Paper 1 has 14 cited references and Paper 2 has 17. The audit records the disposition of all 20 supplied review entries and 16 separate-list entries. The [citation register](research/paper-reference-register.json) maps each numbered source to its in-text uses and supported claim. All eight PDFs were rebuilt, checked for missing citations, and visually reviewed; [validation records](research/papers/validation.json) include exact page counts and file hashes.
 
-## Run the evaluation demo
+## Run without Docker
 
-Install [uv](https://docs.astral.sh/uv/) and Node.js 22 with npm, then run this from the repository root:
+Install [uv](https://docs.astral.sh/uv/), Python 3.12 or newer, and Node.js 22 with npm. Docker and a separate PostgreSQL server are not required for the laptop demo.
+
+For a fresh checkout:
+
+```powershell
+git clone https://github.com/Ananay28425/ThreatScope.git
+cd ThreatScope
+uv sync --frozen
+npm --prefix frontend ci
+```
+
+For an existing checkout, commit or stash your own changes before switching branches, then update:
+
+```powershell
+git switch main
+git pull --ff-only origin main
+```
+
+Start from the repository root:
 
 ```powershell
 uv run --frozen python -m scripts.demo
@@ -27,7 +45,21 @@ uv run --frozen python -m scripts.demo
 
 Open **http://127.0.0.1:15173/**. The launcher builds the frontend, enrolls Orion, Lyra and Vega, and starts the dashboard and workers without Docker. In **Workflow replay**, choose a scenario and press **Play**. Pause freezes input; Reset clears the replay display. Cases remain in **Incident archive**. **System info** explains every dashboard metric. In another terminal, `uv run --frozen python -m scripts.demo_check` still runs the original CLI smoke check.
 
-Use another `--port` if 15173 is occupied. The laptop database and logs stay under `.runtime/native-demo`. PostgreSQL remains the reference deployment; see [native deployment](docs/deployment.md).
+Keep the terminal open while using the dashboard. Press **Ctrl+C** to stop the app and its workers. After the first successful build, you can reuse the frontend build:
+
+```powershell
+uv run --frozen python -m scripts.demo --no-build
+```
+
+If port 15173 is occupied, use a different port and match it in the smoke check:
+
+```powershell
+uv run --frozen python -m scripts.demo --port 15174
+# In another terminal:
+uv run --frozen python -m scripts.demo_check --url http://127.0.0.1:15174
+```
+
+Open **http://127.0.0.1:15174/** for that example. Run without `--no-build` after frontend changes. The laptop database and logs stay under `.runtime/native-demo`. PostgreSQL remains the reference deployment; see [native deployment](docs/deployment.md).
 
 ### Run the same replay with a local model
 
